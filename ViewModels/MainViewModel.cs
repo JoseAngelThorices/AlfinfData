@@ -1,6 +1,7 @@
 using AlfinfData.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Threading.Tasks;
 
 namespace AlfinfData.ViewModels
 {
@@ -46,17 +47,15 @@ namespace AlfinfData.ViewModels
         private async Task OpenConfiguracion()
         {
             await Shell.Current.GoToAsync(nameof(ConfiguracionPage));
-
         }
 
         [RelayCommand]
         private async Task OpenMenu()
         {
-                // Puedes implementar lógica para un menú lateral aquí
-                await Shell.Current.DisplayAlert("Menú", "Funcionalidad de menú lateral", "OK");
+            await Shell.Current.DisplayAlert("Menú", "Funcionalidad de menú lateral", "OK");
         }
 
-       private async Task Navigate(string route)
+        private async Task Navigate(string route)
         {
             try
             {
@@ -67,5 +66,5 @@ namespace AlfinfData.ViewModels
                 await Shell.Current.DisplayAlert("Error", $"No se pudo navegar: {ex.Message}", "OK");
             }
         }
-    }  
+    }
 }

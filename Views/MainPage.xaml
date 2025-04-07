@@ -23,16 +23,34 @@
                   VerticalOptions="Center">
 
                 <!-- Fila 1 -->
-                <Button Text="Inicio" 
-                        Grid.Row="0" Grid.Column="0"
-                        Command="{Binding NavigateToInicioCommand}"
-                        HeightRequest="160"
-                        FontSize="18"
-                        CornerRadius="10"
-                        BackgroundColor="{StaticResource Primary}"
-                        TextColor="White"/>
 
-                <Button Text="Selección" 
+            <!-- Se añade boton odoo -->
+            <VerticalStackLayout Grid.Row="0" Grid.Column="0"
+                     HorizontalOptions="Center"
+                     VerticalOptions="Center"
+                     Spacing="8">
+
+                <Image Source="inicio.png"
+           HeightRequest="160"
+           WidthRequest="160"
+           Aspect="AspectFit"
+           HorizontalOptions="Center" />
+
+                <Label Text="Inicio"
+           TextColor="Black"
+           FontSize="18"
+           HorizontalTextAlignment="Center"
+           HorizontalOptions="Center" />
+
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding NavigateToInicioCommand}" />
+                </VerticalStackLayout.GestureRecognizers>
+            </VerticalStackLayout>
+
+
+
+
+            <Button Text="Selección" 
                         Grid.Row="0" Grid.Column="1"
                         Command="{Binding NavigateToSeleccionCommand}"
                         HeightRequest="160"
