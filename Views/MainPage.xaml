@@ -13,7 +13,7 @@
           BackgroundColor="{StaticResource PageBackgroundColor}">
 
 
-        <!-- Contenedor principal de botones -->
+        <!-- Contenedor principal de botonesss -->
         
             <Grid Grid.Row="1" RowDefinitions="*,*,*" 
                   ColumnDefinitions="*,*"
@@ -78,7 +78,7 @@
                         BackgroundColor="{StaticResource Primary}"
                         TextColor="White"/>
 
-                <!-- Fila 3 hola--> 
+                <!-- Fila 3 holaa--> 
                 <Button Text="Producción" 
                         Grid.Row="2" Grid.Column="0"
                         Command="{Binding NavigateToProduccionCommand}"
