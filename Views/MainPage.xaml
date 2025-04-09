@@ -13,7 +13,7 @@
           BackgroundColor="{StaticResource PageBackgroundColor}">
 
 
-        <!-- Contenedor principal de botones -->
+        <!-- Contenedor principal de botoness -->
         
             <Grid Grid.Row="1" RowDefinitions="*,*,*" 
                   ColumnDefinitions="*,*"
