@@ -13,7 +13,7 @@
           BackgroundColor="{StaticResource PageBackgroundColor}">
 
 
-        <!-- Contenedor principal de botoness -->
+        <!-- Contenedor principal de botonesss -->
         
             <Grid Grid.Row="1" RowDefinitions="*,*,*" 
                   ColumnDefinitions="*,*"
