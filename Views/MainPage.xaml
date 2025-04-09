@@ -59,7 +59,7 @@
                         BackgroundColor="{StaticResource Primary}"
                         TextColor="White"/>
 
-                <!-- Fila 2 -->
+                <!-- Fila 22 -->
                 <Button Text="Tareas" 
                         Grid.Row="1" Grid.Column="0"
                         Command="{Binding NavigateToTareasCommand}"
