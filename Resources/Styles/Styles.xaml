@@ -12,4 +12,9 @@
     <Style TargetType="Label">
         <Setter Property="TextColor" Value="{StaticResource PrimaryText}"/>
     </Style>
+
+    <!-- Estilo global para páginas -->
+    <Style TargetType="ContentPage">
+        <Setter Property="BackgroundColor" Value="{StaticResource PageBackgroundColor}" />
+    </Style>
 </ResourceDictionary>

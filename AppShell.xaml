@@ -6,6 +6,7 @@
     xmlns:views="clr-namespace:AlfinfData.Views"
     FlyoutBehavior="Disabled"
     Title="AlfinfData">
+    
 
     <Shell.TitleView>
         <Grid ColumnDefinitions="Auto,*,Auto">
