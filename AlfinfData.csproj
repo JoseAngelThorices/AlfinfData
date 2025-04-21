@@ -2,16 +2,9 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net9.0-android;net9.0-ios;net9.0-maccatalyst</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
-		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-		<!-- <TargetFrameworks>$(TargetFrameworks);net9.0-tizen</TargetFrameworks> -->
-
-		<!-- Note for MacCatalyst:
-		The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
-		When specifying both architectures, use the plural <RuntimeIdentifiers> instead of the singular <RuntimeIdentifier>.
-		The Mac App Store will NOT accept apps with ONLY maccatalyst-arm64 indicated;
-		either BOTH runtimes must be indicated or ONLY macatalyst-x64. -->
-		<!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">
+			$(TargetFrameworks);net9.0-windows10.0.19041.0
+		</TargetFrameworks>
 
 		<OutputType>Exe</OutputType>
 		<RootNamespace>AlfinfData</RootNamespace>
@@ -20,17 +13,11 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 
-		<!-- Display name -->
 		<ApplicationTitle>AlfinfData</ApplicationTitle>
-
-		<!-- App Identifier -->
 		<ApplicationId>com.companyname.alfinfdata</ApplicationId>
-
-		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 
-		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
 		<WindowsPackageType>None</WindowsPackageType>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
@@ -42,59 +29,81 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
-
-		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
-
-		<!-- Images -->
+		<!-- Ícono personalizado -->
+		<MauiIcon Include="Resources\AppIcon\appicon.png" />
+		<!-- Splash -->
+		<MauiSplashScreen Include="Resources\splash\splash.png" Color="#71639e" />
+		<!-- Imágenes -->
 		<MauiImage Include="Resources\Images\*" />
 
-		<!-- Custom Fonts -->
+		<!-- Fuentes -->
 		<MauiFont Include="Resources\Fonts\*" />
 
-		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
+		<!-- Assets -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <AndroidResource Remove="NewFolder1\**" />
-	  <Compile Remove="NewFolder1\**" />
-	  <EmbeddedResource Remove="NewFolder1\**" />
-	  <MauiCss Remove="NewFolder1\**" />
-	  <MauiXaml Remove="NewFolder1\**" />
-	  <None Remove="NewFolder1\**" />
+		<!-- Limpieza carpeta temporal -->
+		<AndroidResource Remove="NewFolder1\**" />
+		<Compile Remove="NewFolder1\**" />
+		<EmbeddedResource Remove="NewFolder1\**" />
+		<MauiCss Remove="NewFolder1\**" />
+		<MauiXaml Remove="NewFolder1\**" />
+		<None Remove="NewFolder1\**" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\AppIcon\appicon.png" />
+	  <None Remove="Resources\AppIcon\logo.jpg" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Maui" Version="11.2.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.50" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.3" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Views\ConfiguracionPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\InicioPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\LectoresPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\PanelFichajesPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\ProduccionPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\SeleccionPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\TareasPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
+		<Compile Update="Views\Configuracion\ConfiguracionPage.xaml.cs">
+		  <DependentUpon>ConfiguracionPage.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\Horas\HorasPage.xaml.cs">
+		  <DependentUpon>HorasPage.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\Menu\MenuPage.xaml.cs">
+			<DependentUpon>MenuPage.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\Fin\FinPage.xaml.cs">
+		  <DependentUpon>FinPage.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\Salidas\SalidasPage.xaml.cs">
+		  <DependentUpon>SalidasPage.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\Seleccion\SeleccionPage.xaml.cs">
+		  <DependentUpon>SeleccionPage.xaml</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<MauiXaml Update="Views\ConfiguracionPage.xaml" />
+		<MauiXaml Update="Views\InicioPage.xaml" />
+		<MauiXaml Update="Views\Inicio\DescargasPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Inicio\EntradaPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Inicio\NuevoDiaPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\LectoresPage.xaml" />
+		<MauiXaml Update="Views\MenuPage.xaml" />
+		<MauiXaml Update="Views\PanelFichajesPage.xaml" />
+		<MauiXaml Update="Views\ProduccionPage.xaml" />
+		<MauiXaml Update="Views\SeleccionPage.xaml" />
+		<MauiXaml Update="Views\TareasPage.xaml" />
 	</ItemGroup>
 
 </Project>

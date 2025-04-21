@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AlfinfData.Views.Fin.FinPage"
+             Title="FinPage"
+             BackgroundColor="#e9e9e9">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="6">
+
+            <!-- Encabezado -->
+            <Label Text="FIN"
+                   FontSize="24"
+                   HorizontalOptions="Center"
+                   TextColor="Black"
+                   FontAttributes="Bold" />
+
+            <!-- Botón GENERAR HISTÓRICO -->
+            <Button Text="GENERAR HISTÓRICO"
+                    BackgroundColor="#71639e"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    HeightRequest="50"
+                    CornerRadius="10" />
+
+            <!-- Fecha Desde -->
+            <HorizontalStackLayout Spacing="5">
+                <Label Text="Desde:"
+                       VerticalOptions="Center"
+                       TextColor="Black"
+                       FontSize="16" />
+                <Label x:Name="FechaDesdeLabel"
+                       Text="15/04/2025"
+                       VerticalOptions="Center"
+                       TextColor="Black"
+                       FontSize="16" />
+                <Button x:Name="FechaDesdeButton"
+                        Clicked="OnFechaDesdeClicked"
+                        WidthRequest="60"
+                        HeightRequest="60"
+                        CornerRadius="3"
+                        BackgroundColor="Transparent"
+                        ImageSource="calendario.png" />
+            </HorizontalStackLayout>
+
+            <!-- Fecha Hasta -->
+            <HorizontalStackLayout Spacing="5">
+                <Label Text="Hasta:"
+                       VerticalOptions="Center"
+                       TextColor="Black"
+                       FontSize="16" />
+                <Label x:Name="FechaHastaLabel"
+                       Text="15/04/2025"
+                       VerticalOptions="Center"
+                       TextColor="Black"
+                       FontSize="16" />
+                <Button x:Name="FechaHastaButton"
+                        Clicked="OnFechaHastaClicked"
+                        WidthRequest="60"
+                        HeightRequest="60"
+                        CornerRadius="3"
+                        BackgroundColor="Transparent"
+                        ImageSource="calendario.png" />
+            </HorizontalStackLayout>
+
+            <!-- Botón ENVIAR ARCHIVOS -->
+            <Button Text="ENVIAR ARCHIVOS"
+                    BackgroundColor="#71639e"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    HeightRequest="50"
+                    CornerRadius="10" />
+
+            <!-- Campo de texto para mostrar información -->
+            <Frame BorderColor="#a0a0a0"
+                   CornerRadius="10"
+                   HeightRequest="430"
+                   Padding="10">
+                <ScrollView>
+                    <Label x:Name="ResultadoLabel"
+                           Text=""
+                           FontSize="14"
+                           TextColor="Black" />
+                </ScrollView>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
