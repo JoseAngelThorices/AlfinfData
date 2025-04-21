@@ -5,6 +5,11 @@
              Title="InicioPage"
              BackgroundColor="{StaticResource PageBackgroundColor}">
 
+    <!-- Oculta botón de volver -->
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsVisible="False" />
+    </Shell.BackButtonBehavior>
+
     <ScrollView>
         <VerticalStackLayout Margin="40" Spacing="20">
 

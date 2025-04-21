@@ -12,10 +12,10 @@
     Shell.NavBarHasShadow="False">
 
     <Shell.TitleView>
-        <Grid ColumnDefinitions="Auto,*,Auto" BackgroundColor="#71639e" >
-            <!-- Botón con imagen agrandada -->
+        <Grid ColumnDefinitions="Auto,*,Auto" BackgroundColor="#71639e">
+            <!-- Botón izquierdo: retroceder a MainPage -->
             <Button ImageSource="btncuadrados.png"
-                    Command="{Binding OpenMenuCommand}"
+                    Clicked="OnBackToMainClicked"
                     BackgroundColor="Transparent"
                     TextColor="White"
                     HeightRequest="30"
@@ -27,9 +27,9 @@
                    HorizontalOptions="Center"
                    VerticalOptions="Center"
                    FontSize="Medium"
-                   TextColor="White"/>
+                   TextColor="White" />
 
-            <!-- Otro botón con imagen agrandada -->
+            <!-- Botón derecho: configuración -->
             <Button ImageSource="trespuntos.png"
                     Grid.Column="2"
                     Command="{Binding OpenConfiguracionMenuCommand}"

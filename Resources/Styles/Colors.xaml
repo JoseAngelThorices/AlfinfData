@@ -7,7 +7,7 @@
     <Color x:Key="Primary">#512BD4</Color>
     <Color x:Key="Secondary">#DFD8F7</Color>
     <Color x:Key="Tertiary">#2B0B98</Color>
-    <Color x:Key="PageBackgroundColor">#74649C</Color>
+    <Color x:Key="PageBackgroundColor">white</Color>
 
     <!-- Colores de texto -->
     <Color x:Key="PrimaryText">#FFFFFF</Color>
