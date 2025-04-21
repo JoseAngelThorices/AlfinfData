@@ -49,7 +49,7 @@
                 HeightRequest="60"/>
 
 
-            <Button Text="prueba"
+            <Button Text="prueba1"
                 Command="{Binding DescargasCommand}"
                 BackgroundColor="#71639e"
                 TextColor="White"
