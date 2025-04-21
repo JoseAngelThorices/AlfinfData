@@ -12,8 +12,10 @@
     <Grid RowDefinitions="Auto,*,Auto"
           BackgroundColor="{StaticResource PageBackgroundColor}">
 
-        <!-- Contenedor principal de botonesss -->
-        <Grid Grid.Row="1" RowDefinitions="*,*,*" 
+
+        <!-- Contenedor principal de botones estilo "Inicio" -->
+        <Grid Grid.Row="1" RowDefinitions="*,*,*"
+
               ColumnDefinitions="*,*"
               RowSpacing="15"
               ColumnSpacing="15"
@@ -23,22 +25,25 @@
             <!-- Fila 1 -->
 
             <!-- Botón Inicio -->
+
             <VerticalStackLayout Grid.Row="0" Grid.Column="0"
-                     HorizontalOptions="Center"
-                     VerticalOptions="Center"
-                     Spacing="8">
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Spacing="8">
 
                 <Image Source="inicio.png"
-             HeightRequest="160"
-             WidthRequest="160"
-             Aspect="AspectFit"
-             HorizontalOptions="Center" />
+
+                       HeightRequest="160"
+                       WidthRequest="160"
+                       Aspect="AspectFit"
+                       HorizontalOptions="Center" />
 
                 <Label Text="Inicio"
-            TextColor="Black"
-            FontSize="18"
-            HorizontalTextAlignment="Center"
-            HorizontalOptions="Center" />
+                       TextColor="Black"
+                       FontSize="18"
+                       HorizontalTextAlignment="Center"
+                       HorizontalOptions="Center" />
+
 
                 <VerticalStackLayout.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding NavigateToInicioCommand}" />
@@ -99,7 +104,7 @@
                      VerticalOptions="Center"
                      Spacing="8">
 
-                <Image Source="hora.png"
+             <Image Source="hora.png"
              HeightRequest="160"
              WidthRequest="160"
              Aspect="AspectFit"
@@ -163,6 +168,7 @@
                     <TapGestureRecognizer Command="{Binding NavigateToPanelCommand}" />
                 </VerticalStackLayout.GestureRecognizers>
             </VerticalStackLayout>
+
         </Grid>
     </Grid>
 </ContentPage>
