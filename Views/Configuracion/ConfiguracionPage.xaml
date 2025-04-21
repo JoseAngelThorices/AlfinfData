@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AlfinfData.Views.Configuracion.ConfiguracionPage"
+             xmlns:local="clr-namespace:AlfinfData.Views.Configuracion"
+             x:DataType="local:ConfiguracionPage"
+             BackgroundColor="White"
+             Title="Configuración"
+             Shell.NavBarIsVisible="False">
+
+
+    <ScrollView>
+        <VerticalStackLayout Padding="5" Spacing="5">
+
+            <!-- Sección SERVIDOR HTTP -->
+            <Border Stroke="LightGray" 
+                    StrokeShape="RoundRectangle 5"
+                    BackgroundColor="White"
+                    Padding="10">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="SERVIDOR HTTP" 
+                           FontAttributes="Bold" 
+                           FontSize="Medium"
+                           TextColor="Black"/>
+
+                    <!-- Campo IP -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="IP"
+                               FontAttributes="Bold"
+                               FontSize="Small"
+                               TextColor="Black"/>
+
+                        <Border Stroke="LightGray"
+                                StrokeShape="RoundRectangle 5"
+                                BackgroundColor="White"
+                                Padding="0"
+                                HeightRequest="40">
+                            <Grid>
+                                <Label x:Name="IpLabel" 
+                                       Text="IP del servidor"
+                                       Margin="10,0"
+                                       VerticalOptions="Center"
+                                       TextColor="Gray"/>
+                                <Button BackgroundColor="Transparent"
+                                        Clicked="OnIpClicked"/>
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Campo Puerto -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Puerto"
+                               FontAttributes="Bold"
+                               FontSize="Small"
+                               TextColor="Black"/>
+
+                        <Border Stroke="LightGray"
+                                StrokeShape="RoundRectangle 5"
+                                BackgroundColor="White"
+                                Padding="0"
+                                HeightRequest="40">
+                            <Grid>
+                                <Label x:Name="PortLabel" 
+                                       Text="Puerto del servidor"
+                                       Margin="10,0"
+                                       VerticalOptions="Center"
+                                       TextColor="Gray"/>
+                                <Button BackgroundColor="Transparent"
+                                        Clicked="OnPortClicked"/>
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Sección IMPRESORA ETIQUETAS -->
+            <Border Stroke="LightGray" 
+                    StrokeShape="RoundRectangle 5"
+                    BackgroundColor="White"
+                    Padding="10">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="IMPRESORA ETIQUETAS" 
+                           FontAttributes="Bold" 
+                           FontSize="Medium"
+                           TextColor="Black"/>
+
+                    <!-- Campo Dirección MAC -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Dirección MAC" 
+                               FontAttributes="Bold"
+                               FontSize="Small"
+                               TextColor="Black"/>
+
+                        <Border Stroke="LightGray"
+                                StrokeShape="RoundRectangle 5"
+                                BackgroundColor="White"
+                                Padding="0"
+                                HeightRequest="40">
+                            <Grid>
+                                <Label x:Name="MacLabel" 
+                                       Text="Dirección MAC de la impresora"
+                                       Margin="10,0"
+                                       VerticalOptions="Center"
+                                       TextColor="Gray"/>
+                                <Button BackgroundColor="Transparent"
+                                        Clicked="OnMacClicked"/>
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Campo ID Entrada -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="ID Entrada" 
+                               FontAttributes="Bold"
+                               FontSize="Small"
+                               TextColor="Black"/>
+
+                        <Border Stroke="LightGray"
+                                StrokeShape="RoundRectangle 5"
+                                BackgroundColor="White"
+                                Padding="0"
+                                HeightRequest="40">
+                            <Grid>
+                                <Label x:Name="IdEntradaLabel" 
+                                       Text="ID para la siguiente entrada"
+                                       Margin="10,0"
+                                       VerticalOptions="Center"
+                                       TextColor="Gray"/>
+                                <Button BackgroundColor="Transparent"
+                                        Clicked="OnIdEntradaClicked"/>
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Campo Imprimir Etiqueta -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Imprimir Etiqueta"
+                               FontAttributes="Bold"
+                               FontSize="Small"
+                               TextColor="Black"/>
+
+                        <Border BackgroundColor="White"
+                               Padding="0"
+                               HeightRequest="40">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Text="Imprimir etiqueta"
+                                       Margin="10,0"
+                                       VerticalOptions="Center"
+                                       TextColor="Gray"/>
+                                <Switch Grid.Column="1"
+                                        IsToggled="{Binding ImprimirEtiqueta}"
+                                        HorizontalOptions="End"
+                                        VerticalOptions="Center"/>
+                            </Grid>
+                        </Border>
+                        <BoxView HeightRequest="1" 
+                                 BackgroundColor="LightGray"
+                                 HorizontalOptions="Fill"/>
+                    </VerticalStackLayout>
+
+                    <!-- Campo Etiqueta Separador Negro -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Etiqueta Separador Negro" 
+                               FontAttributes="Bold"
+                               FontSize="Small"
+                               TextColor="Black"/>
+
+                        <Border BackgroundColor="White"
+                               Padding="0"
+                               HeightRequest="40">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Text="Etiquetas con separador negro"
+                                       Margin="10,0"
+                                       VerticalOptions="Center"
+                                       TextColor="Gray"/>
+                                <Switch Grid.Column="1"
+                                        IsToggled="{Binding SeparadorNegro}"
+                                        HorizontalOptions="End"
+                                        VerticalOptions="Center"/>
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Sección GENERAL -->
+            <Border Stroke="LightGray" 
+                    StrokeShape="RoundRectangle 5"
+                    BackgroundColor="White"
+                    Padding="10">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="GENERAL" 
+                           FontAttributes="Bold" 
+                           FontSize="Medium"
+                           TextColor="Black"/>
+
+                    <!-- Campo Habilitar protocolo TCP -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Habilitar protocolo TCP"
+                               FontAttributes="Bold"
+                               FontSize="Small"
+                               TextColor="Black"/>
+
+                        <Border BackgroundColor="White"
+                               Padding="0"
+                               HeightRequest="40">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Text="Habilitar comunicación TCP con los lectores"
+                                       Margin="10,0"
+                                       VerticalOptions="Center"
+                                       TextColor="Gray"/>
+                                <Switch Grid.Column="1"
+                                        IsToggled="{Binding HabilitarTcp}"
+                                        HorizontalOptions="End"
+                                        VerticalOptions="Center"/>
+                            </Grid>
+                        </Border>
+                        <BoxView HeightRequest="1" 
+                                 BackgroundColor="LightGray"
+                                 HorizontalOptions="Fill"/>
+                    </VerticalStackLayout>
+
+                    <!-- Campo Enviar Totales -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Enviar Totales"
+                               FontAttributes="Bold"
+                               FontSize="Small"
+                               TextColor="Black"/>
+
+                        <Border BackgroundColor="White"
+                               Padding="0"
+                               HeightRequest="40">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Text="Envío de totales al servidor"
+                                       Margin="10,0"
+                                       VerticalOptions="Center"
+                                       TextColor="Gray"/>
+                                <Switch Grid.Column="1"
+                                        IsToggled="{Binding EnviarTotales}"
+                                        HorizontalOptions="End"
+                                        VerticalOptions="Center"/>
+                            </Grid>
+                        </Border>
+                        <BoxView HeightRequest="1" 
+                                 BackgroundColor="LightGray"
+                                 HorizontalOptions="Fill"/>
+                    </VerticalStackLayout>
+
+                    <!-- Campo Enviar Asistencia -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Enviar Asistencia"
+                               FontAttributes="Bold"
+                               FontSize="Small"
+                               TextColor="Black"/>
+
+                        <Border BackgroundColor="White"
+                               Padding="0"
+                               HeightRequest="40">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Text="Envío de datos de asistencia al servidor"
+                                       Margin="10,0"
+                                       VerticalOptions="Center"
+                                       TextColor="Gray"/>
+                                <Switch Grid.Column="1"
+                                        IsToggled="{Binding EnviarAsistencia}"
+                                        HorizontalOptions="End"
+                                        VerticalOptions="Center"/>
+                            </Grid>
+                        </Border>
+                        <BoxView HeightRequest="1" 
+                                 BackgroundColor="LightGray"
+                                 HorizontalOptions="Fill"/>
+                    </VerticalStackLayout>
+
+                    <!-- Campo Aceptar Fichajes Desconocidos -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Aceptar Fichajes Desconocidos"
+                               FontAttributes="Bold"
+                               FontSize="Small"
+                               TextColor="Black"/>
+
+                        <Border BackgroundColor="White"
+                               Padding="0"
+                               HeightRequest="40">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Text="Aceptar fichajes de tarjetas no asignadas a jornaleros"
+                                       Margin="10,0"
+                                       VerticalOptions="Center"
+                                       TextColor="Gray"/>
+                                <Switch Grid.Column="1"
+                                        IsToggled="{Binding AceptarFichajesDesconocidos}"
+                                        HorizontalOptions="End"
+                                        VerticalOptions="Center"/>
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

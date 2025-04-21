@@ -5,24 +5,39 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:AlfinfData.Views"
     FlyoutBehavior="Disabled"
-    Title="AlfinfData">
+    Title="AlfinfData"
+    Shell.BackgroundColor="#71639e"
+    Shell.TitleColor="White"
+    Shell.ForegroundColor="White"
+    Shell.NavBarHasShadow="False">
 
     <Shell.TitleView>
-        <Grid ColumnDefinitions="Auto,*,Auto">
-            <Button ImageSource="menu.png" 
+        <Grid ColumnDefinitions="Auto,*,Auto" BackgroundColor="#71639e" >
+            <!-- Botón con imagen agrandada -->
+            <Button ImageSource="btncuadrados.png"
                     Command="{Binding OpenMenuCommand}"
-                    BackgroundColor="Transparent"/>
+                    BackgroundColor="Transparent"
+                    TextColor="White"
+                    HeightRequest="30"
+                    WidthRequest="30"
+                    Padding="0"/>
 
-            <Label Text="AlfinfData" 
+            <Label Text="AlfinfData"
                    Grid.Column="1"
                    HorizontalOptions="Center"
                    VerticalOptions="Center"
-                   FontSize="Medium"/>
+                   FontSize="Medium"
+                   TextColor="White"/>
 
-            <Button ImageSource="trespuntos.png" 
+            <!-- Otro botón con imagen agrandada -->
+            <Button ImageSource="trespuntos.png"
                     Grid.Column="2"
-                    Command="{Binding OpenConfiguracionCommand}"
-                    BackgroundColor="Transparent"/>
+                    Command="{Binding OpenConfiguracionMenuCommand}"
+                    BackgroundColor="Transparent"
+                    TextColor="White"
+                    HeightRequest="50"
+                    WidthRequest="40"
+                    Padding="0"/>
         </Grid>
     </Shell.TitleView>
 

@@ -1,4 +1,4 @@
-namespace AlfinfData.Views;
+namespace AlfinfData.Views.Produccion;
 
 public partial class ProduccionPage : ContentPage
 {

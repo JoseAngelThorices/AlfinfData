@@ -1,47 +1,39 @@
-using AlfinfData.Views;
+using AlfinfData.Views.Configuracion;
+using AlfinfData.Views.Fin;
+using AlfinfData.Views.Horas;
+using AlfinfData.Views.Inicio;
+using AlfinfData.Views.Menu;
+using AlfinfData.Views.Produccion;
+using AlfinfData.Views.Salidas;
+using AlfinfData.Views.Seleccion;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Threading.Tasks;
+
 
 namespace AlfinfData.ViewModels
 {
     public partial class MainViewModel : ObservableObject
     {
         [RelayCommand]
-        private async Task NavigateToInicio()
-        {
-            await Shell.Current.GoToAsync(nameof(InicioPage));
-        }
+        private async Task NavigateToInicio() => await Shell.Current.GoToAsync(nameof(InicioPage));
 
         [RelayCommand]
-        private async Task NavigateToSeleccion()
-        {
-            await Shell.Current.GoToAsync(nameof(SeleccionPage));
-        }
+        private async Task NavigateToSeleccion() => await Shell.Current.GoToAsync(nameof(SeleccionPage));
 
         [RelayCommand]
-        private async Task NavigateToTareas()
-        {
-            await Shell.Current.GoToAsync(nameof(TareasPage));
-        }
+        private async Task NavigateToTareas() => await Shell.Current.GoToAsync(nameof(HorasPage));
 
         [RelayCommand]
-        private async Task NavigateToLectores()
-        {
-            await Shell.Current.GoToAsync(nameof(LectoresPage));
-        }
+        private async Task NavigateToLectores() => await Shell.Current.GoToAsync(nameof(SalidasPage));
 
         [RelayCommand]
-        private async Task NavigateToProduccion()
-        {
-            await Shell.Current.GoToAsync(nameof(ProduccionPage));
-        }
+        private async Task NavigateToProduccion() => await Shell.Current.GoToAsync(nameof(ProduccionPage));
 
         [RelayCommand]
-        private async Task NavigateToPanel()
-        {
-            await Shell.Current.GoToAsync(nameof(PanelFichajesPage));
-        }
+        private async Task NavigateToPanel() => await Shell.Current.GoToAsync(nameof(FinPage));
+
+        [RelayCommand]
+        private async Task OpenMenu() => await Shell.Current.GoToAsync(nameof(MenuPage));
 
         [RelayCommand]
         private async Task OpenConfiguracion()
@@ -50,20 +42,28 @@ namespace AlfinfData.ViewModels
         }
 
         [RelayCommand]
-        private async Task OpenMenu()
+        private async Task OpenConfiguracionMenu()
         {
-            await Shell.Current.DisplayAlert("Menú", "Funcionalidad de menú lateral", "OK");
-        }
+            string action = await Shell.Current.DisplayActionSheet(
+                "Opciones", "Cancelar", null, "Configuración");
 
-        private async Task Navigate(string route)
-        {
-            try
+            if (action == "Configuración")
             {
-                await Shell.Current.GoToAsync(route);
-            }
-            catch (Exception ex)
-            {
-                await Shell.Current.DisplayAlert("Error", $"No se pudo navegar: {ex.Message}", "OK");
+                string password = await Shell.Current.DisplayPromptAsync(
+                    "Contraseña requerida",
+                    "Introduce la contraseña para acceder a la configuración:",
+                    "Aceptar", "Cancelar", "",
+                    maxLength: 10,
+                    keyboard: Keyboard.Numeric);
+
+                if (password == "123")
+                {
+                    await Shell.Current.GoToAsync(nameof(ConfiguracionPage));
+                }
+                else if (!string.IsNullOrWhiteSpace(password))
+                {
+                    await Shell.Current.DisplayAlert("Error", "Contraseña incorrecta.", "OK");
+                }
             }
         }
     }

@@ -12,91 +12,157 @@
     <Grid RowDefinitions="Auto,*,Auto"
           BackgroundColor="{StaticResource PageBackgroundColor}">
 
-
         <!-- Contenedor principal de botonesss -->
-        
-            <Grid Grid.Row="1" RowDefinitions="*,*,*" 
-                  ColumnDefinitions="*,*"
-                  RowSpacing="15"
-                  ColumnSpacing="15"
-                  Padding="20"
-                  VerticalOptions="Center">
+        <Grid Grid.Row="1" RowDefinitions="*,*,*" 
+              ColumnDefinitions="*,*"
+              RowSpacing="15"
+              ColumnSpacing="15"
+              Padding="20"
+              VerticalOptions="Center">
 
-                <!-- Fila 1 -->
+            <!-- Fila 1 -->
 
-            <!-- Se añade boton odoo -->
+            <!-- Botón Inicio -->
             <VerticalStackLayout Grid.Row="0" Grid.Column="0"
                      HorizontalOptions="Center"
                      VerticalOptions="Center"
                      Spacing="8">
 
                 <Image Source="inicio.png"
-           HeightRequest="160"
-           WidthRequest="160"
-           Aspect="AspectFit"
-           HorizontalOptions="Center" />
+             HeightRequest="160"
+             WidthRequest="160"
+             Aspect="AspectFit"
+             HorizontalOptions="Center" />
 
                 <Label Text="Inicio"
-           TextColor="Black"
-           FontSize="18"
-           HorizontalTextAlignment="Center"
-           HorizontalOptions="Center" />
+            TextColor="Black"
+            FontSize="18"
+            HorizontalTextAlignment="Center"
+            HorizontalOptions="Center" />
 
                 <VerticalStackLayout.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding NavigateToInicioCommand}" />
                 </VerticalStackLayout.GestureRecognizers>
             </VerticalStackLayout>
 
+            <!-- Botón Selección -->
+            <VerticalStackLayout Grid.Row="0" Grid.Column="1"
+                     HorizontalOptions="Center"
+                     VerticalOptions="Center"
+                     Spacing="8">
 
+                <Image Source="seleccion.png"
+             HeightRequest="160"
+             WidthRequest="160"
+             Aspect="AspectFit"
+             HorizontalOptions="Center" />
 
+                <Label Text="Selección"
+            TextColor="Black"
+            FontSize="18"
+            HorizontalTextAlignment="Center"
+            HorizontalOptions="Center" />
 
-            <Button Text="Selección" 
-                        Grid.Row="0" Grid.Column="1"
-                        Command="{Binding NavigateToSeleccionCommand}"
-                        HeightRequest="160"
-                        FontSize="18"
-                        CornerRadius="10"
-                        BackgroundColor="{StaticResource Primary}"
-                        TextColor="White"/>
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding NavigateToSeleccionCommand}" />
+                </VerticalStackLayout.GestureRecognizers>
+            </VerticalStackLayout>
 
-                <!-- Fila 22 -->
-                <Button Text="Tareas" 
-                        Grid.Row="1" Grid.Column="0"
-                        Command="{Binding NavigateToTareasCommand}"
-                        HeightRequest="160"
-                        FontSize="18"
-                        CornerRadius="10"
-                        BackgroundColor="{StaticResource Primary}"
-                        TextColor="White"/>
+            <!-- Fila 2 -->
 
-                <Button Text="Lectores" 
-                        Grid.Row="1" Grid.Column="1"
-                        Command="{Binding NavigateToLectoresCommand}"
-                        HeightRequest="160"
-                        FontSize="18"
-                        CornerRadius="10"
-                        BackgroundColor="{StaticResource Primary}"
-                        TextColor="White"/>
+            <!-- Botón Producción -->
+            <VerticalStackLayout Grid.Row="1" Grid.Column="0"
+         HorizontalOptions="Center"
+         VerticalOptions="Center"
+         Spacing="8">
 
-                <!-- Fila 3 holaa--> 
-                <Button Text="Producción" 
-                        Grid.Row="2" Grid.Column="0"
-                        Command="{Binding NavigateToProduccionCommand}"
-                        HeightRequest="160"
-                        FontSize="18"
-                        CornerRadius="10"
-                        BackgroundColor="{StaticResource Primary}"
-                        TextColor="White"/>
+                <Image Source="produccion.png"
+                 HeightRequest="160"
+                 WidthRequest="160"
+                 Aspect="AspectFit"
+                 HorizontalOptions="Center" />
 
-                <Button Text="Panel Fichajes" 
-                        Grid.Row="2" Grid.Column="1"
-                        Command="{Binding NavigateToPanelCommand}"
-                        HeightRequest="160"
-                        FontSize="18"
-                        CornerRadius="10"
-                        BackgroundColor="{StaticResource Primary}"
-                        TextColor="White"/>
-            </Grid>
-        
+                                <Label Text="Producción"
+                TextColor="Black"
+                FontSize="18"
+                HorizontalTextAlignment="Center"
+                HorizontalOptions="Center" />
+
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding NavigateToProduccionCommand}" />
+                </VerticalStackLayout.GestureRecognizers>
+            </VerticalStackLayout>
+
+            <!-- Botón Horas -->
+            <VerticalStackLayout Grid.Row="1" Grid.Column="1"
+                     HorizontalOptions="Center"
+                     VerticalOptions="Center"
+                     Spacing="8">
+
+                <Image Source="hora.png"
+             HeightRequest="160"
+             WidthRequest="160"
+             Aspect="AspectFit"
+             HorizontalOptions="Center" />
+
+                <Label Text="Horas"
+            TextColor="Black"
+            FontSize="18"
+            HorizontalTextAlignment="Center"
+            HorizontalOptions="Center" />
+
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding NavigateToLectoresCommand}" />
+                </VerticalStackLayout.GestureRecognizers>
+            </VerticalStackLayout>
+
+            <!-- Fila 3 -->
+
+            <!-- Botón Salidas -->
+            <VerticalStackLayout Grid.Row="2" Grid.Column="0"
+         HorizontalOptions="Center"
+         VerticalOptions="Center"
+         Spacing="8">
+
+                    <Image Source="salidas.png"
+                 HeightRequest="160"
+                 WidthRequest="160"
+                 Aspect="AspectFit"
+                 HorizontalOptions="Center" />
+
+                    <Label Text="Salidas"
+                TextColor="Black"
+                FontSize="18"
+                HorizontalTextAlignment="Center"
+                HorizontalOptions="Center" />
+
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding NavigateToTareasCommand}" />
+                </VerticalStackLayout.GestureRecognizers>
+            </VerticalStackLayout>
+
+            <!-- Fin -->
+            <VerticalStackLayout Grid.Row="2" Grid.Column="1"
+                     HorizontalOptions="Center"
+                     VerticalOptions="Center"
+                     Spacing="8">
+
+                <Image Source="fin.png"
+             HeightRequest="160"
+             WidthRequest="160"
+             Aspect="AspectFit"
+             HorizontalOptions="Center" />
+
+                <Label Text="Fin"
+            TextColor="Black"
+            FontSize="18"
+            HorizontalTextAlignment="Center"
+            HorizontalOptions="Center" />
+
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding NavigateToPanelCommand}" />
+                </VerticalStackLayout.GestureRecognizers>
+            </VerticalStackLayout>
+        </Grid>
     </Grid>
 </ContentPage>

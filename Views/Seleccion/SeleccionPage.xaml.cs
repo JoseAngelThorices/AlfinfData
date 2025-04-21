@@ -1,4 +1,4 @@
-namespace AlfinfData.Views;
+namespace AlfinfData.Views.Seleccion;
 
 public partial class SeleccionPage : ContentPage
 {
