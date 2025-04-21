@@ -3,7 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AlfinfData.Views.Fin.FinPage"
              Title="FinPage"
-             BackgroundColor="#e9e9e9">
+             BackgroundColor="#e9e9e9"
+             Shell.NavBarIsVisible="True">
+
+    <!-- Oculta botón de volver -->
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsVisible="False" />
+    </Shell.BackButtonBehavior>
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="6">
