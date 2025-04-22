@@ -5,7 +5,7 @@
              Title="InicioPage"
              BackgroundColor="{StaticResource PageBackgroundColor}">
 
-    <!-- Oculta botón de volver -->
+    <!-- Oculta botón de volverr -->
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsVisible="False" />
     </Shell.BackButtonBehavior>
