@@ -66,6 +66,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Compile Update="Popups\HoraPopup.xaml.cs">
+		  <DependentUpon>HoraPopup.xaml</DependentUpon>
+		</Compile>
 		<Compile Update="Views\Configuracion\ConfiguracionPage.xaml.cs">
 		  <DependentUpon>ConfiguracionPage.xaml</DependentUpon>
 		</Compile>
@@ -87,6 +90,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<MauiXaml Update="Popups\HoraPopup.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\ConfiguracionPage.xaml" />
 		<MauiXaml Update="Views\InicioPage.xaml" />
 		<MauiXaml Update="Views\Inicio\DescargasPage.xaml">

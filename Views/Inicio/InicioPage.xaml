@@ -5,7 +5,7 @@
              Title="InicioPage"
              BackgroundColor="{StaticResource PageBackgroundColor}">
 
-    <!-- Oculta botón de volver -->
+    <!-- Oculta botón de volverr -->
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsVisible="False" />
     </Shell.BackButtonBehavior>
@@ -13,12 +13,13 @@
     <ScrollView>
         <VerticalStackLayout Margin="40" Spacing="20">
 
-            <Label Text="MENÚ INICIO"
+            <Label Text="{Binding Titulo}"
                    HorizontalOptions="Center"
                    FontSize="24"
                    FontAttributes="Bold"
                    TextColor="Black"
                    Margin="0,10"/>
+
 
             <!-- Botones en vertical -->
             <Button Text="NUEVO DÍA"
