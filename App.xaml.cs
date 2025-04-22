@@ -7,6 +7,9 @@ namespace AlfinfData
         public App()
         {
             InitializeComponent();
+            Application.Current.UserAppTheme = AppTheme.Light; //Tema Claro para todo el sistema.
+
+
         }
 
         protected override Window CreateWindow(IActivationState? activationState)

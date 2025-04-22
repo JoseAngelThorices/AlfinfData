@@ -1,45 +1,79 @@
-using System.Diagnostics;
-using AlfinfData.Views.Inicio;
+﻿using System.Diagnostics;
+using AlfinfData.Popups;
+using CommunityToolkit.Maui.Views;
+
 
 namespace AlfinfData.ViewModels
 {
     public class InicioViewModel : BindableObject
     {
+
+        private readonly Page _page;
+
+
+        //Guardar la hora del sistema en Modulo Inicio
+        private string _titulo;
+        public string Titulo
+        {
+            get => _titulo;
+            set
+            {
+                _titulo = value;
+                OnPropertyChanged();
+            }
+        }
         public Command NuevoDiaCommand { get; }
         public Command EntradaCommand { get; }
         public Command DescargasCommand { get; }
 
-        public InicioViewModel()
+        public InicioViewModel(Page page) // <- le pasas la página
         {
+            _page = page;
+
+            Titulo = "MENÚ INICIO";
+
             NuevoDiaCommand = new Command(async () => await OnNuevoDiaClicked());
             EntradaCommand = new Command(async () => await OnEntradaClicked());
             DescargasCommand = new Command(async () => await OnDescargasClicked());
         }
 
+
         private async Task OnNuevoDiaClicked()
         {
             try
             {
-                string password = await Shell.Current.DisplayPromptAsync(
-                    "Contrase�a requerida",
-                    "Introduce la contrase�a para registrar un nuevo d�a:",
+                string password = await _page.DisplayPromptAsync(
+                    "Contraseña requerida",
+                    "Introduce la contraseña para registrar un nuevo día:",
                     "Aceptar", "Cancelar", "",
                     maxLength: 10,
                     keyboard: Keyboard.Numeric);
 
                 if (password == "123")
                 {
-                    await Shell.Current.GoToAsync(nameof(NuevoDiaPage));
+                    // Mostrar popup para seleccionar hora
+                    var popup = new HoraPopup();
+                    var resultado = await _page.ShowPopupAsync(popup);
+
+                    if (resultado is TimeSpan horaSeleccionada)
+                    {
+                        var fechaHoy = DateTime.Today;
+                        var fechaHora = fechaHoy.Add(horaSeleccionada);
+
+                        Titulo = $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}"; // <-- ESTA LÍNEA CAMBIA EL TÍTULO
+
+                        await _page.DisplayAlert("Nuevo Día", $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}", "OK");
+
+                    }
                 }
                 else if (!string.IsNullOrWhiteSpace(password))
                 {
-                    await Shell.Current.DisplayAlert("Error", "Contrase�a incorrecta.", "OK");
+                    await _page.DisplayAlert("Error", "Contraseña incorrecta.", "OK");
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error al navegar: {ex.Message}");
-                await Shell.Current.DisplayAlert("Error", "No se pudo abrir Nuevo D�a", "OK");
+                await _page.DisplayAlert("Error", "No se pudo registrar el nuevo día", "OK");
             }
         }
 
