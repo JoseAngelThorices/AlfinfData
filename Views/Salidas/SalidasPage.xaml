@@ -1,19 +1,92 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="AlfinfData.Views.Horas.HorasPage"
-             Title="HorasPage">
-    <!-- Oculta botón de volver -->
-    <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsVisible="False" />
-    </Shell.BackButtonBehavior>
-    
-    <VerticalStackLayout>
-        <!-- Encabezado -->
-        <Label Text="Horas"
-        FontSize="24"
-        HorizontalOptions="Center"
-        TextColor="Black"
-        FontAttributes="Bold" />
-    </VerticalStackLayout>
+             x:Class="AlfinfData.Views.Salidas.SalidasPage"
+             Title="SalidasPage"
+             BackgroundColor="#e9e9e9">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="10" Spacing="10">
+
+            <!-- Fila superior-->
+            <HorizontalStackLayout Spacing="10" HeightRequest="45">
+                <Button Text="Salida"
+                        BackgroundColor="#ffff66"
+                        TextColor="Black"
+                        FontAttributes="Bold"
+                        HeightRequest="45"
+                        WidthRequest="270"
+                        HorizontalOptions="FillAndExpand" />
+
+                <Button Text="NO FALTA"
+                        BackgroundColor="#cfd8dc"
+                        TextColor="Black"
+                        FontAttributes="Bold"
+                        HeightRequest="45"
+                        WidthRequest="100"
+                        HorizontalOptions="End" />
+            </HorizontalStackLayout>
+
+            <!-- Fila hora y F. TAREA -->
+            <HorizontalStackLayout Spacing="10" HeightRequest="45">
+                <Button x:Name="HoraButton"
+                        Text="13:30"
+                        BackgroundColor="#50698a"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        WidthRequest="100"
+                        HeightRequest="45" />
+
+                <Button Text="F. TAREA"
+                        BackgroundColor="#e0e0e0"
+                        TextColor="Black"
+                        FontAttributes="Bold"
+                        WidthRequest="100"
+                        HeightRequest="45" />
+            </HorizontalStackLayout>
+
+            <!-- Cabecera de lista -->
+            <Grid ColumnDefinitions="50,*,Auto" Padding="5,0">
+                <Label Text="N.L." FontAttributes="Bold" TextColor="Black" />
+                <Label Text="Nombre" FontAttributes="Bold" TextColor="Black" Grid.Column="1" />
+                <Label Text="Hora" FontAttributes="Bold" TextColor="Black" Grid.Column="2" />
+            </Grid>
+
+            <!-- Lista principal vacía por ahora -->
+            <Frame CornerRadius="10"
+                   BorderColor="Gray"
+                   BackgroundColor="White"
+                   HeightRequest="380"
+                   Padding="5">
+                <CollectionView x:Name="ListaActual" SelectionMode="None">
+                    <!-- Aquí irían los datos si los tienes -->
+                </CollectionView>
+            </Frame>
+
+            <!-- Sección pendientes -->
+            <Label Text="Pendientes:"
+                   FontAttributes="Bold"
+                   TextColor="Black"
+                   Margin="0,5,0,0" />
+
+            <Frame CornerRadius="10"
+                   BorderColor="Gray"
+                   BackgroundColor="White"
+                   HeightRequest="200"
+                   Padding="5">
+                <CollectionView x:Name="ListaPendientes" SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="50,*,Auto" Padding="3">
+                                <Label Text="{Binding Numero}" TextColor="Black" />
+                                <Label Text="{Binding Nombre}" Grid.Column="1" TextColor="Black" />
+                                <Label Text="{Binding Tarea}" Grid.Column="2" TextColor="Black" />
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>
