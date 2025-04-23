@@ -32,7 +32,7 @@
 		<!-- Ícono personalizado -->
 		<MauiIcon Include="Resources\AppIcon\appicon.png" />
 		<!-- Splash -->
-		<MauiSplashScreen Include="Resources\Splash\splash.png" />
+		<MauiSplashScreen Include="Resources\Splash\splashh.png" Color="#ffffff" />
 		<!-- Imágenes -->
 		<MauiImage Include="Resources\Images\*" />
 		<!-- Fuentes -->
@@ -53,9 +53,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Remove="Resources\AppIcon\appicon.png" />
-		<None Remove="Resources\AppIcon\logo.jpg" />
-		<None Remove="Resources\Splash\splash.png" />
+	  <None Remove="Resources\AppIcon\appicon.png" />
+	  <None Remove="Resources\AppIcon\logo.jpg" />
+	  <None Remove="Resources\Splash\splashh.png" />
 	</ItemGroup>
 
 	<ItemGroup>
