@@ -1,8 +1,8 @@
-namespace AlfinfData.Views.Salidas;
+namespace AlfinfData.Views.Horas;
 
-public partial class SalidasPage : ContentPage
+public partial class HorasPage : ContentPage
 {
-	public SalidasPage()
+	public HorasPage()
 	{
 		InitializeComponent();
 	}
