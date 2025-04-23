@@ -74,8 +74,8 @@
 		<Compile Update="Views\Configuracion\ConfiguracionPage.xaml.cs">
 		  <DependentUpon>ConfiguracionPage.xaml</DependentUpon>
 		</Compile>
-		<Compile Update="Views\Horas\HorasPage.xaml.cs">
-		  <DependentUpon>HorasPage.xaml</DependentUpon>
+		<Compile Update="Views\Salidas\SalidasPage.xaml.cs">
+		  <DependentUpon>SalidasPage.xaml</DependentUpon>
 		</Compile>
 		<Compile Update="Views\Menu\MenuPage.xaml.cs">
 			<DependentUpon>MenuPage.xaml</DependentUpon>
@@ -83,8 +83,8 @@
 		<Compile Update="Views\Fin\FinPage.xaml.cs">
 		  <DependentUpon>FinPage.xaml</DependentUpon>
 		</Compile>
-		<Compile Update="Views\Salidas\SalidasPage.xaml.cs">
-		  <DependentUpon>SalidasPage.xaml</DependentUpon>
+		<Compile Update="Views\Horas\HorasPage.xaml.cs">
+		  <DependentUpon>HorasPage.xaml</DependentUpon>
 		</Compile>
 		<Compile Update="Views\Seleccion\SeleccionPage.xaml.cs">
 		  <DependentUpon>SeleccionPage.xaml</DependentUpon>
