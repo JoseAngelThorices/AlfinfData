@@ -1,23 +1,28 @@
-﻿using System.Net.Http.Json;
+﻿using System;
+using System.Net.Http.Json;
 using System.Text.Json;
 using AlfinfData.Models;
+using AlfinfData.Settings;
+using Microsoft.Extensions.Options;
 
 namespace AlfinfData.Services
 {
     public class OdooService
     {
         private readonly HttpClient _http;
-        private readonly string _db = "postgres";
-        private readonly string _user = "josedbourre@gmail.com";
-        private readonly string _password = "odoo";
+        private readonly OdooConfiguracion _cfg;
         private int _uid;
+        private bool _isLogged;
 
-        public OdooService(HttpClient http) => _http = http;
-
-        // 1) Autenticación: guarda el UID
-        public async Task LoginAsync()
+        public OdooService(HttpClient http, IOptions<OdooConfiguracion> cfg)
         {
-            if (_uid != 0) return; // ya autenticado
+            _http = http;
+            _cfg = cfg.Value;
+        }
+        private async Task LoginAsync()
+        {
+            // Si ya hicimos login, no volvemos a llamarlo
+            if (_isLogged) return;
 
             var payload = new
             {
@@ -27,7 +32,12 @@ namespace AlfinfData.Services
                 {
                     service = "common",
                     method = "login",
-                    args = new object[] { _db, _user, _password }
+                    args = new object[]
+                    {
+                    _cfg.Database,
+                    _cfg.Username,
+                    _cfg.Password
+                    }
                 },
                 id = 1
             };
@@ -37,63 +47,25 @@ namespace AlfinfData.Services
 
             using var doc = JsonDocument.Parse(await resp.Content.ReadAsStringAsync());
             _uid = doc.RootElement.GetProperty("result").GetInt32();
-            if (_uid == 0)
-                throw new Exception("Odoo: credenciales inválidas");
+            _isLogged = true;
         }
-
-        // 2) Lectura de empleados
-        public async Task<List<Empleado>> GetEmpleadosAsync()
+        public async Task<string?> TryLoginAsync()
         {
-            await LoginAsync();
-
-            var payload = new
+            try
             {
-                jsonrpc = "2.0",
-                method = "call",
-                @params = new
-                {
-                    service = "object",
-                    method = "execute_kw",
-                    args = new object[] {
-                    _db,
-                    _uid,
-                    _password,
-                    "hr.employee",     // modelo
-                    "search_read",     // método
-                    new object[] {
-                        new object[] { } // dominio vacío → todos
-                    },
-                    new {
-                        fields = new[] {
-                            "id", "name", "work_email", "job_id", "department_id"
-                        },
-                        limit = 100         // límite de registros
-                    }
-                }
-                },
-                id = 2
-            };
-
-            var resp = await _http.PostAsJsonAsync("/jsonrpc", payload);
-            resp.EnsureSuccessStatusCode();
-
-            using var doc = JsonDocument.Parse(await resp.Content.ReadAsStringAsync());
-            var array = doc.RootElement.GetProperty("result").EnumerateArray();
-
-            var lista = new List<Empleado>();
-            foreach (var item in array)
-            {
-                lista.Add(new Empleado
-                {
-                    Id = item.GetProperty("id").GetInt32(),
-                    Nombre = item.GetProperty("name").GetString()!,
-                    EmailTrabajo = item.GetProperty("work_email").GetString(),
-                    Puesto = item.GetProperty("job_id")[1].GetString()!,
-                    Departamento = item.GetProperty("department_id")[1].GetString()!
-                });
+                await LoginAsync();
+                return null;    // OK
             }
-            return lista;
+            catch (HttpRequestException httpEx)
+            {
+                // Incluye código de estado si lo hay
+                return $"HTTP {(int?)httpEx.StatusCode}: {httpEx.Message}";
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
         }
-
     }
+
 }
