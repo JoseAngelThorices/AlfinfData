@@ -117,7 +117,7 @@
             HorizontalOptions="Center" />
 
                 <VerticalStackLayout.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding NavigateToLectoresCommand}" />
+                    <TapGestureRecognizer Command="{Binding NavigateToHorasCommand}" />
                 </VerticalStackLayout.GestureRecognizers>
             </VerticalStackLayout>
 
@@ -142,7 +142,7 @@
                 HorizontalOptions="Center" />
 
                 <VerticalStackLayout.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding NavigateToTareasCommand}" />
+                    <TapGestureRecognizer Command="{Binding NavigateToSalidasCommand}" />
                 </VerticalStackLayout.GestureRecognizers>
             </VerticalStackLayout>
 
