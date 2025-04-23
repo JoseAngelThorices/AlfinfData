@@ -21,10 +21,10 @@ namespace AlfinfData.ViewModels
         private async Task NavigateToSeleccion() => await Shell.Current.GoToAsync(nameof(SeleccionPage));
 
         [RelayCommand]
-        private async Task NavigateToTareas() => await Shell.Current.GoToAsync(nameof(HorasPage));
+        private async Task NavigateToSalidas() => await Shell.Current.GoToAsync(nameof(SalidasPage));
 
         [RelayCommand]
-        private async Task NavigateToLectores() => await Shell.Current.GoToAsync(nameof(SalidasPage));
+        private async Task NavigateToHoras() => await Shell.Current.GoToAsync(nameof(HorasPage));
 
         [RelayCommand]
         private async Task NavigateToProduccion() => await Shell.Current.GoToAsync(nameof(ProduccionPage));
