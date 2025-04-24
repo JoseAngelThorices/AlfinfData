@@ -6,7 +6,7 @@ using AlfinfData.Models;
 using System.Diagnostics;
 using YourMauiApp.Models;
 
-namespace AlfinfData.Services
+namespace AlfinfData.Services.BdLocal
 {
     public class DatabaseService
     {

@@ -57,6 +57,11 @@ public static class MauiProgram
         builder.Services.AddScoped<IEmpleadosService, EmpleadosService>();
         builder.Services.AddTransient<DescargasViewModel>();
         builder.Services.AddTransient<DescargasPage>();
+        builder.Services.AddSingleton(sp =>
+        {
+            var path = Path.Combine(FileSystem.AppDataDirectory, "local.db3");
+            return new LocalDatabase(path);
+        });
 
 #if DEBUG
         builder.Logging.AddDebug();
