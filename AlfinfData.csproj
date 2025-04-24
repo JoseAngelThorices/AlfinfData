@@ -142,7 +142,7 @@
 	  </None>
 	</ItemGroup>
 	<ItemGroup>
-		<MauiAsset Include="appsettings.json" />
+		<MauiAsset Include="appsettings.json" CopyToOutputDirectory="Always" />
 	</ItemGroup>
 
 </Project>

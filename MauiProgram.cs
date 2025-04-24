@@ -1,14 +1,13 @@
 ﻿using AlfinfData;
-using AlfinfData.Services;
+using AlfinfData.Services.odoo;
 using AlfinfData.Settings;
+using AlfinfData.ViewModels;
+using AlfinfData.Views.Inicio;
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
-    
-
-
 
 public static class MauiProgram
 {
@@ -53,10 +52,11 @@ public static class MauiProgram
         // Acepta cualquier certificado SSL/TLS
         ServerCertificateCustomValidationCallback =
             HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-    }
-);
-
-
+            }
+        );
+        builder.Services.AddScoped<IEmpleadosService, EmpleadosService>();
+        builder.Services.AddTransient<DescargasViewModel>();
+        builder.Services.AddTransient<DescargasPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();
