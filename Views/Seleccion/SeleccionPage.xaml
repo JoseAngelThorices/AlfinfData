@@ -62,7 +62,7 @@
                 HeightRequest="550">
 
             <CollectionView x:Name="ListaUsuarios"
-                            ItemsSource="{Binding Lista}"
+                            ItemsSource="{Binding Empleados}"
                             SelectionMode="None">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>

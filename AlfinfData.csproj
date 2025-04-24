@@ -43,13 +43,24 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<!-- Limpieza carpeta temporal -->
-		<AndroidResource Remove="NewFolder1\**" />
-		<Compile Remove="NewFolder1\**" />
-		<EmbeddedResource Remove="NewFolder1\**" />
-		<MauiCss Remove="NewFolder1\**" />
-		<MauiXaml Remove="NewFolder1\**" />
-		<None Remove="NewFolder1\**" />
+	  <AndroidResource Remove="Files\**" />
+	  <AndroidResource Remove="NewFolder2\**" />
+	  <AndroidResource Remove="NewFolder\**" />
+	  <Compile Remove="Files\**" />
+	  <Compile Remove="NewFolder2\**" />
+	  <Compile Remove="NewFolder\**" />
+	  <EmbeddedResource Remove="Files\**" />
+	  <EmbeddedResource Remove="NewFolder2\**" />
+	  <EmbeddedResource Remove="NewFolder\**" />
+	  <MauiCss Remove="Files\**" />
+	  <MauiCss Remove="NewFolder2\**" />
+	  <MauiCss Remove="NewFolder\**" />
+	  <MauiXaml Remove="Files\**" />
+	  <MauiXaml Remove="NewFolder2\**" />
+	  <MauiXaml Remove="NewFolder\**" />
+	  <None Remove="Files\**" />
+	  <None Remove="NewFolder2\**" />
+	  <None Remove="NewFolder\**" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -62,6 +73,8 @@
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="11.2.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.4" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.4" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.4" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.50" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.3" />
@@ -121,6 +134,15 @@
 		<MauiXaml Update="Views\ProduccionPage.xaml" />
 		<MauiXaml Update="Views\SeleccionPage.xaml" />
 		<MauiXaml Update="Views\TareasPage.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="appsettings.json">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+	<ItemGroup>
+		<MauiAsset Include="appsettings.json" CopyToOutputDirectory="Always" />
 	</ItemGroup>
 
 </Project>
