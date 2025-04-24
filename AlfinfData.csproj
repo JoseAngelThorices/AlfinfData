@@ -118,6 +118,9 @@
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\ConfiguracionPage.xaml" />
+		<MauiXaml Update="Views\Horas\CalcularPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\InicioPage.xaml" />
 		<MauiXaml Update="Views\Inicio\DescargasPage.xaml">
 			<Generator>MSBuild:Compile</Generator>

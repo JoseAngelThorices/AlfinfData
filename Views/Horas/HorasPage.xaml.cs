@@ -1,9 +1,17 @@
-namespace AlfinfData.Views.Horas;
+using Microsoft.Maui.Controls;
 
-public partial class HorasPage : ContentPage
+namespace AlfinfData.Views.Horas
 {
-	public HorasPage()
-	{
-		InitializeComponent();
-	}
+    public partial class HorasPage : ContentPage
+    {
+        public HorasPage()
+        {
+            InitializeComponent();
+        }
+
+        private async void OnCalcularClicked(object sender, EventArgs e)
+        {
+            await Shell.Current.GoToAsync(nameof(CalcularPage));
+        }
+    }
 }

@@ -2,18 +2,63 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AlfinfData.Views.Horas.HorasPage"
-             Title="HorasPage">
-    <!-- Oculta botón de volver -->
+             BackgroundColor="#e9e9e9"
+             Title="Horas"
+             Shell.NavBarIsVisible="True">
+
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsVisible="False" />
     </Shell.BackButtonBehavior>
-    
-    <VerticalStackLayout>
-        <!-- Encabezado -->
-        <Label Text="Horas"
-        FontSize="24"
-        HorizontalOptions="Center"
-        TextColor="Black"
-        FontAttributes="Bold" />
-    </VerticalStackLayout>
+
+    <Grid Padding="10" RowSpacing="10" ColumnSpacing="10" RowDefinitions="Auto, Auto, 3*, *">
+
+        <!-- Fila amarilla con Picker y botón -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Padding="0,5">
+            <Picker x:Name="GrupoPicker"
+                    Title="Selecciona grupo"
+                    BackgroundColor="#fbffb8"
+                    TitleColor="Black"
+                    TextColor="Black"
+                    FontSize="16"
+                    HeightRequest="45"
+                    Margin="5"
+                    HorizontalOptions="FillAndExpand" />
+
+            <Button ImageSource="calcular.png"
+                    BackgroundColor="Transparent"
+                    WidthRequest="45"
+                    HeightRequest="45"
+                    Padding="0"
+                    Clicked="OnCalcularClicked"
+                    Grid.Column="1"
+                    HorizontalOptions="End"
+                    VerticalOptions="Center"
+                    CornerRadius="10" />
+        </Grid>
+
+        <!-- Cabecera tabla -->
+        <Grid Grid.Row="1" ColumnSpacing="5"
+              ColumnDefinitions="50,*,30,50,90,Auto"
+              Padding="7,0">
+            <Label Text="N.L." FontSize="12" TextColor="Black" FontAttributes="Bold" VerticalOptions="Center" Margin="5,1" />
+            <Label Text="Nombre" FontSize="12" TextColor="Black" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="1" Margin="5,1" />
+            <Label Text="HN" FontSize="12" TextColor="Black" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="2" HorizontalTextAlignment="Center" Margin="5,1" />
+            <Label Text="HE1" FontSize="12" TextColor="Black" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="3" HorizontalTextAlignment="Center" Margin="5,1" />
+            <Label Text="HE2" FontSize="12" TextColor="Black" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="4" HorizontalTextAlignment="Start" Margin="5,1" />
+            <Label Text="Falta" FontSize="12" TextColor="Black" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="5" Margin="5,1" />
+        </Grid>
+
+        <!-- Lista -->
+        <Frame Grid.Row="2"
+               Grid.RowSpan="2"
+               CornerRadius="10"
+               BorderColor="#a0a0a0"
+               BackgroundColor="White"
+               VerticalOptions="FillAndExpand"
+               HorizontalOptions="FillAndExpand"
+               Padding="5"
+               HasShadow="False">
+            <CollectionView x:Name="ListaHoras" SelectionMode="None" />
+        </Frame>
+    </Grid>
 </ContentPage>
