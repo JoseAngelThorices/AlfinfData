@@ -5,76 +5,72 @@
              Title="SeleccionPage"
              BackgroundColor="#e9e9e9">
 
-    <!-- Oculta botón de volver -->
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsVisible="False" />
     </Shell.BackButtonBehavior>
 
-    <VerticalStackLayout Padding="10" Spacing="10">
+    <ScrollView>
+        <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" 
+              Padding="10" 
+              RowSpacing="10">
 
-        <Label Text="SELECCION"
-               HorizontalOptions="Center"
-               FontSize="24"
-               FontAttributes="Bold"
-               TextColor="Black"
-               Margin="0,10"/>
+            <Picker x:Name="GrupoPicker"
+                    Grid.Row="1"
+                    Title="Selecciona grupo"
+                    BackgroundColor="#fbffb8"
+                    TitleColor="Black"
+                    TextColor="Black"
+                    HeightRequest="40"
+                    Margin="5" />
 
-        <!-- Picker sin Border -->
-        <Picker x:Name="GrupoPicker"
-                Title="Selecciona grupo"
-                BackgroundColor="#fbffb8"
-                TitleColor="Black"
-                TextColor="Black"
-                HeightRequest="40"
-                Margin="5" />
+            <Grid Grid.Row="2" 
+                  ColumnDefinitions="*,*" 
+                  ColumnSpacing="10">
+                <Button Text="SEL. TODOS"
+                        BackgroundColor="#71639e"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        CornerRadius="5"
+                        HeightRequest="40"
+                        Margin="5" />
 
-        <!-- Botones de Selección -->
-        <HorizontalStackLayout Spacing="10" HorizontalOptions="FillAndExpand">
-            <Button Text="SEL. TODOS"
-                    BackgroundColor="#71639e"
-                    TextColor="White"
-                    FontAttributes="Bold"
-                    CornerRadius="10"
-                    WidthRequest="185"
-                    HorizontalOptions="Start" />
+                <Button Text="QUITAR TODOS"
+                        BackgroundColor="#71639e"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        CornerRadius="5"
+                        HeightRequest="40"
+                        Grid.Column="1"
+                        Margin="5" />
+            </Grid>
 
-            <Button Text="QUITAR TODOS"
-                    BackgroundColor="#71639e"
-                    TextColor="White"
-                    FontAttributes="Bold"
-                    CornerRadius="10"
-                    WidthRequest="185"
-                    HorizontalOptions="End" />
-        </HorizontalStackLayout>
+            <Grid Grid.Row="3" 
+                  ColumnDefinitions="50,*,Auto" 
+                  Padding="5">
+                <Label Text="N.L." FontAttributes="Bold" TextColor="Black"/>
+                <Label Text="Nombre" FontAttributes="Bold" TextColor="Black" Grid.Column="1"/>
+                <Label Text="Activo" FontAttributes="Bold" TextColor="Black" Grid.Column="2"/>
+            </Grid>
 
-        <!-- Encabezado separado de la CollectionView -->
-        <Grid Padding="5" ColumnDefinitions="50,*,Auto">
-            <Label Text="N.L." FontAttributes="Bold" TextColor="Black"/>
-            <Label Text="Nombre" FontAttributes="Bold" TextColor="Black" Grid.Column="1"/>
-            <Label Text="Activo" FontAttributes="Bold" TextColor="Black" Grid.Column="2"/>
+            <Border Grid.Row="4"
+                    Stroke="LightGray"
+                    StrokeShape="RoundRectangle 10"
+                    BackgroundColor="White"
+                    Margin="5">
+                <CollectionView x:Name="ListaUsuarios"
+                              ItemsSource="{Binding Lista}"
+                              SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="10,5" ColumnDefinitions="50,*,Auto">
+                                <Label Text="{Binding Numero}" TextColor="Black"/>
+                                <Label Text="{Binding Nombre}" Grid.Column="1" TextColor="Black"/>
+                                <Switch IsToggled="{Binding Activo}" Grid.Column="2" HorizontalOptions="End"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Border>
         </Grid>
-
-        <!-- Lista con borde gris claro y esquinas redondeadas -->
-        <Border Stroke="LightGray"
-                StrokeShape="RoundRectangle 10"
-                BackgroundColor="White"
-                Padding="5"
-                HeightRequest="550">
-
-            <CollectionView x:Name="ListaUsuarios"
-                            ItemsSource="{Binding Lista}"
-                            SelectionMode="None">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Padding="5" ColumnDefinitions="50,*,Auto">
-                            <Label Text="{Binding Numero}" TextColor="Black"/>
-                            <Label Text="{Binding Nombre}" Grid.Column="1" TextColor="Black"/>
-                            <Switch IsToggled="{Binding Activo}" Grid.Column="2"/>
-                        </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </Border>
-
-    </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>
