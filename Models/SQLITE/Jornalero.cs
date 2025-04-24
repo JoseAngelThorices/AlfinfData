@@ -1,8 +1,8 @@
 using SQLite;
 
-namespace AlfinfData.Models
+namespace AlfinfData.Models.SQLITE
 {
-    public class jornalero
+    public class Jornalero
     {
         [PrimaryKey, AutoIncrement]
         public int IdJornalero { get; set; }

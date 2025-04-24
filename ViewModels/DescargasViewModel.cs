@@ -2,7 +2,7 @@
 using AlfinfData.Services.odoo;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using AlfinfData.Models;
+using AlfinfData.Models.Odoo;
 
 
 namespace AlfinfData.ViewModels
@@ -38,6 +38,7 @@ namespace AlfinfData.ViewModels
                 Empleados.Clear();
                 foreach (var e in lista)
                     Empleados.Add(e);
+                await Shell.Current.DisplayAlert("Success", "Se han bajado con exito los datos!", "OK");
             }
             catch (Exception ex)
             {

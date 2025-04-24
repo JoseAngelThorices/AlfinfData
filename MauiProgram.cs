@@ -1,5 +1,6 @@
 ﻿using AlfinfData;
 using AlfinfData.Services.odoo;
+using AlfinfData.Services.BdLocal;
 using AlfinfData.Settings;
 using AlfinfData.ViewModels;
 using AlfinfData.Views.Inicio;
@@ -57,11 +58,9 @@ public static class MauiProgram
         builder.Services.AddScoped<IEmpleadosService, EmpleadosService>();
         builder.Services.AddTransient<DescargasViewModel>();
         builder.Services.AddTransient<DescargasPage>();
-        builder.Services.AddSingleton(sp =>
-        {
-            var path = Path.Combine(FileSystem.AppDataDirectory, "local.db3");
-            return new LocalDatabase(path);
-        });
+
+        var dbPath = Path.Combine(FileSystem.AppDataDirectory, "BaseDeDatosLocal.db3");
+        builder.Services.AddSingleton(sp => new DatabaseService(dbPath));
 
 #if DEBUG
         builder.Logging.AddDebug();
