@@ -5,88 +5,94 @@
              Title="SalidasPage"
              BackgroundColor="#e9e9e9">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="10" Spacing="10">
+    <!-- Oculta botón de volver -->
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsVisible="False" />
+    </Shell.BackButtonBehavior>
 
-            <!-- Fila superior-->
-            <HorizontalStackLayout Spacing="10" HeightRequest="45">
-                <Button Text="Salida"
-                        BackgroundColor="#ffff66"
-                        TextColor="Black"
-                        FontAttributes="Bold"
-                        HeightRequest="45"
-                        WidthRequest="270"
-                        HorizontalOptions="FillAndExpand" />
+    <Grid RowDefinitions="Auto,Auto,Auto,2*,Auto,1*"
+          Padding="10"
+          RowSpacing="10"
+          ColumnSpacing="10">
 
-                <Button Text="NO FALTA"
-                        BackgroundColor="#cfd8dc"
-                        TextColor="Black"
-                        FontAttributes="Bold"
-                        HeightRequest="45"
-                        WidthRequest="100"
-                        HorizontalOptions="End" />
-            </HorizontalStackLayout>
+        <!-- Fila superior - Picker y Botón -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+            <Picker x:Name="GrupoPicker"
+                    Title="Selecciona grupo"
+                    BackgroundColor="#fbffb8"
+                    TitleColor="Black"
+                    TextColor="Black"
+                    HeightRequest="40"
+                    Margin="5" />
 
-            <!-- Fila hora y F. TAREA -->
-            <HorizontalStackLayout Spacing="10" HeightRequest="45">
-                <Button x:Name="HoraButton"
-                        Text="13:30"
-                        BackgroundColor="#50698a"
-                        TextColor="White"
-                        FontAttributes="Bold"
-                        WidthRequest="100"
-                        HeightRequest="45" />
+            <Button Text="NO FALTA"
+                    BackgroundColor="#209c0f"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    HeightRequest="40"
+                    Grid.Column="1"
+                    Margin="5" />
+        </Grid>
 
-                <Button Text="F. TAREA"
-                        BackgroundColor="#e0e0e0"
-                        TextColor="Black"
-                        FontAttributes="Bold"
-                        WidthRequest="100"
-                        HeightRequest="45" />
-            </HorizontalStackLayout>
+        <!-- Fila hora y F. TAREA -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,*">
+            <Button x:Name="HoraButton"
+                    Text="HORA"
+                    BackgroundColor="#71639e"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    HeightRequest="40"
+                    Margin="5"
+                    Clicked="OnHoraButtonClicked" />
 
-            <!-- Cabecera de lista -->
-            <Grid ColumnDefinitions="50,*,Auto" Padding="5,0">
-                <Label Text="N.L." FontAttributes="Bold" TextColor="Black" />
-                <Label Text="Nombre" FontAttributes="Bold" TextColor="Black" Grid.Column="1" />
-                <Label Text="Hora" FontAttributes="Bold" TextColor="Black" Grid.Column="2" />
-            </Grid>
+            <Button Text="F. TAREA"
+                    BackgroundColor="#c12727"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    HeightRequest="40"
+                    Grid.Column="1"
+                    Margin="5" />
+        </Grid>
 
-            <!-- Lista principal vacía por ahora -->
-            <Frame CornerRadius="10"
-                   BorderColor="Gray"
-                   BackgroundColor="White"
-                   HeightRequest="380"
-                   Padding="5">
-                <CollectionView x:Name="ListaActual" SelectionMode="None">
-                    <!-- Aquí irían los datos si los tienes -->
-                </CollectionView>
-            </Frame>
+        <!-- Cabecera de lista -->
+        <Grid Grid.Row="2" ColumnDefinitions="50,*,Auto" Padding="5,0">
+            <Label Text="N.L." FontAttributes="Bold" TextColor="Black" />
+            <Label Text="Nombre" FontAttributes="Bold" TextColor="Black" Grid.Column="1" />
+            <Label Text="Hora" FontAttributes="Bold" TextColor="Black" Grid.Column="2" />
+        </Grid>
 
-            <!-- Sección pendientes -->
-            <Label Text="Pendientes:"
-                   FontAttributes="Bold"
-                   TextColor="Black"
-                   Margin="0,5,0,0" />
+        <!-- Lista principal -->
+        <Border Grid.Row="3"
+                Stroke="Gray"
+                StrokeShape="RoundRectangle 10"
+                BackgroundColor="White"
+                Margin="5">
+            <CollectionView x:Name="ListaActual" SelectionMode="None" />
+        </Border>
 
-            <Frame CornerRadius="10"
-                   BorderColor="Gray"
-                   BackgroundColor="White"
-                   HeightRequest="200"
-                   Padding="5">
-                <CollectionView x:Name="ListaPendientes" SelectionMode="None">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid ColumnDefinitions="50,*,Auto" Padding="3">
-                                <Label Text="{Binding Numero}" TextColor="Black" />
-                                <Label Text="{Binding Nombre}" Grid.Column="1" TextColor="Black" />
-                                <Label Text="{Binding Tarea}" Grid.Column="2" TextColor="Black" />
-                            </Grid>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </Frame>
+        <!-- Sección pendientes -->
+        <Label Grid.Row="4"
+               Text="Pendientes:"
+               FontAttributes="Bold"
+               TextColor="Black"
+               Margin="5,10,5,0" />
 
-        </VerticalStackLayout>
-    </ScrollView>
+        <Border Grid.Row="5"
+                Stroke="Gray"
+                StrokeShape="RoundRectangle 10"
+                BackgroundColor="White"
+                Margin="5">
+            <CollectionView x:Name="ListaPendientes" SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="50,*,Auto" Padding="10,5">
+                            <Label Text="{Binding Numero}" TextColor="Black" />
+                            <Label Text="{Binding Nombre}" Grid.Column="1" TextColor="Black" />
+                            <Label Text="{Binding Tarea}" Grid.Column="2" TextColor="Black" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Border>
+    </Grid>
 </ContentPage>
