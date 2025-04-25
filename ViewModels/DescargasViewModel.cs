@@ -5,6 +5,7 @@ using AlfinfData.Models.SQLITE;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using AlfinfData.Models.Odoo;
+using System.Diagnostics;
 
 
 namespace AlfinfData.ViewModels
@@ -41,13 +42,17 @@ namespace AlfinfData.ViewModels
                 {
                     Nombre = o.Nombre,
                     IdCuadrilla = o.Id_Departamento,   
+                    IdOdoo = o.Id
                 }).ToList(); // ahora es List<Jornalero>
 
+                foreach (var j in listaLocal)
+                {
+                    Debug.WriteLine(
+                        $"[listaLocal] IdOdoo={j.IdOdoo}, Nombre=\"{j.Nombre}\", IdCuadrilla={j.IdCuadrilla}"
+                    );
+                }
                 await _jornaleroRepo.UpsertJornalerosAsync(listaLocal);
-                // Volcar en la ObservableCollection
-                Empleados.Clear();
-                foreach (var e in listaDesdeOdoo)
-                    Empleados.Add(e);
+                
                 await Shell.Current.DisplayAlert("Success", "Se han bajado con exito los datos!", "OK");
             }
             catch (Exception ex)

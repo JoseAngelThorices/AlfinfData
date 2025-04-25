@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
+using System.Net;
 
 public static class MauiProgram
 {
@@ -48,12 +49,19 @@ public static class MauiProgram
                   .Add(new MediaTypeWithQualityHeaderValue("application/json"));
         })
         .ConfigurePrimaryHttpMessageHandler(() =>
-            new HttpClientHandler
+
     {
-        // Acepta cualquier certificado SSL/TLS
-        ServerCertificateCustomValidationCallback =
+        return new HttpClientHandler
+        {
+            // <-- Importante: guardamos cookies de sesión
+            CookieContainer = new CookieContainer(),
+            UseCookies = true,
+
+            // Si necesitas aceptar certificados autofirmados:
+            ServerCertificateCustomValidationCallback =
             HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-            }
+        };
+    }
         );
         builder.Services.AddScoped<IEmpleadosService, EmpleadosService>();
         builder.Services.AddTransient<DescargasViewModel>();

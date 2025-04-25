@@ -1,4 +1,5 @@
-﻿using AlfinfData.Models.SQLITE;
+﻿using System.Diagnostics;
+using AlfinfData.Models.SQLITE;
 using SQLite;
 
 namespace AlfinfData.Services.BdLocal
@@ -14,12 +15,35 @@ namespace AlfinfData.Services.BdLocal
 
         public Task UpsertJornalerosAsync(IEnumerable<Jornalero> jornaleros)
         {
-            
+
             return _db.RunInTransactionAsync(conn =>
             {
+                
                 foreach (var j in jornaleros)
-                    conn.InsertOrReplace(j);
+                {
+                    // ¿Ya existe uno con este IdOdoo?
+                    var exist = conn
+                       .Table<Jornalero>()
+                       .FirstOrDefault(x => x.IdOdoo == j.IdOdoo);
+
+                    if (exist != null)
+                    {
+                        // Si existe, reutilizamos su IdJornalero y hacemos UPDATE
+                        j.IdJornalero = exist.IdJornalero;
+                        conn.Update(j);
+                    }
+                    else
+                    {
+                        // Si no existe, dejamos IdJornalero = 0 y hacemos INSERT
+                        conn.Insert(j);
+                    }
+                }
+                
+                // Para saber cuantos registros hay
+                 //var todos = conn.Table<Jornalero>().ToList();
+                 //Debug.WriteLine($"[BD] Total jornaleros tras upsert: {todos.Count}");
             });
+
         }
 
         public Task<List<Jornalero>> GetAllAsync()
