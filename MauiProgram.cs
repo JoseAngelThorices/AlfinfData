@@ -59,8 +59,13 @@ public static class MauiProgram
         builder.Services.AddTransient<DescargasViewModel>();
         builder.Services.AddTransient<DescargasPage>();
 
+        // Base de datos local
         var dbPath = Path.Combine(FileSystem.AppDataDirectory, "BaseDeDatosLocal.db3");
         builder.Services.AddSingleton(sp => new DatabaseService(dbPath));
+
+        // Repositorios de la base de datos local
+        builder.Services.AddTransient<JornaleroRepository>();
+
 
 #if DEBUG
         builder.Logging.AddDebug();

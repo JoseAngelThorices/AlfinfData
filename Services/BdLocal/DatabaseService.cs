@@ -20,5 +20,6 @@ namespace AlfinfData.Services.BdLocal
             _db.CreateTableAsync<Produccion>().GetAwaiter().GetResult();
             _db.CreateTableAsync<Fichaje>().GetAwaiter().GetResult();
         }
+        public SQLiteAsyncConnection Conn => _db;
     }
 }

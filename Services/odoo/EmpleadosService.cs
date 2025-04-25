@@ -29,7 +29,7 @@ namespace AlfinfData.Services.odoo
                     "hr.employee", // el modelo
                     "search_read", // el método
                     new object[] { new object[] { } }},
-                           kwargs: new { fields = new[] { "id", "name" } });
+                           kwargs: new { fields = new[] { "id", "name", "department_id" } });
 
             // 2) Mapear el JsonElement (que es un array) a List<Employee>
             var list = new List<Empleado>();
@@ -38,7 +38,8 @@ namespace AlfinfData.Services.odoo
                 list.Add(new Empleado
                 {
                     Id = item.GetProperty("id").GetInt32(),
-                    Nombre = item.GetProperty("name").GetString()!
+                    Nombre = item.GetProperty("name").GetString()!,
+                    Id_Departamento = item.GetProperty("department_id").GetInt32()!
                 });
             }
 

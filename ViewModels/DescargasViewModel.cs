@@ -1,5 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using AlfinfData.Services.odoo;
+using AlfinfData.Services.BdLocal;
+using AlfinfData.Models.SQLITE;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using AlfinfData.Models.Odoo;
@@ -7,20 +9,22 @@ using AlfinfData.Models.Odoo;
 
 namespace AlfinfData.ViewModels
 {
-    
+
 
     public partial class DescargasViewModel : ObservableObject
     {
-        private readonly IEmpleadosService _empleadosService;
-        public DescargasViewModel(IEmpleadosService empleadosService)
+        private readonly IEmpleadosService _empleadosService;    // servicio Odoo
+        private readonly JornaleroRepository _jornaleroRepo;      // repositorio SQLite
+        public DescargasViewModel(IEmpleadosService empleadosService, JornaleroRepository jornaleroRepo)
         {
             _empleadosService = empleadosService;
+            _jornaleroRepo = jornaleroRepo;
             Empleados = new ObservableCollection<Empleado>();
         }
-        
+
         public ObservableCollection<Empleado> Empleados { get; }
 
-       
+
         [ObservableProperty]
         private bool isBusy;
         private async Task CargarEmpleadosAsync()
@@ -31,12 +35,18 @@ namespace AlfinfData.ViewModels
             try
             {
                 isBusy = true;
-                
-                var lista = await _empleadosService.GetAllAsync();
 
+                var listaDesdeOdoo = await _empleadosService.GetAllAsync();
+                var listaLocal = listaDesdeOdoo.Select(o => new Jornalero
+                {
+                    Nombre = o.Nombre,
+                    IdCuadrilla = o.Id_Departamento,   
+                }).ToList(); // ahora es List<Jornalero>
+
+                await _jornaleroRepo.UpsertJornalerosAsync(listaLocal);
                 // Volcar en la ObservableCollection
                 Empleados.Clear();
-                foreach (var e in lista)
+                foreach (var e in listaDesdeOdoo)
                     Empleados.Add(e);
                 await Shell.Current.DisplayAlert("Success", "Se han bajado con exito los datos!", "OK");
             }
@@ -52,7 +62,7 @@ namespace AlfinfData.ViewModels
         }
 
         [RelayCommand]
-        private async  void Entrada()
+        private async void Entrada()
         {
             await CargarEmpleadosAsync();
         }
