@@ -1,9 +1,9 @@
 using SQLite;
 using System;
 
-namespace AlfinfData.Models
+namespace AlfinfData.Models.SQLITE
 {
-    public class fichaje
+    public class Fichaje
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }

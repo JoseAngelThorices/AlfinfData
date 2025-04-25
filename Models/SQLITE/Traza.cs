@@ -1,8 +1,8 @@
 using SQLite;
 
-namespace AlfinfData.Models
+namespace AlfinfData.Models.SQLITE
 {
-    public class traza
+    public class Traza
     {
         [PrimaryKey, AutoIncrement]
         public int IdTraza { get; set; }

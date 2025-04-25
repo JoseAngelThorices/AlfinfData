@@ -1,9 +1,9 @@
 using SQLite;
 using System;
 
-namespace YourMauiApp.Models
+namespace AlfinfData.Models.SQLITE
 {
-    public class produccion
+    public class Produccion
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }

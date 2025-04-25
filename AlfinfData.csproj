@@ -43,34 +43,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <AndroidResource Remove="Files\**" />
-	  <AndroidResource Remove="NewFolder2\**" />
-	  <AndroidResource Remove="NewFolder\**" />
-	  <Compile Remove="Files\**" />
-	  <Compile Remove="NewFolder2\**" />
-	  <Compile Remove="NewFolder\**" />
-	  <EmbeddedResource Remove="Files\**" />
-	  <EmbeddedResource Remove="NewFolder2\**" />
-	  <EmbeddedResource Remove="NewFolder\**" />
-	  <MauiCss Remove="Files\**" />
-	  <MauiCss Remove="NewFolder2\**" />
-	  <MauiCss Remove="NewFolder\**" />
-	  <MauiXaml Remove="Files\**" />
-	  <MauiXaml Remove="NewFolder2\**" />
-	  <MauiXaml Remove="NewFolder\**" />
-	  <None Remove="Files\**" />
-	  <None Remove="NewFolder2\**" />
-	  <None Remove="NewFolder\**" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Platforms\Android\Resources\xml\network_security_config.xml" />
-	  <None Remove="Resources\AppIcon\appicon.png" />
-	  <None Remove="Resources\AppIcon\logo.jpg" />
-	  <None Remove="Resources\Splash\splashh.png" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="11.2.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.4" />

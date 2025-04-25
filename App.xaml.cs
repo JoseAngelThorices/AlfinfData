@@ -1,10 +1,10 @@
-﻿using AlfinfData.Views;
+﻿using AlfinfData.Services.BdLocal;
 
 namespace AlfinfData
 {
     public partial class App : Application
     {
-        public App()
+        public App(DatabaseService dbService)
         {
             InitializeComponent();
             Application.Current.UserAppTheme = AppTheme.Light; //Tema Claro para todo el sistema.

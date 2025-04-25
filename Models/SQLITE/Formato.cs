@@ -1,11 +1,11 @@
 using SQLite;
 
-namespace AlfinfData.Models
+namespace AlfinfData.Models.SQLITE
 {
-    public class cuadrilla
+    public class Formato
     {
         [PrimaryKey, AutoIncrement]
-        public int IdCuadrilla { get; set; }
+        public int IdFormato { get; set; }
         public string Descripcion { get; set; }
     }
 }
