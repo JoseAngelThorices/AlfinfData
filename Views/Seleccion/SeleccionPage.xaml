@@ -45,7 +45,7 @@
             </Grid>
 
             <Grid Grid.Row="3" 
-                  ColumnDefinitions="50,*,Auto" 
+                  ColumnDefinitions="70,*,Auto" 
                   Padding="5">
                 <Label Text="N.L." FontAttributes="Bold" TextColor="Black"/>
                 <Label Text="Nombre" FontAttributes="Bold" TextColor="Black" Grid.Column="1"/>
@@ -53,7 +53,7 @@
             </Grid>
 
             <Border Grid.Row="4"
-                    Stroke="LightGray"
+                    Stroke="#a0a0a0"
                     StrokeShape="RoundRectangle 10"
                     BackgroundColor="White"
                     Margin="5">
@@ -62,8 +62,10 @@
                               SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <Grid Padding="10,5" ColumnDefinitions="50,*,Auto">
+
+                            <Grid Padding="8" ColumnDefinitions="50,*,Auto">
                                 <Label Text="{Binding IdJornalero}" TextColor="Black"/>
+
                                 <Label Text="{Binding Nombre}" Grid.Column="1" TextColor="Black"/>
                                 <Switch IsToggled="{Binding TarjetaNFC}" Grid.Column="2" HorizontalOptions="End"/>
                             </Grid>

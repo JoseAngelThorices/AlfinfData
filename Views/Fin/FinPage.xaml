@@ -79,22 +79,24 @@
                 Grid.Row="3" />
 
         <!-- Resultado -->
-        <Frame BorderColor="#a0a0a0"
-               CornerRadius="10"
-               BackgroundColor="White"
-               Padding="10"
-               Grid.Row="4"
-               Grid.RowSpan="3"
-               VerticalOptions="FillAndExpand"
-               HorizontalOptions="FillAndExpand">
+        <!-- Resultado completamente plano -->
+        <Border Stroke="#a0a0a0"
+        StrokeThickness="1"
+        BackgroundColor="White"
+        StrokeShape="RoundRectangle 10"
+        Padding="10"
+        Grid.Row="4"
+        Grid.RowSpan="3"
+        VerticalOptions="FillAndExpand"
+        HorizontalOptions="FillAndExpand">
             <ScrollView>
                 <Label x:Name="ResultadoLabel"
-                       Text=""
-                       FontSize="16"
-                       TextColor="Black"
-                       VerticalOptions="FillAndExpand"
-                       HorizontalOptions="FillAndExpand" />
+               Text=""
+               FontSize="16"
+               TextColor="Black"
+               VerticalOptions="FillAndExpand"
+               HorizontalOptions="FillAndExpand" />
             </ScrollView>
-        </Frame>
+        </Border>
     </Grid>
 </ContentPage>

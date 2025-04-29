@@ -2,18 +2,12 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AlfinfData.Views.Produccion.ProduccionPage"
-             Title="ProduccionPage">
+             BackgroundColor="#f0f0f0"
+             Title="Producción">
+
     <!-- Oculta botón de volver -->
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsVisible="False" />
     </Shell.BackButtonBehavior>
 
-    <VerticalStackLayout>
-        <!-- Encabezado -->
-        <Label Text="Produccion"
-        FontSize="24"
-        HorizontalOptions="Center"
-        TextColor="Black"
-        FontAttributes="Bold" />
-    </VerticalStackLayout>
 </ContentPage>
