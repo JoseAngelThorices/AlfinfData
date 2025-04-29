@@ -21,6 +21,7 @@ public partial class SeleccionPage : ContentPage
         {
             await _viewModel.CargarEmpleadosAsync();
         }
+        await _viewModel.CargarCuadrillaAsync();
     }
 
 }

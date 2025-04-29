@@ -14,16 +14,22 @@ namespace AlfinfData.ViewModels
 
     public partial class DescargasViewModel : ObservableObject
     {
-        private readonly IEmpleadosService _empleadosService;    // servicio Odoo
+        private readonly IEmpleadosService _empleadosService;     // servicio Odoo Empleado
+        private readonly ICuadrillasService _cuadrillaService;    // servicio Odoo Cuadrilla
         private readonly JornaleroRepository _jornaleroRepo;      // repositorio SQLite
-        public DescargasViewModel(IEmpleadosService empleadosService, JornaleroRepository jornaleroRepo)
+        private readonly CuadrillaRepository _cuadrillaRepo;
+        public DescargasViewModel(IEmpleadosService empleadosService, ICuadrillasService cuadrillaService, JornaleroRepository jornaleroRepo, CuadrillaRepository cuadrillaRepo)
         {
             _empleadosService = empleadosService;
+            _cuadrillaService = cuadrillaService;
             _jornaleroRepo = jornaleroRepo;
+            _cuadrillaRepo = cuadrillaRepo;
             Empleados = new ObservableCollection<Empleado>();
+            Cuadrillas = new ObservableCollection<CuadrillaOdoo>();
         }
 
         public ObservableCollection<Empleado> Empleados { get; }
+        public ObservableCollection<CuadrillaOdoo> Cuadrillas { get; }
 
 
         [ObservableProperty]
@@ -74,7 +80,43 @@ namespace AlfinfData.ViewModels
         [RelayCommand]
         private async void Cuadrilla()
         {
-            await CargarEmpleadosAsync();
+            await CargarCuadrillaAsync();
+        }
+        private async Task CargarCuadrillaAsync()
+        {
+            if (IsBusy)
+                return;
+
+            try
+            {
+                isBusy = true;
+
+                var listaDesdeOdoo = await _cuadrillaService.GetAllAsync();
+                var listaLocal = listaDesdeOdoo.Select(o => new Cuadrilla
+                {
+                    Descripcion = o.Descripcion,
+                    IdOdoo = o.IdCuadrilla
+                }).ToList(); // ahora es List<Cuadrilla>
+                //Para ver los datos que se estan pasando por la terminal de salida
+                foreach (var j in listaLocal)
+                {
+                   Debug.WriteLine(
+                        $"[listaLocal] IdOdoo={j.IdOdoo}, Nombre=\"{j.Descripcion}\""
+                    );
+                }
+                await _cuadrillaRepo.UpsertCuadrillaAsync(listaLocal);
+
+                await Shell.Current.DisplayAlert("Success", "Se han bajado con exito los datos!", "OK");
+            }
+            catch (Exception ex)
+            {
+                // Mostrar alerta de error, log, etc.
+                await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+            }
+            finally
+            {
+                isBusy = false;
+            }
         }
 
 

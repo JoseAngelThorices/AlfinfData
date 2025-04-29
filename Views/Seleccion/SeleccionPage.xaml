@@ -21,7 +21,11 @@
                     TitleColor="Black"
                     TextColor="Black"
                     HeightRequest="40"
-                    Margin="5" />
+                    Margin="5" 
+                    ItemsSource="{Binding Cuadrillas}"
+                    ItemDisplayBinding="{Binding Descripcion}"
+                    SelectedItem="{Binding CuadrillaSeleccionada, Mode=TwoWay}"
+                    />
 
             <Grid Grid.Row="2" 
                   ColumnDefinitions="*,*" 
