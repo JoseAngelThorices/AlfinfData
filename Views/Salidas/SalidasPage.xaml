@@ -55,7 +55,7 @@
         </Grid>
 
         <!-- Cabecera de lista -->
-        <Grid Grid.Row="2" ColumnDefinitions="50,*,Auto" Padding="5,0">
+        <Grid Grid.Row="2" ColumnDefinitions="70,*,Auto" Padding="5,0">
             <Label Text="N.L." FontAttributes="Bold" TextColor="Black" />
             <Label Text="Nombre" FontAttributes="Bold" TextColor="Black" Grid.Column="1" />
             <Label Text="Hora" FontAttributes="Bold" TextColor="Black" Grid.Column="2" />
@@ -63,7 +63,7 @@
 
         <!-- Lista principal -->
         <Border Grid.Row="3"
-                Stroke="Gray"
+                Stroke="#a0a0a0"
                 StrokeShape="RoundRectangle 10"
                 BackgroundColor="White"
                 Margin="5">
@@ -78,7 +78,7 @@
                Margin="5,10,5,0" />
 
         <Border Grid.Row="5"
-                Stroke="Gray"
+                Stroke="#a0a0a0"
                 StrokeShape="RoundRectangle 10"
                 BackgroundColor="White"
                 Margin="5">
