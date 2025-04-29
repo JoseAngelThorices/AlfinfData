@@ -53,18 +53,20 @@ public static class MauiProgram
     {
         return new HttpClientHandler
         {
-            // <-- Importante: guardamos cookies de sesión
+            // Guardamos cookies de sesión para poder usarla cada vez que hagamos peticiones a Odoo.
             CookieContainer = new CookieContainer(),
             UseCookies = true,
 
-            // Si necesitas aceptar certificados autofirmados:
+            // Esto sirve para poder usar conexiones https, pero evitando el validacion de certificación.
             ServerCertificateCustomValidationCallback =
             HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
         };
     }
         );
         builder.Services.AddScoped<IEmpleadosService, EmpleadosService>();
+
         builder.Services.AddTransient<DescargasViewModel>();
+        builder.Services.AddTransient<SeleccionViewModels>();
         builder.Services.AddTransient<DescargasPage>();
 
         // Base de datos local
