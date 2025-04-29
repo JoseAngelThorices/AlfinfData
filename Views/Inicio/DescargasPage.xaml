@@ -23,7 +23,7 @@
 
             <Button Text="CUADRILLAS"
                     Grid.Row="1"
-                    Command="{Binding NuevoDiaCommand}"
+                    Command="{Binding CuadrillaCommand}"
                     BackgroundColor="#71639e"
                     TextColor="White"
                     FontSize="20"

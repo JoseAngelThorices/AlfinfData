@@ -30,13 +30,14 @@ namespace AlfinfData.Services.odoo
             {
                 domain = new object[][]
         {
-            new object[] { "department_id", "=", 3 }
+            new object[] { "department_id", "in", new object[] { 3, 4 } }
         },
                 fields = new[]
         {
             "id",
             "name",
-            "department_id"
+            "department_id",
+            "active"
         },
                 order = "name",
                 offset = 0
