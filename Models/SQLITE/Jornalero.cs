@@ -11,6 +11,6 @@ namespace AlfinfData.Models.SQLITE
         public int? IdOdoo { get; set; }          
         public string? Nombre { get; set; }
         public int? NumeroLista { get; set; }
-        public string? TarjetaNFC { get; set; }
+        public Boolean TarjetaNFC { get; set; }
     }
 }

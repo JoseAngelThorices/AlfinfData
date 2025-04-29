@@ -57,15 +57,15 @@
                     StrokeShape="RoundRectangle 10"
                     BackgroundColor="White"
                     Margin="5">
-                <CollectionView x:Name="ListaUsuarios"
-                              ItemsSource="{Binding Lista}"
+                <CollectionView x:Name="ListaDeJornaleros"
+                              ItemsSource="{Binding Jornaleros}"
                               SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Grid Padding="10,5" ColumnDefinitions="50,*,Auto">
-                                <Label Text="{Binding Numero}" TextColor="Black"/>
+                                <Label Text="{Binding IdJornalero}" TextColor="Black"/>
                                 <Label Text="{Binding Nombre}" Grid.Column="1" TextColor="Black"/>
-                                <Switch IsToggled="{Binding Activo}" Grid.Column="2" HorizontalOptions="End"/>
+                                <Switch IsToggled="{Binding TarjetaNFC}" Grid.Column="2" HorizontalOptions="End"/>
                             </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

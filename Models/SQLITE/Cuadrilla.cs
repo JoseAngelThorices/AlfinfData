@@ -7,6 +7,7 @@ namespace AlfinfData.Models.SQLITE
     {
         [PrimaryKey, AutoIncrement]
         public int IdCuadrilla { get; set; }
-        public string Descripcion { get; set; }
+        public int idOdoo { get; set; }
+        public string? Descripcion { get; set; }
     }
 }
