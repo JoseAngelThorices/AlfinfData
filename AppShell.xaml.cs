@@ -25,7 +25,6 @@ namespace AlfinfData
             Routing.RegisterRoute(nameof(InicioPage), typeof(InicioPage));
             Routing.RegisterRoute(nameof(EntradaPage), typeof(EntradaPage));
             Routing.RegisterRoute(nameof(DescargasPage), typeof(DescargasPage));
-            Routing.RegisterRoute(nameof(NuevoDiaPage), typeof(NuevoDiaPage));
             Routing.RegisterRoute(nameof(HorasPage), typeof(HorasPage));
             Routing.RegisterRoute(nameof(FinPage), typeof(FinPage));
             Routing.RegisterRoute(nameof(MainPage), typeof(MainPage));
@@ -40,7 +39,22 @@ namespace AlfinfData
         // Botón izquierdo: Volver a MainPage
         private async void OnBackToMainClicked(object sender, EventArgs e)
         {
-            await GoToAsync("//MainPage");
+            await Shell.Current.GoToAsync("///main");
+
+
         }
+
+        private void OnMenuClicked(object sender, EventArgs e)
+        {
+            Shell.Current.FlyoutIsPresented = true; // Abre el menú lateral
+        }
+
+
+        //Salir de la apk por el menu desplegable 
+        private void OnSalirClicked(object sender, EventArgs e)
+        {
+            Application.Current.Quit(); 
+        }
+
     }
 }

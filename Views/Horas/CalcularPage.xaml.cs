@@ -9,15 +9,35 @@ namespace AlfinfData.Views.Horas
             InitializeComponent();
         }
 
-        // Botón de selección (SI/NO)
+        // Botón de A. Selección (verde)
         private void OnSeleccionToggled(object sender, EventArgs e)
         {
             var button = (Button)sender;
             button.Text = button.Text == "SI" ? "NO" : "SI";
             button.BackgroundColor = button.Text == "SI"
-                ? Color.FromHex("#3cb043")
-                : Color.FromHex("#ff4444");
+                ? Color.FromHex("#1a8a22")  // Verde
+                : Color.FromHex("#cdcdcd"); // Gris
         }
+
+        // Botón de Falta (inicia vacío, alterna SI/vacío)
+        private void OnFaltaToggled(object sender, EventArgs e)
+        {
+            var button = (Button)sender;
+
+            if (string.IsNullOrWhiteSpace(button.Text))
+            {
+                // Si está vacío, poner "SI" y color verde
+                button.Text = "SI";
+                button.BackgroundColor = Color.FromHex("#1a8a22"); // Verde
+            }
+            else
+            {
+                // Si tiene "SI", limpiar y poner gris
+                button.Text = "";
+                button.BackgroundColor = Color.FromHex("#cdcdcd"); // Gris
+            }
+        }
+
 
         private void OnNumeroClicked(object sender, EventArgs e)
         {

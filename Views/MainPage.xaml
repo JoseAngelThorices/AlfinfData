@@ -3,172 +3,111 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:AlfinfData.ViewModels"
              x:Class="AlfinfData.Views.MainPage"
-             Title="MainPage">
+             Title="MainPage"
+             BackgroundColor="{StaticResource PageBackgroundColor}">
 
-    <ContentPage.BindingContext>
-        <viewmodels:MainViewModel/>
-    </ContentPage.BindingContext>
+    <ScrollView>
+        <Grid Padding="30" RowDefinitions="Auto,*" ColumnDefinitions="*" VerticalOptions="FillAndExpand">
 
-    <Grid RowDefinitions="Auto,*,Auto"
-          BackgroundColor="{StaticResource PageBackgroundColor}">
+            <Grid Grid.Row="1"
+                  ColumnDefinitions="*,*"
+                  RowDefinitions="Auto,Auto,Auto"
+                  ColumnSpacing="50"
+                  RowSpacing="50"
+                  VerticalOptions="Center"
+                  HorizontalOptions="Center">
 
+                <!-- INICIO -->
+                <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="15" HorizontalOptions="Center">
+                    <Image Source="inicio.png"
+                           Aspect="AspectFit"
+                           HeightRequest="140"
+                           WidthRequest="140" />
+                    <Label Text="Inicio"
+                           FontSize="18"
+                           TextColor="Black"
+                           HorizontalTextAlignment="Center" />
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NavigateToInicioCommand}" />
+                    </VerticalStackLayout.GestureRecognizers>
+                </VerticalStackLayout>
 
-        <!-- Contenedor principal de botones estilo "Inicio" -->
-        <Grid Grid.Row="1" RowDefinitions="*,*,*"
+                <!-- SELECCIÓN -->
+                <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="15" HorizontalOptions="Center">
+                    <Image Source="seleccion.png"
+                           Aspect="AspectFit"
+                           HeightRequest="140"
+                           WidthRequest="140" />
+                    <Label Text="Selección"
+                           FontSize="18"
+                           TextColor="Black"
+                           HorizontalTextAlignment="Center" />
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NavigateToSeleccionCommand}" />
+                    </VerticalStackLayout.GestureRecognizers>
+                </VerticalStackLayout>
 
-              ColumnDefinitions="*,*"
-              RowSpacing="15"
-              ColumnSpacing="15"
-              Padding="20"
-              VerticalOptions="Center">
+                <!-- PRODUCCIÓN -->
+                <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="15" HorizontalOptions="Center">
+                    <Image Source="produccion.png"
+                           Aspect="AspectFit"
+                           HeightRequest="140"
+                           WidthRequest="140" />
+                    <Label Text="Producción"
+                           FontSize="18"
+                           TextColor="Black"
+                           HorizontalTextAlignment="Center" />
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NavigateToProduccionCommand}" />
+                    </VerticalStackLayout.GestureRecognizers>
+                </VerticalStackLayout>
 
-            <!-- Fila 1 -->
+                <!-- HORAS -->
+                <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="15" HorizontalOptions="Center">
+                    <Image Source="hora.png"
+                           Aspect="AspectFit"
+                           HeightRequest="140"
+                           WidthRequest="140" />
+                    <Label Text="Horas"
+                           FontSize="18"
+                           TextColor="Black"
+                           HorizontalTextAlignment="Center" />
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NavigateToHorasCommand}" />
+                    </VerticalStackLayout.GestureRecognizers>
+                </VerticalStackLayout>
 
-            <!-- Botón Inicio -->
-
-            <VerticalStackLayout Grid.Row="0" Grid.Column="0"
-                                 HorizontalOptions="Center"
-                                 VerticalOptions="Center"
-                                 Spacing="8">
-
-                <Image Source="inicio.png"
-
-                       HeightRequest="160"
-                       WidthRequest="160"
-                       Aspect="AspectFit"
-                       HorizontalOptions="Center" />
-
-                <Label Text="Inicio"
-                       TextColor="Black"
-                       FontSize="18"
-                       HorizontalTextAlignment="Center"
-                       HorizontalOptions="Center" />
-
-
-                <VerticalStackLayout.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding NavigateToInicioCommand}" />
-                </VerticalStackLayout.GestureRecognizers>
-            </VerticalStackLayout>
-
-            <!-- Botón Selección -->
-            <VerticalStackLayout Grid.Row="0" Grid.Column="1"
-                     HorizontalOptions="Center"
-                     VerticalOptions="Center"
-                     Spacing="8">
-
-                <Image Source="seleccion.png"
-             HeightRequest="160"
-             WidthRequest="160"
-             Aspect="AspectFit"
-             HorizontalOptions="Center" />
-
-                <Label Text="Selección"
-            TextColor="Black"
-            FontSize="18"
-            HorizontalTextAlignment="Center"
-            HorizontalOptions="Center" />
-
-                <VerticalStackLayout.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding NavigateToSeleccionCommand}" />
-                </VerticalStackLayout.GestureRecognizers>
-            </VerticalStackLayout>
-
-            <!-- Fila 2 -->
-
-            <!-- Botón Producción -->
-            <VerticalStackLayout Grid.Row="1" Grid.Column="0"
-         HorizontalOptions="Center"
-         VerticalOptions="Center"
-         Spacing="8">
-
-                <Image Source="produccion.png"
-                 HeightRequest="160"
-                 WidthRequest="160"
-                 Aspect="AspectFit"
-                 HorizontalOptions="Center" />
-
-                                <Label Text="Producción"
-                TextColor="Black"
-                FontSize="18"
-                HorizontalTextAlignment="Center"
-                HorizontalOptions="Center" />
-
-                <VerticalStackLayout.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding NavigateToProduccionCommand}" />
-                </VerticalStackLayout.GestureRecognizers>
-            </VerticalStackLayout>
-
-            <!-- Botón Horas -->
-            <VerticalStackLayout Grid.Row="1" Grid.Column="1"
-                     HorizontalOptions="Center"
-                     VerticalOptions="Center"
-                     Spacing="8">
-
-             <Image Source="hora.png"
-             HeightRequest="160"
-             WidthRequest="160"
-             Aspect="AspectFit"
-             HorizontalOptions="Center" />
-
-                <Label Text="Horas"
-            TextColor="Black"
-            FontSize="18"
-            HorizontalTextAlignment="Center"
-            HorizontalOptions="Center" />
-
-                <VerticalStackLayout.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding NavigateToHorasCommand}" />
-                </VerticalStackLayout.GestureRecognizers>
-            </VerticalStackLayout>
-
-            <!-- Fila 3 -->
-
-            <!-- Botón Salidas -->
-            <VerticalStackLayout Grid.Row="2" Grid.Column="0"
-         HorizontalOptions="Center"
-         VerticalOptions="Center"
-         Spacing="8">
-
+                <!-- SALIDAS -->
+                <VerticalStackLayout Grid.Row="2" Grid.Column="0" Spacing="15" HorizontalOptions="Center">
                     <Image Source="salidas.png"
-                 HeightRequest="160"
-                 WidthRequest="160"
-                 Aspect="AspectFit"
-                 HorizontalOptions="Center" />
-
+                           Aspect="AspectFit"
+                           HeightRequest="140"
+                           WidthRequest="140" />
                     <Label Text="Salidas"
-                TextColor="Black"
-                FontSize="18"
-                HorizontalTextAlignment="Center"
-                HorizontalOptions="Center" />
+                           FontSize="18"
+                           TextColor="Black"
+                           HorizontalTextAlignment="Center" />
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NavigateToSalidasCommand}" />
+                    </VerticalStackLayout.GestureRecognizers>
+                </VerticalStackLayout>
 
-                <VerticalStackLayout.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding NavigateToSalidasCommand}" />
-                </VerticalStackLayout.GestureRecognizers>
-            </VerticalStackLayout>
+                <!-- FIN -->
+                <VerticalStackLayout Grid.Row="2" Grid.Column="1" Spacing="15" HorizontalOptions="Center">
+                    <Image Source="fin.png"
+                           Aspect="AspectFit"
+                           HeightRequest="140"
+                           WidthRequest="140" />
+                    <Label Text="Fin"
+                           FontSize="18"
+                           TextColor="Black"
+                           HorizontalTextAlignment="Center" />
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NavigateToPanelCommand}" />
+                    </VerticalStackLayout.GestureRecognizers>
+                </VerticalStackLayout>
 
-            <!-- Fin -->
-            <VerticalStackLayout Grid.Row="2" Grid.Column="1"
-                     HorizontalOptions="Center"
-                     VerticalOptions="Center"
-                     Spacing="8">
-
-                <Image Source="fin.png"
-             HeightRequest="160"
-             WidthRequest="160"
-             Aspect="AspectFit"
-             HorizontalOptions="Center" />
-
-                <Label Text="Fin"
-            TextColor="Black"
-            FontSize="18"
-            HorizontalTextAlignment="Center"
-            HorizontalOptions="Center" />
-
-                <VerticalStackLayout.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding NavigateToPanelCommand}" />
-                </VerticalStackLayout.GestureRecognizers>
-            </VerticalStackLayout>
-
+            </Grid>
         </Grid>
-    </Grid>
+    </ScrollView>
 </ContentPage>
