@@ -23,9 +23,7 @@ namespace AlfinfData.Views.Inicio
                 var fechaHoy = DateTime.Today;
                 var fechaHora = fechaHoy.Add(horaSeleccionada);
 
-                await DisplayAlert("Nuevo Día", $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}", "OK");  
-
-                // Aquí puedes usar `fechaHora` para lo que necesites
+                await DisplayAlert("Nuevo DÃ­a", $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}", "OK");
             }
         }
     }
