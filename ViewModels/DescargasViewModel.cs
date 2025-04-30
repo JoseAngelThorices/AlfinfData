@@ -28,6 +28,11 @@ namespace AlfinfData.ViewModels
 
         [ObservableProperty]
         private bool isBusy;
+        [RelayCommand]
+        private async void Entrada()
+        {
+            await CargarEmpleadosAsync();
+        }
         private async Task CargarEmpleadosAsync()
         {
             if (IsBusy)
@@ -42,15 +47,16 @@ namespace AlfinfData.ViewModels
                 {
                     Nombre = o.Nombre,
                     IdCuadrilla = o.Id_Departamento,   
-                    IdOdoo = o.Id
+                    IdOdoo = o.Id,
+                    TarjetaNFC = o.TarjetaNFC
                 }).ToList(); // ahora es List<Jornalero>
-
-                foreach (var j in listaLocal)
-                {
-                    Debug.WriteLine(
-                        $"[listaLocal] IdOdoo={j.IdOdoo}, Nombre=\"{j.Nombre}\", IdCuadrilla={j.IdCuadrilla}"
-                    );
-                }
+                //Para ver los datos que se estan pasando por la terminal de salida
+                //foreach (var j in listaLocal)
+                //{
+                //    Debug.WriteLine(
+                //        $"[listaLocal] IdOdoo={j.IdOdoo}, Nombre=\"{j.Nombre}\", IdCuadrilla={j.IdCuadrilla}, TarjetaNFC={j.TarjetaNFC}"
+                //    );
+                //}
                 await _jornaleroRepo.UpsertJornalerosAsync(listaLocal);
                 
                 await Shell.Current.DisplayAlert("Success", "Se han bajado con exito los datos!", "OK");
@@ -65,12 +71,13 @@ namespace AlfinfData.ViewModels
                 isBusy = false;
             }
         }
-
         [RelayCommand]
-        private async void Entrada()
+        private async void Cuadrilla()
         {
             await CargarEmpleadosAsync();
         }
+
+
 
     }
 }

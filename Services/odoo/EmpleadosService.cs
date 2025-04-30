@@ -23,24 +23,25 @@ namespace AlfinfData.Services.odoo
         public async Task<IEnumerable<Empleado>> GetAllAsync()
         {
             var json = await _odoo.CallAsync(
-    model: "hr.employee",
-    method: "search_read",
-    args: new object[] { },    // vacío
-    kwargs: new
-    {
-        domain = new object[][]
+            model: "hr.employee",
+            method: "search_read",
+            args: new object[] { },    // vacío
+            kwargs: new
+            {
+                domain = new object[][]
         {
-            new object[] { "department_id", "=", 3 }
+            new object[] { "department_id", "in", new object[] { 3, 4 } }
         },
-        fields = new[]
+                fields = new[]
         {
             "id",
             "name",
-            "department_id"
+            "department_id",
+            "active"
         },
-        order = "name",
-        offset = 0
-    }
+                order = "name",
+                offset = 0
+            }
 );
 
             // 2) Mapear el JsonElement (que es un array) a List<Employee>
