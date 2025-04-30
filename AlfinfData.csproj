@@ -66,6 +66,9 @@
 		<Compile Update="Views\Configuracion\ConfiguracionPage.xaml.cs">
 			<DependentUpon>ConfiguracionPage.xaml</DependentUpon>
 		</Compile>
+		<Compile Update="Views\Horas\DetalleJornaleroPopup.xaml.cs">
+		  <DependentUpon>DetalleJornaleroPopup.xaml</DependentUpon>
+		</Compile>
 
 		<Compile Update="Views\Salidas\SalidasPage.xaml.cs">
 			<DependentUpon>SalidasPage.xaml</DependentUpon>
@@ -93,14 +96,14 @@
 		<MauiXaml Update="Views\Horas\CalcularPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\Horas\DetalleJornaleroPopup.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\InicioPage.xaml" />
 		<MauiXaml Update="Views\Inicio\DescargasPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Inicio\EntradaPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\Inicio\NuevoDiaPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\LectoresPage.xaml" />
