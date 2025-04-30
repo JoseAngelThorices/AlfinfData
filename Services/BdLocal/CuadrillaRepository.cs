@@ -1,26 +1,24 @@
-﻿using System.Diagnostics;
-using AlfinfData.Models.SQLITE;
+﻿using AlfinfData.Models.SQLITE;
 using SQLite;
 
 namespace AlfinfData.Services.BdLocal
 {
-    public class JornaleroRepository
+
+    public class CuadrillaRepository
     {
         private readonly SQLiteAsyncConnection _db;
 
-        public JornaleroRepository(DatabaseService databaseService)
+        public CuadrillaRepository(DatabaseService databaseService)
         {
             _db = databaseService.Conn;
         }
 
-        public Task UpsertJornalerosAsync(IEnumerable<Jornalero> jornaleros)
+        public Task UpsertCuadrillaAsync(IEnumerable<Cuadrilla> cuadrillas)
         {
 
             return _db.RunInTransactionAsync(conn =>
-            {
-
-                foreach (var j in jornaleros)
-                {
+            {             
+                foreach (var j in cuadrillas){
                     // InsertOrReplace insertará si no existe,
                     // o actualizará si ya hay un registro con esa PK.
                     conn.InsertOrReplace(j);
@@ -33,8 +31,8 @@ namespace AlfinfData.Services.BdLocal
 
         }
 
-        public Task<List<Jornalero>> GetAllAsync()
-            => _db.Table<Jornalero>().ToListAsync();
+        public Task<List<Cuadrilla>> GetAllAsync()
+            => _db.Table<Cuadrilla>().ToListAsync();
 
         // Otros métodos específicos de Empleado...
     }

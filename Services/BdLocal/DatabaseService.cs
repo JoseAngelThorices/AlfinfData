@@ -11,7 +11,9 @@ namespace AlfinfData.Services.BdLocal
         {
             // Crear la conexión
             _db = new SQLiteAsyncConnection(dbPath);
-        
+            //_db.DropTableAsync<Jornalero>().GetAwaiter().GetResult();
+            //_db.DropTableAsync<Cuadrilla>().GetAwaiter().GetResult();
+
             _db.CreateTableAsync<Cuadrilla>().GetAwaiter().GetResult();
             _db.CreateTableAsync<Jornalero>().GetAwaiter().GetResult();
             _db.CreateTableAsync<Traza>().GetAwaiter().GetResult();
