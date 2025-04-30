@@ -121,11 +121,7 @@ namespace AlfinfData.Views.Configuracion
             PortLabel.Text = Preferences.Default.Get("ServerPort", "Puerto del servidor");
             PortLabel.TextColor = PortLabel.Text == "Puerto del servidor" ? Colors.Gray : Colors.Black;
 
-            MacLabel.Text = Preferences.Default.Get("PrinterMac", "Dirección MAC de la impresora");
-            MacLabel.TextColor = MacLabel.Text == "Dirección MAC de la impresora" ? Colors.Gray : Colors.Black;
-
-            IdEntradaLabel.Text = Preferences.Default.Get("EntryId", "ID para la siguiente entrada");
-            IdEntradaLabel.TextColor = IdEntradaLabel.Text == "ID para la siguiente entrada" ? Colors.Gray : Colors.Black;
+            
         }
 
         protected new virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
@@ -158,33 +154,6 @@ namespace AlfinfData.Views.Configuracion
                 PortLabel.TextColor = string.IsNullOrWhiteSpace(result) ? Colors.Gray : Colors.Black;
                 Preferences.Default.Set("ServerPort", PortLabel.Text);
             }
-        }
-
-        private async void OnMacClicked(object sender, System.EventArgs e)
-        {
-            var result = await DisplayPromptAsync("Configurar MAC", "Ingrese la dirección MAC de la impresora:",
-                initialValue: MacLabel.Text == "Dirección MAC de la impresora" ? "" : MacLabel.Text);
-
-            if (result != null)
-            {
-                MacLabel.Text = string.IsNullOrWhiteSpace(result) ? "Dirección MAC de la impresora" : result;
-                MacLabel.TextColor = string.IsNullOrWhiteSpace(result) ? Colors.Gray : Colors.Black;
-                Preferences.Default.Set("PrinterMac", MacLabel.Text);
-            }
-        }
-
-        private async void OnIdEntradaClicked(object sender, System.EventArgs e)
-        {
-            var result = await DisplayPromptAsync("Configurar ID Entrada", "Ingrese el ID para la siguiente entrada:",
-                initialValue: IdEntradaLabel.Text == "ID para la siguiente entrada" ? "" : IdEntradaLabel.Text,
-                keyboard: Keyboard.Numeric);
-
-            if (result != null)
-            {
-                IdEntradaLabel.Text = string.IsNullOrWhiteSpace(result) ? "ID para la siguiente entrada" : result;
-                IdEntradaLabel.TextColor = string.IsNullOrWhiteSpace(result) ? Colors.Gray : Colors.Black;
-                Preferences.Default.Set("EntryId", IdEntradaLabel.Text);
-            }
-        }
+        }   
     }
 }

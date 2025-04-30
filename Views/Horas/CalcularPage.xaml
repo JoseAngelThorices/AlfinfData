@@ -41,7 +41,7 @@
                            HorizontalOptions="Center"/>
                     <Button x:Name="SeleccionButton"
                             Text="SI"
-                            BackgroundColor="#3cb043"
+                            BackgroundColor="#1a8a22"
                             TextColor="White"
                             HeightRequest="40"
                             WidthRequest="100"

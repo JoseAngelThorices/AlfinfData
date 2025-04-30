@@ -23,6 +23,16 @@
                     HeightRequest="45"
                     Margin="5"
                     HorizontalOptions="FillAndExpand" />
+
+            <Button ImageSource="calcular.png"
+                    BackgroundColor="Transparent"
+                    WidthRequest="45"
+                    HeightRequest="45"
+                    Padding="0"    
+                    Grid.Column="1"
+                    HorizontalOptions="End"
+                    VerticalOptions="Center"
+                    CornerRadius="10" />
         </Grid>
 
         <!-- Cabecera tabla -->

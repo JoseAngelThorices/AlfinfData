@@ -15,7 +15,7 @@ namespace AlfinfData.Views.Horas
             var button = (Button)sender;
             button.Text = button.Text == "SI" ? "NO" : "SI";
             button.BackgroundColor = button.Text == "SI"
-                ? Color.FromHex("#3cb043")  // Verde
+                ? Color.FromHex("#1a8a22")  // Verde
                 : Color.FromHex("#cdcdcd"); // Gris
         }
 
@@ -28,7 +28,7 @@ namespace AlfinfData.Views.Horas
             {
                 // Si está vacío, poner "SI" y color verde
                 button.Text = "SI";
-                button.BackgroundColor = Color.FromHex("#3cb043"); // Verde
+                button.BackgroundColor = Color.FromHex("#1a8a22"); // Verde
             }
             else
             {
