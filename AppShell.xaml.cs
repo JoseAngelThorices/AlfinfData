@@ -39,7 +39,22 @@ namespace AlfinfData
         // Botón izquierdo: Volver a MainPage
         private async void OnBackToMainClicked(object sender, EventArgs e)
         {
-            await GoToAsync("//MainPage");
+            await Shell.Current.GoToAsync("///main");
+
+
         }
+
+        private void OnMenuClicked(object sender, EventArgs e)
+        {
+            Shell.Current.FlyoutIsPresented = true; // Abre el menú lateral
+        }
+
+
+        //Salir de la apk por el menu desplegable 
+        private void OnSalirClicked(object sender, EventArgs e)
+        {
+            Application.Current.Quit(); 
+        }
+
     }
 }
