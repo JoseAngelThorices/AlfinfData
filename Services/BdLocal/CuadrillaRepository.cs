@@ -17,26 +17,11 @@ namespace AlfinfData.Services.BdLocal
         {
 
             return _db.RunInTransactionAsync(conn =>
-            {
-
-                foreach (var c in cuadrillas)
-                {
-                    // ¿Ya existe uno con este IdOdoo?
-                    var exist = conn
-                       .Table<Cuadrilla>()
-                       .FirstOrDefault(x => x.IdOdoo == c.IdOdoo);
-
-                    if (exist != null)
-                    {
-                        // Si existe, reutilizamos su IdJornalero y hacemos UPDATE
-                        c.IdCuadrilla = exist.IdCuadrilla;
-                        conn.Update(c);
-                    }
-                    else
-                    {
-                        // Si no existe, dejamos IdJornalero = 0 y hacemos INSERT
-                        conn.Insert(c);
-                    }
+            {             
+                foreach (var j in cuadrillas){
+                    // InsertOrReplace insertará si no existe,
+                    // o actualizará si ya hay un registro con esa PK.
+                    conn.InsertOrReplace(j);
                 }
 
                 // Para saber cuantos registros hay

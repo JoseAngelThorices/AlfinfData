@@ -12,11 +12,12 @@ public partial class SeleccionPage : ContentPage
         InitializeComponent();
         BindingContext = _viewModel = viewModel;
     }
+    //Este método se realiza cuando la pagina se inicie
     protected override async void OnAppearing()
     {
         base.OnAppearing();
 
-        // Si quieres evitar recargas innecesarias:
+        // Si quieres evitar recargas innecesarias: la siguiente condicion se puede descartar y solamente quedarnos con la llamada del los métodos.
         if (_viewModel.Jornaleros.Count == 0)
         {
             await _viewModel.CargarEmpleadosAsync();
