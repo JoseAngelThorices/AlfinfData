@@ -1,20 +1,20 @@
-<?xml version="1.0" encoding="UTF-8" ?>
 <Shell
     x:Class="AlfinfData.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:AlfinfData.Views"
-    FlyoutBehavior="Disabled"
-    Title="AlfinfData"
+    FlyoutBehavior="Flyout"
     Shell.BackgroundColor="#71639e"
     Shell.TitleColor="White"
+    Title="AlfinfData"
     Shell.ForegroundColor="White"
     Shell.NavBarHasShadow="False">
 
     <Shell.TitleView>
         <Grid ColumnDefinitions="Auto,*,Auto" BackgroundColor="#71639e">
             <!-- Botón izquierdo: retroceder a MainPage -->
-            <Button ImageSource="btncuadrados.png"
+            <Button x:Name="BackButton"
+                    ImageSource="btncuadrados.png"
                     Clicked="OnBackToMainClicked"
                     BackgroundColor="Transparent"
                     TextColor="White"
@@ -28,21 +28,34 @@
                    VerticalOptions="Center"
                    FontSize="Medium"
                    TextColor="White" />
-
-            <!-- Botón derecho: configuración -->
-            <Button ImageSource="trespuntos.png"
-                    Grid.Column="2"
-                    Command="{Binding OpenConfiguracionMenuCommand}"
-                    BackgroundColor="Transparent"
-                    TextColor="White"
-                    HeightRequest="50"
-                    WidthRequest="40"
-                    Padding="0"/>
         </Grid>
     </Shell.TitleView>
 
-    <ShellContent
-        Title=""
-        ContentTemplate="{DataTemplate views:MainPage}"
-        Route="MainPage" />
+    <!-- CABECERA DEL MENÚ -->
+    <Shell.FlyoutHeader>
+        <Grid BackgroundColor="White" Padding="20">
+            <Image Source="menusuperior.png"
+                   WidthRequest="200"
+                   HeightRequest="80"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    
+
+    <!-- PÁGINAS DEL MENÚ -->
+    <ShellItem Title="Inicio" Icon="icon_home.png">
+        <ShellContent Route="main" ContentTemplate="{DataTemplate views:MainPage}" />
+    </ShellItem>
+
+    <!-- PIE DEL MENÚ -->   
+    <Shell.FlyoutFooter>
+        <Button Text="Salir"
+                BackgroundColor="#71639e"
+                TextColor="White"
+                Margin="10"
+                CornerRadius="10"
+                Clicked="OnSalirClicked"/>
+    </Shell.FlyoutFooter>
 </Shell>
