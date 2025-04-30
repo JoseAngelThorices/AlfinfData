@@ -3,32 +3,26 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:AlfinfData.ViewModels"
              x:Class="AlfinfData.Views.MainPage"
-             Title="MainPage">
-
-    <ContentPage.BindingContext>
-        <viewmodels:MainViewModel/>
-    </ContentPage.BindingContext>
+             Title="MainPage"
+             BackgroundColor="{StaticResource PageBackgroundColor}">
 
     <ScrollView>
-        <Grid Padding="40"
-              RowDefinitions="Auto,*,Auto"
-              ColumnDefinitions="*"
-              BackgroundColor="{StaticResource PageBackgroundColor}">
+        <Grid Padding="30" RowDefinitions="Auto,*" ColumnDefinitions="*" VerticalOptions="FillAndExpand">
 
             <Grid Grid.Row="1"
-                  RowDefinitions="Auto,Auto,Auto"
                   ColumnDefinitions="*,*"
-                  RowSpacing="25"
-                  ColumnSpacing="25"
-                  VerticalOptions="Center">
+                  RowDefinitions="Auto,Auto,Auto"
+                  ColumnSpacing="50"
+                  RowSpacing="50"
+                  VerticalOptions="Center"
+                  HorizontalOptions="Center">
 
                 <!-- INICIO -->
-                <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="8" HorizontalOptions="Center">
+                <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="15" HorizontalOptions="Center">
                     <Image Source="inicio.png"
-                           HeightRequest="160"
-                           WidthRequest="160"
                            Aspect="AspectFit"
-                           HorizontalOptions="Center" />
+                           HeightRequest="140"
+                           WidthRequest="140" />
                     <Label Text="Inicio"
                            FontSize="18"
                            TextColor="Black"
@@ -39,12 +33,11 @@
                 </VerticalStackLayout>
 
                 <!-- SELECCIÓN -->
-                <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="8" HorizontalOptions="Center">
+                <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="15" HorizontalOptions="Center">
                     <Image Source="seleccion.png"
-                           HeightRequest="160"
-                           WidthRequest="160"
                            Aspect="AspectFit"
-                           HorizontalOptions="Center" />
+                           HeightRequest="140"
+                           WidthRequest="140" />
                     <Label Text="Selección"
                            FontSize="18"
                            TextColor="Black"
@@ -55,12 +48,11 @@
                 </VerticalStackLayout>
 
                 <!-- PRODUCCIÓN -->
-                <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="8" HorizontalOptions="Center">
+                <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="15" HorizontalOptions="Center">
                     <Image Source="produccion.png"
-                           HeightRequest="160"
-                           WidthRequest="160"
                            Aspect="AspectFit"
-                           HorizontalOptions="Center" />
+                           HeightRequest="140"
+                           WidthRequest="140" />
                     <Label Text="Producción"
                            FontSize="18"
                            TextColor="Black"
@@ -71,12 +63,11 @@
                 </VerticalStackLayout>
 
                 <!-- HORAS -->
-                <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="8" HorizontalOptions="Center">
+                <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="15" HorizontalOptions="Center">
                     <Image Source="hora.png"
-                           HeightRequest="160"
-                           WidthRequest="160"
                            Aspect="AspectFit"
-                           HorizontalOptions="Center" />
+                           HeightRequest="140"
+                           WidthRequest="140" />
                     <Label Text="Horas"
                            FontSize="18"
                            TextColor="Black"
@@ -87,12 +78,11 @@
                 </VerticalStackLayout>
 
                 <!-- SALIDAS -->
-                <VerticalStackLayout Grid.Row="2" Grid.Column="0" Spacing="8" HorizontalOptions="Center">
+                <VerticalStackLayout Grid.Row="2" Grid.Column="0" Spacing="15" HorizontalOptions="Center">
                     <Image Source="salidas.png"
-                           HeightRequest="160"
-                           WidthRequest="160"
                            Aspect="AspectFit"
-                           HorizontalOptions="Center" />
+                           HeightRequest="140"
+                           WidthRequest="140" />
                     <Label Text="Salidas"
                            FontSize="18"
                            TextColor="Black"
@@ -103,12 +93,11 @@
                 </VerticalStackLayout>
 
                 <!-- FIN -->
-                <VerticalStackLayout Grid.Row="2" Grid.Column="1" Spacing="8" HorizontalOptions="Center">
+                <VerticalStackLayout Grid.Row="2" Grid.Column="1" Spacing="15" HorizontalOptions="Center">
                     <Image Source="fin.png"
-                           HeightRequest="160"
-                           WidthRequest="160"
                            Aspect="AspectFit"
-                           HorizontalOptions="Center" />
+                           HeightRequest="140"
+                           WidthRequest="140" />
                     <Label Text="Fin"
                            FontSize="18"
                            TextColor="Black"
@@ -117,6 +106,7 @@
                         <TapGestureRecognizer Command="{Binding NavigateToPanelCommand}" />
                     </VerticalStackLayout.GestureRecognizers>
                 </VerticalStackLayout>
+
             </Grid>
         </Grid>
     </ScrollView>
