@@ -7,11 +7,11 @@ namespace AlfinfData.Services.BdLocal
     {
         private readonly SQLiteAsyncConnection _db;
 
-        public DatabaseService(string dbPath)
+        public DatabaseService(string dbPath) // Le pasamos url (mauiprogram)
         {
-            // Crear la conexión
+            // Crear la conexiÃ³n
             _db = new SQLiteAsyncConnection(dbPath);
-        
+
             _db.CreateTableAsync<Cuadrilla>().GetAwaiter().GetResult();
             _db.CreateTableAsync<Jornalero>().GetAwaiter().GetResult();
             _db.CreateTableAsync<Traza>().GetAwaiter().GetResult();
@@ -20,6 +20,7 @@ namespace AlfinfData.Services.BdLocal
             _db.CreateTableAsync<Produccion>().GetAwaiter().GetResult();
             _db.CreateTableAsync<Fichaje>().GetAwaiter().GetResult();
         }
+        //conexion con la base de datos
         public SQLiteAsyncConnection Conn => _db;
     }
 }

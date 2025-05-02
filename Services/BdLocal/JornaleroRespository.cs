@@ -13,42 +13,35 @@ namespace AlfinfData.Services.BdLocal
             _db = databaseService.Conn;
         }
 
-        public Task UpsertJornalerosAsync(IEnumerable<Jornalero> jornaleros)
+        //METODO PARA LA INSERCCION DE DATOS 
+        // Recibe una lista de jornaleros y los inserta o lo reemplaza en la base de datos
+        // Si en IdOdoo ya existe, reemplaza el registro existente
+        // Si no existe, inserta un nuevo registro
+        public Task UpsertJornalerosAsync(IEnumerable<Jornalero> jornaleros) 
         {
 
             return _db.RunInTransactionAsync(conn =>
             {
-                
+
                 foreach (var j in jornaleros)
                 {
-                    // ¿Ya existe uno con este IdOdoo?
-                    var exist = conn
-                       .Table<Jornalero>()
-                       .FirstOrDefault(x => x.IdOdoo == j.IdOdoo);
 
-                    if (exist != null)
-                    {
-                        // Si existe, reutilizamos su IdJornalero y hacemos UPDATE
-                        j.IdJornalero = exist.IdJornalero;
-                        conn.Update(j);
-                    }
-                    else
-                    {
-                        // Si no existe, dejamos IdJornalero = 0 y hacemos INSERT
-                        conn.Insert(j);
-                    }
+                    // InsertOrReplace insertará si no existe,
+                    // o actualizará si ya hay un registro con esa PK.
+                    conn.InsertOrReplace(j);
                 }
-                
+
                 // Para saber cuantos registros hay
-                 //var todos = conn.Table<Jornalero>().ToList();
-                 //Debug.WriteLine($"[BD] Total jornaleros tras upsert: {todos.Count}");
+                //var todos = conn.Table<Jornalero>().ToList();
+                //Debug.WriteLine($"[BD] Total jornaleros tras upsert: {todos.Count}");
             });
 
         }
 
+        //Obtiene todos los registros que esten en la tabla jornalero
         public Task<List<Jornalero>> GetAllAsync()
             => _db.Table<Jornalero>().ToListAsync();
 
-        // Otros métodos específicos de Empleado...
+      
     }
 }
