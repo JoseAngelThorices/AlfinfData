@@ -57,12 +57,12 @@ namespace AlfinfData.ViewModels
                     Activo = o.Activo
                 }).ToList(); // ahora es List<Jornalero>
                 //Para ver los datos que se estan pasando por la terminal de salida
-                //foreach (var j in listaLocal)
-                //{
-                //    Debug.WriteLine(
-                //        $"[listaLocal] IdOdoo={j.IdOdoo}, Nombre=\"{j.Nombre}\", IdCuadrilla={j.IdCuadrilla}, TarjetaNFC={j.TarjetaNFC}"
-                //    );
-                //}
+                foreach (var j in listaLocal)
+                {
+                    Debug.WriteLine(
+                       $"[listaLocal] Nombre=\"{j.Nombre}\", IdCuadrilla={j.IdCuadrilla}, TarjetaNFC={j.TarjetaNFC}"
+                   );
+                }
                 await _jornaleroRepo.UpsertJornalerosAsync(listaLocal);
                 
                 await Shell.Current.DisplayAlert("Success", "Se han bajado con exito los datos!", "OK");
