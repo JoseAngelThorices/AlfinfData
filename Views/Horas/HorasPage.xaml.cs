@@ -14,7 +14,7 @@ namespace AlfinfData.Views.Horas
             var datosPrueba = new List<HorasItem>
             {
                 new HorasItem { NumeroLista = 1, Nombre = "Juan", HN = 8, HE1 = 1, HE2 = 0, Falta = false },
-                new HorasItem { NumeroLista = 2, Nombre = "María", HN = 7.5, HE1 = 0, HE2 = 1, Falta = true },
+                new HorasItem { NumeroLista = 2, Nombre = "María", HN = 7.5, HE1 = 0, HE2 = 1, Falta = false },
                 new HorasItem { NumeroLista = 3, Nombre = "Carlos", HN = 8, HE1 = 0.5, HE2 = 0, Falta = false },
             };
 

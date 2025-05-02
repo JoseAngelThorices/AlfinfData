@@ -8,7 +8,6 @@ using AlfinfData.Views.Seleccion;
 using AlfinfData.ViewModels;
 using AlfinfData.Views;
 
-
 namespace AlfinfData
 {
     public partial class AppShell : Shell
@@ -27,34 +26,30 @@ namespace AlfinfData
             Routing.RegisterRoute(nameof(DescargasPage), typeof(DescargasPage));
             Routing.RegisterRoute(nameof(HorasPage), typeof(HorasPage));
             Routing.RegisterRoute(nameof(FinPage), typeof(FinPage));
-            Routing.RegisterRoute(nameof(MainPage), typeof(MainPage));
+            Routing.RegisterRoute(nameof(MainPage), typeof(MainPage)); // <-- Corregido aquí
             Routing.RegisterRoute(nameof(ProduccionPage), typeof(ProduccionPage));
             Routing.RegisterRoute(nameof(SalidasPage), typeof(SalidasPage));
             Routing.RegisterRoute(nameof(SeleccionPage), typeof(SeleccionPage));
             Routing.RegisterRoute(nameof(ConfiguracionPage), typeof(ConfiguracionPage));
             Routing.RegisterRoute(nameof(CalcularPage), typeof(CalcularPage));
-
         }
 
         // Botón izquierdo: Volver a MainPage
         private async void OnBackToMainClicked(object sender, EventArgs e)
         {
             await Shell.Current.GoToAsync("///main");
-
-
         }
 
+        // Botón menú
         private void OnMenuClicked(object sender, EventArgs e)
         {
-            Shell.Current.FlyoutIsPresented = true; // Abre el menú lateral
+            Shell.Current.FlyoutIsPresented = true;
         }
 
-
-        //Salir de la apk por el menu desplegable 
+        // Botón salir
         private void OnSalirClicked(object sender, EventArgs e)
         {
-            Application.Current.Quit(); 
+            Application.Current.Quit();
         }
-
     }
 }
