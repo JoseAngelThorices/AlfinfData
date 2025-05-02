@@ -7,11 +7,8 @@ namespace AlfinfData.ViewModels
 {
     public class InicioViewModel : BindableObject
     {
-
         private readonly Page _page;
 
-
-        //Guardar la hora del sistema en Modulo Inicio
         private string _titulo;
         public string Titulo
         {
@@ -22,11 +19,14 @@ namespace AlfinfData.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public string FechaSistema => $"F.T.: {DateTime.Now:dd-MM-yyyy}";
+
         public Command NuevoDiaCommand { get; }
         public Command EntradaCommand { get; }
         public Command DescargasCommand { get; }
 
-        public InicioViewModel(Page page) // <- le pasas la página
+        public InicioViewModel(Page page)
         {
             _page = page;
 
