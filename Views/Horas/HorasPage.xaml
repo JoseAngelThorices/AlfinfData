@@ -53,6 +53,7 @@
             <CollectionView x:Name="ListaHoras" SelectionMode="None">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
+
                         <Grid ColumnDefinitions="30,*,50,50,50,50,70" 
                               Padding="0" 
                               VerticalOptions="Center"
@@ -67,6 +68,7 @@
                                    HorizontalTextAlignment="Center"/>
 
                             <!-- Nombre -->
+
                             <Label Text="{Binding Nombre}" 
                                    Grid.Column="1"
                                    TextColor="Black"

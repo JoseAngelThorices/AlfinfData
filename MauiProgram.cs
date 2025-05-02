@@ -64,6 +64,7 @@ public static class MauiProgram
     }
         );
         builder.Services.AddScoped<IEmpleadosService, EmpleadosService>();
+        builder.Services.AddScoped<ICuadrillasService, CuadrillaService>();
 
         builder.Services.AddTransient<DescargasViewModel>();
         builder.Services.AddTransient<SeleccionViewModels>();
@@ -75,6 +76,7 @@ public static class MauiProgram
 
         // Repositorios de la base de datos local
         builder.Services.AddTransient<JornaleroRepository>();
+        builder.Services.AddTransient<CuadrillaRepository>();
 
 
 #if DEBUG

@@ -28,6 +28,16 @@
                    VerticalOptions="Center"
                    FontSize="Medium"
                    TextColor="White" />
+
+            <!-- Botón derecho: configuración -->
+            <Button ImageSource="trespuntos.png"
+                    Grid.Column="2"
+                    Command="{Binding OpenConfiguracionMenuCommand}"
+                    BackgroundColor="Transparent"
+                    TextColor="White"
+                    HeightRequest="50"
+                    WidthRequest="40"
+                    Padding="0"/>
         </Grid>
     </Shell.TitleView>
 

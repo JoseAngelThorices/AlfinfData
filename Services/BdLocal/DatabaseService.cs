@@ -9,10 +9,9 @@ namespace AlfinfData.Services.BdLocal
 
         public DatabaseService(string dbPath) // Le pasamos url (mauiprogram)
         {
-            // Crear la conexión
+            // Crear la conexiÃ³n
             _db = new SQLiteAsyncConnection(dbPath);
 
-            // Crear las tablas
             _db.CreateTableAsync<Cuadrilla>().GetAwaiter().GetResult();
             _db.CreateTableAsync<Jornalero>().GetAwaiter().GetResult();
             _db.CreateTableAsync<Traza>().GetAwaiter().GetResult();

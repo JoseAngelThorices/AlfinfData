@@ -22,11 +22,18 @@ namespace AlfinfData.Services.BdLocal
 
             return _db.RunInTransactionAsync(conn =>
             {
-                
+
                 foreach (var j in jornaleros)
                 {
-                   conn.InsertOrReplace(j);
+
+                    // InsertOrReplace insertará si no existe,
+                    // o actualizará si ya hay un registro con esa PK.
+                    conn.InsertOrReplace(j);
                 }
+
+                // Para saber cuantos registros hay
+                //var todos = conn.Table<Jornalero>().ToList();
+                //Debug.WriteLine($"[BD] Total jornaleros tras upsert: {todos.Count}");
             });
 
         }
