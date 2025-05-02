@@ -13,7 +13,11 @@ namespace AlfinfData.Services.BdLocal
             _db = databaseService.Conn;
         }
 
-        public Task UpsertJornalerosAsync(IEnumerable<Jornalero> jornaleros)
+        //METODO PARA LA INSERCCION DE DATOS 
+        // Recibe una lista de jornaleros y los inserta o lo reemplaza en la base de datos
+        // Si en IdOdoo ya existe, reemplaza el registro existente
+        // Si no existe, inserta un nuevo registro
+        public Task UpsertJornalerosAsync(IEnumerable<Jornalero> jornaleros) 
         {
 
             return _db.RunInTransactionAsync(conn =>
@@ -21,6 +25,7 @@ namespace AlfinfData.Services.BdLocal
 
                 foreach (var j in jornaleros)
                 {
+
                     // InsertOrReplace insertará si no existe,
                     // o actualizará si ya hay un registro con esa PK.
                     conn.InsertOrReplace(j);
@@ -33,9 +38,10 @@ namespace AlfinfData.Services.BdLocal
 
         }
 
+        //Obtiene todos los registros que esten en la tabla jornalero
         public Task<List<Jornalero>> GetAllAsync()
             => _db.Table<Jornalero>().ToListAsync();
 
-        // Otros métodos específicos de Empleado...
+      
     }
 }
