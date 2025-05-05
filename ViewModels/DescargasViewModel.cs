@@ -6,6 +6,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using AlfinfData.Models.Odoo;
 using System.Diagnostics;
+using Plugin.NFC;
+using System.Text;
 
 
 namespace AlfinfData.ViewModels
@@ -30,10 +32,99 @@ namespace AlfinfData.ViewModels
 
         public ObservableCollection<Empleado> Empleados { get; }
         public ObservableCollection<CuadrillaOdoo> Cuadrillas { get; }
-
+        public ObservableCollection<string> TagsLeidas { get; } = new();
 
         [ObservableProperty]
         private bool isBusy;
+        [ObservableProperty]
+        bool isAltaPopupVisible = false;
+        [RelayCommand]
+        private async Task NfcTarjeta()
+        {
+            // Comprueba que el usuario lo tenga activado
+            if (!CrossNFC.Current.IsAvailable)
+            {
+                await Shell.Current.DisplayAlert("NFC", "Este dispositivo no tiene NFC.", "OK");
+                return;
+            }
+
+            
+            if (!CrossNFC.Current.IsEnabled)
+            {
+                await Shell.Current.DisplayAlert("NFC", "Activa NFC en los ajustes.", "OK");
+                return;
+            }
+            CrossNFC.Current.OnMessageReceived += OnTagReceived;
+            try
+            {
+                var valor = RangoValores();
+                CrossNFC.Current.StartListening();
+                IsAltaPopupVisible = true;
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Error NFC", ex.Message, "OK");
+                return;
+            }
+        }
+
+
+        void OnTagReceived(ITagInfo tagInfo)
+        {
+        // raw bytes
+        var idBytes = tagInfo.Identifier;
+        var idHex = BitConverter.ToString(idBytes);
+
+        // serial como string
+        var serial = tagInfo.SerialNumber;
+
+        MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                await Shell.Current.DisplayAlert(
+                    "NFC leído",
+                    $"ID bytes: {idHex}\nSerialNumber: {serial}",
+                    "OK");
+                });
+        }
+
+        async Task<(int start, int end)?> RangoValores()
+        {
+            // Pedir inicio
+            var startStr = await Shell.Current.DisplayPromptAsync(
+                "Rango NFC", "Valor de inicio:", "Aceptar", "Cancelar",
+                placeholder: "0", keyboard: Keyboard.Numeric);
+            if (string.IsNullOrWhiteSpace(startStr))
+                return null; // canceló
+
+            // Pedir fin
+            var endStr = await Shell.Current.DisplayPromptAsync(
+                "Rango NFC", "Valor de fin:", "Aceptar", "Cancelar",
+                placeholder: startStr, keyboard: Keyboard.Numeric);
+            if (string.IsNullOrWhiteSpace(endStr))
+                return null; // canceló
+
+            if (!int.TryParse(startStr, out var start) ||
+                !int.TryParse(endStr, out var end) ||
+                 start > end)
+            {
+                await Shell.Current.DisplayAlert(
+                    "Error", "Rango inválido; inicio ≤ fin y números enteros.", "OK");
+                return null;
+            }
+
+            return (start, end);
+        }
+
+        [RelayCommand]
+        private async void CancelarAlta()
+        {
+            IsAltaPopupVisible = false;
+            CrossNFC.Current.StopListening();
+            CrossNFC.Current.OnMessageReceived -= OnTagReceived;
+
+        }
+
+
         [RelayCommand]
         private async void Entrada()
         {
@@ -57,12 +148,12 @@ namespace AlfinfData.ViewModels
                     Activo = o.Activo
                 }).ToList(); // ahora es List<Jornalero>
                 //Para ver los datos que se estan pasando por la terminal de salida
-                foreach (var j in listaLocal)
-                {
-                    Debug.WriteLine(
-                       $"[listaLocal] Nombre=\"{j.Nombre}\", IdCuadrilla={j.IdCuadrilla}, TarjetaNFC={j.TarjetaNFC}"
-                   );
-                }
+                //foreach (var j in listaLocal)
+                //{
+                //    Debug.WriteLine(
+                //       $"[listaLocal] Nombre=\"{j.Nombre}\", IdCuadrilla={j.IdCuadrilla}, TarjetaNFC={j.TarjetaNFC}"
+                //   );
+                //}
                 await _jornaleroRepo.UpsertJornalerosAsync(listaLocal);
                 
                 await Shell.Current.DisplayAlert("Success", "Se han bajado con exito los datos!", "OK");
@@ -118,8 +209,5 @@ namespace AlfinfData.ViewModels
                 isBusy = false;
             }
         }
-
-
-
     }
 }
