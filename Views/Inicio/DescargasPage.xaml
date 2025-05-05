@@ -14,13 +14,6 @@
               RowSpacing="20"
               Padding="20,40">
 
-            <Label Text="DESCARGAS"
-                   Grid.Row="0"
-                   HorizontalOptions="Center"
-                   FontSize="24"
-                   FontAttributes="Bold"
-                   TextColor="Black"/>
-
             <Button Text="CUADRILLAS"
                     Grid.Row="1"
                     Command="{Binding CuadrillaCommand}"

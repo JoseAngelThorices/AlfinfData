@@ -1,65 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <Shell
     x:Class="AlfinfData.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:AlfinfData.Views"
-    FlyoutBehavior="Flyout"
     Shell.BackgroundColor="#71639e"
     Shell.TitleColor="White"
-    Title="AlfinfData"
     Shell.ForegroundColor="White"
-    Shell.NavBarHasShadow="False">
+    Shell.NavBarHasShadow="False"
+    FlyoutBehavior="Flyout">
 
+    <!-- Título superior con botón de regreso, título y fecha -->
     <Shell.TitleView>
-        <Grid ColumnDefinitions="Auto,*,Auto" BackgroundColor="#71639e">
-            <!-- Botón izquierdo: retroceder a MainPage -->
-            <Button x:Name="BackButton"
-                    ImageSource="btncuadrados.png"
-                    Clicked="OnBackToMainClicked"
-                    BackgroundColor="Transparent"
-                    TextColor="White"
-                    HeightRequest="30"
-                    WidthRequest="30"
-                    Padding="0"/>
+        <Grid ColumnDefinitions="Auto,*,Auto" BackgroundColor="#71639e" HeightRequest="60">
 
-            <Label Text="AlfinfData"
-                   Grid.Column="1"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Center"
+            <!-- Botón cuadrado a la izquierda -->
+            <Button Grid.Column="0"
+                ImageSource="btncuadrados.png"
+                Clicked="OnBackToMainClicked"
+                BackgroundColor="Transparent"
+                HeightRequest="30"
+                WidthRequest="30"
+                Padding="0"
+                HorizontalOptions="Start"
+                VerticalOptions="Center"/>
+
+            <!-- Botón de configuración a la derecha -->
+            <Button Grid.Column="2"
+                ImageSource="trespuntos.png"
+                Clicked="OnAbrirConfiguracionClicked"
+                BackgroundColor="Transparent"
+                HeightRequest="30"
+                WidthRequest="30"
+                Padding="0"
+                HorizontalOptions="End"
+                VerticalOptions="Center"/>
+
+            <!-- CENTRADO REAL - siempre visible y centrado -->
+            <VerticalStackLayout
+            Grid.ColumnSpan="3"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            InputTransparent="True"
+            Spacing="0">
+                <Label Text="{Binding Titulo}"
+                   TextColor="White"
                    FontSize="Medium"
-                   TextColor="White" />
-
-            <!-- Botón derecho: configuración -->
-            <Button ImageSource="trespuntos.png"
-                    Grid.Column="2"
-                    Command="{Binding OpenConfiguracionMenuCommand}"
-                    BackgroundColor="Transparent"
-                    TextColor="White"
-                    HeightRequest="50"
-                    WidthRequest="40"
-                    Padding="0"/>
+                   HorizontalTextAlignment="Center"/>
+                <Label Text="{Binding FechaHora}"
+                   TextColor="White"
+                   FontSize="12"
+                   HorizontalTextAlignment="Center"/>
+            </VerticalStackLayout>
         </Grid>
     </Shell.TitleView>
 
-    <!-- CABECERA DEL MENÚ -->
+
+    <!-- Cabecera del menú lateral -->
     <Shell.FlyoutHeader>
         <Grid BackgroundColor="White" Padding="20">
-            <Image Source="menusuperior.png"
-                   WidthRequest="200"
-                   HeightRequest="80"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Center"/>
+            <VerticalStackLayout HorizontalOptions="Center">
+                <Image Source="menusuperior.png"/>
+                <Label Text="{Binding FechaMenu}"
+                       FontSize="Small"
+                       TextColor="Gray"
+                       HorizontalOptions="Center"/>
+            </VerticalStackLayout>
         </Grid>
     </Shell.FlyoutHeader>
 
-    
+    <!-- Página inicial -->
+    <ShellContent Route="main"
+                  ContentTemplate="{DataTemplate views:MainPage}" />
 
-    <!-- PÁGINAS DEL MENÚ -->
-    <ShellItem Title="Inicio" Icon="icon_home.png">
-        <ShellContent Route="main" ContentTemplate="{DataTemplate views:MainPage}" />
-    </ShellItem>
-
-    <!-- PIE DEL MENÚ -->   
+    <!-- Pie del menú -->
     <Shell.FlyoutFooter>
         <Button Text="Salir"
                 BackgroundColor="#71639e"
