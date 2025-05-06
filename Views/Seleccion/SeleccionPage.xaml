@@ -16,7 +16,7 @@
 
             <Picker x:Name="GrupoPicker"
                     Grid.Row="1"
-                    Title="Selecciona grupo"
+                    Title="Selecciona cuadrilla"
                     BackgroundColor="#fbffb8"
                     TitleColor="Black"
                     TextColor="Black"

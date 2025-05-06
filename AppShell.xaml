@@ -10,57 +10,45 @@
     Shell.NavBarHasShadow="False"
     FlyoutBehavior="Flyout">
 
-    <!-- Título superior con botón de regreso, título y fecha -->
+    <!-- Barra superior -->
     <Shell.TitleView>
-        <Grid ColumnDefinitions="Auto,*,Auto" BackgroundColor="#71639e" HeightRequest="60">
-
-            <!-- Botón cuadrado a la izquierda -->
-            <Button Grid.Column="0"
-                ImageSource="btncuadrados.png"
-                Clicked="OnBackToMainClicked"
-                BackgroundColor="Transparent"
-                HeightRequest="30"
-                WidthRequest="30"
-                Padding="0"
-                HorizontalOptions="Start"
-                VerticalOptions="Center"/>
-
-            <!-- Botón de configuración a la derecha -->
-            <Button Grid.Column="2"
-                ImageSource="trespuntos.png"
-                Clicked="OnAbrirConfiguracionClicked"
-                BackgroundColor="Transparent"
-                HeightRequest="30"
-                WidthRequest="30"
-                Padding="0"
-                HorizontalOptions="End"
-                VerticalOptions="Center"/>
-
-            <!-- CENTRADO REAL - siempre visible y centrado -->
-            <VerticalStackLayout
-            Grid.ColumnSpan="3"
-            HorizontalOptions="Center"
-            VerticalOptions="Center"
-            InputTransparent="True"
-            Spacing="0">
+        <Grid ColumnDefinitions="Auto,*,Auto" BackgroundColor="#71639e">
+            <Button ImageSource="btncuadrados.png"
+                    Clicked="OnBackToMainClicked"
+                    BackgroundColor="Transparent"
+                    HeightRequest="30"
+                    WidthRequest="30"
+                    Padding="0"/>
+            <VerticalStackLayout x:Name="TituloStack"
+                                 Grid.Column="1"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Start"
+                                 Margin="10,0,0,0"
+                                 Spacing="0">
                 <Label Text="{Binding Titulo}"
-                   TextColor="White"
-                   FontSize="Medium"
-                   HorizontalTextAlignment="Center"/>
+                       TextColor="White"
+                       FontSize="Medium"
+                       HorizontalTextAlignment="Center"/>
                 <Label Text="{Binding FechaHora}"
-                   TextColor="White"
-                   FontSize="12"
-                   HorizontalTextAlignment="Center"/>
+                       TextColor="White"
+                       FontSize="12"
+                       HorizontalTextAlignment="Center"/>
             </VerticalStackLayout>
+            <Button ImageSource="trespuntos.png"
+                    Grid.Column="2"
+                    Clicked="OnAbrirConfiguracionClicked"
+                    BackgroundColor="Transparent"
+                    HeightRequest="50"
+                    WidthRequest="40"
+                    Padding="0"/>
         </Grid>
     </Shell.TitleView>
 
-
-    <!-- Cabecera del menú lateral -->
+    <!-- Menú lateral -->
     <Shell.FlyoutHeader>
         <Grid BackgroundColor="White" Padding="20">
             <VerticalStackLayout HorizontalOptions="Center">
-                <Image Source="menusuperior.png"/>
+                <Image Source="menusuperior.png" WidthRequest="200" HeightRequest="80"/>
                 <Label Text="{Binding FechaMenu}"
                        FontSize="Small"
                        TextColor="Gray"
@@ -70,10 +58,9 @@
     </Shell.FlyoutHeader>
 
     <!-- Página inicial -->
-    <ShellContent Route="main"
-                  ContentTemplate="{DataTemplate views:MainPage}" />
+    <ShellContent Route="main" ContentTemplate="{DataTemplate views:MainPage}" />
 
-    <!-- Pie del menú -->
+    <!-- Pie de menú -->
     <Shell.FlyoutFooter>
         <Button Text="Salir"
                 BackgroundColor="#71639e"
