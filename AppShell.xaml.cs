@@ -1,5 +1,4 @@
-﻿// AppShell.xaml.cs completamente funcional y dinámico con fecha/título
-using AlfinfData.Views.Configuracion;
+﻿using AlfinfData.Views.Configuracion;
 using AlfinfData.Views.Fin;
 using AlfinfData.Views.Horas;
 using AlfinfData.Views.Inicio;
@@ -75,11 +74,7 @@ namespace AlfinfData
 
         private bool ActualizarFechaHora()
         {
-            var ahora = DateTime.Now;
-            string ruta = Current?.CurrentState.Location.OriginalString?.ToLower() ?? "";
-
-            FechaHora = ahora.ToString("dd/MM/yyyy");
-
+            FechaHora = DateTime.Now.ToString("dd/MM/yyyy");
             return true;
         }
 
@@ -88,15 +83,35 @@ namespace AlfinfData
             string ruta = Current?.CurrentState.Location.OriginalString?.ToLower() ?? "";
             FechaMenu = DateTime.Now.ToString("dd/MM/yyyy");
 
-            if (ruta.Contains("main")) Titulo = "AlfinfData";
-            else if (ruta.Contains("inicio")) Titulo = "Inicio";
-            else if (ruta.Contains("seleccion")) Titulo = "Selección";
-            else if (ruta.Contains("produccion")) Titulo = "Producción";
-            else if (ruta.Contains("horas")) Titulo = "Horas";
-            else if (ruta.Contains("salidas")) Titulo = "Salidas";
-            else if (ruta.Contains("fin")) Titulo = "Fin";
-            else if (ruta.Contains("configuracion")) Titulo = "Configuración";
-            else Titulo = "AlfinfData";
+            var segments = ruta.Split('/');
+            var currentPage = segments.LastOrDefault();
+
+            Titulo = currentPage switch
+            {
+                "main" => "AlfinfData",
+                "iniciopage" => "Inicio",
+                "seleccionpage" => "Selección",
+                "produccionpage" => "Producción",
+                "horaspage" => "Horas",
+                "salidaspage" => "Salidas",
+                "finpage" => "Fin",
+                "configuracionpage" => "Configuración",
+                _ => "AlfinfData"
+            };
+
+            if (TituloStack != null)
+            {
+                if (currentPage == "main")
+                {
+                    TituloStack.HorizontalOptions = LayoutOptions.Start;
+                    TituloStack.Margin = new Thickness(10, 0, 0, 0);
+                }
+                else
+                {
+                    TituloStack.HorizontalOptions = LayoutOptions.Center;
+                    TituloStack.Margin = new Thickness(0);
+                }
+            }
         }
 
         private async void OnAbrirConfiguracionClicked(object sender, EventArgs e)

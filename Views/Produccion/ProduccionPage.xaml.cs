@@ -23,7 +23,7 @@ namespace AlfinfData.Views.Produccion
                 new Jornalero { IdJornalero = 2, Nombre = "María García", Cajas = Preferences.Get("Cajas_2", 0) },
                 new Jornalero { IdJornalero = 3, Nombre = "Carlos López", Cajas = Preferences.Get("Cajas_3", 0) },
                 new Jornalero { IdJornalero = 4, Nombre = "Ana Martínez", Cajas = Preferences.Get("Cajas_4", 0) },
-                new Jornalero { IdJornalero = 5, Nombre = "Pedro Sánchez", Cajas = Preferences.Get("Cajas_5", 0) }
+                new Jornalero { IdJornalero = 5, Nombre = "Carlos Sánchez", Cajas = Preferences.Get("Cajas_5", 0) }
             };
 
             ListaDeJornaleros.ItemsSource = Jornaleros;
