@@ -1,11 +1,15 @@
 using CommunityToolkit.Maui.Views;
 using Microsoft.Maui.Controls;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AlfinfData.Views.Horas
 {
     public partial class HorasPage : ContentPage
     {
+        // Persona seleccionada en la lista
+        private HorasItem personaSeleccionada;
+
         public HorasPage()
         {
             InitializeComponent();
@@ -21,19 +25,78 @@ namespace AlfinfData.Views.Horas
             ListaHoras.ItemsSource = datosPrueba;
         }
 
-        private async void OnDetalleClicked(object sender, EventArgs e)
+        // Evento cuando el usuario selecciona una persona de la lista
+        private void OnPersonaSeleccionada(object sender, SelectionChangedEventArgs e)
         {
-            await Navigation.PushAsync(new DetalleJornaleroPage());
+            personaSeleccionada = e.CurrentSelection.FirstOrDefault() as HorasItem;
         }
 
 
 
+        private async void OnDetalleClicked(object sender, EventArgs e)
+{
+    var persona = ListaHoras.SelectedItem as HorasItem;
+
+    if (persona == null)
+    {
+        await DisplayAlert("Atención", "Por favor selecciona una persona de la lista.", "OK");
+        return;
+    }
+
+    Popup popup = null;
+
+    var cerrarButton = new Button
+    {
+        Text = "Cerrar",
+        HorizontalOptions = LayoutOptions.Center,
+        Command = new Command(() => popup?.Close())
+    };
+
+    popup = new Popup
+    {
+        CanBeDismissedByTappingOutsideOfPopup = true,
+        Content = new Frame
+        {
+            Padding = 20,
+            CornerRadius = 10,
+            BackgroundColor = Colors.White,
+            MinimumWidthRequest = 300,
+            MinimumHeightRequest = 300,
+            Content = new VerticalStackLayout
+            {
+                Spacing = 10,
+                Children =
+                {
+                    new Label
+                    {
+                        Text = "Detalle Jornalero",
+                        FontAttributes = FontAttributes.Bold,
+                        FontSize = 18,
+                        HorizontalOptions = LayoutOptions.Center
+                    },
+                    new Label { Text = $"Nombre: {persona.Nombre}" },
+                    new Label { Text = $"Nº Lista: {persona.NumeroLista}" },
+                    new Label { Text = $"HN: {persona.HN}" },
+                    new Label { Text = $"HE1: {persona.HE1}" },
+                    new Label { Text = $"HE2: {persona.HE2}" },
+                    new Label { Text = $"Faltó: {(persona.Falta ? "Sí" : "No")}" },
+                    cerrarButton
+                }
+            }
+        }
+    };
+
+    await this.ShowPopupAsync(popup);
+}
+
+
+        // Botón de "Calcular"
         private async void OnCalcularClicked(object sender, EventArgs e)
         {
             await Shell.Current.GoToAsync(nameof(CalcularPage));
         }
 
-        // Clase auxiliar para los datos
+        // Clase de datos
         public class HorasItem
         {
             public int NumeroLista { get; set; }
