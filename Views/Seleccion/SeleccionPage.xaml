@@ -31,21 +31,23 @@
                   ColumnDefinitions="*,*" 
                   ColumnSpacing="10">
                 <Button Text="SEL. TODOS"
-                        BackgroundColor="#71639e"
-                        TextColor="White"
-                        FontAttributes="Bold"
-                        CornerRadius="5"
-                        HeightRequest="40"
-                        Margin="5" />
+        BackgroundColor="#71639e"
+        TextColor="White"
+        FontAttributes="Bold"
+        CornerRadius="5"
+        HeightRequest="40"
+        Margin="5"
+        Clicked="OnSeleccionarTodosClicked" />
 
                 <Button Text="QUITAR TODOS"
-                        BackgroundColor="#71639e"
-                        TextColor="White"
-                        FontAttributes="Bold"
-                        CornerRadius="5"
-                        HeightRequest="40"
-                        Grid.Column="1"
-                        Margin="5" />
+        BackgroundColor="#71639e"
+        TextColor="White"
+        FontAttributes="Bold"
+        CornerRadius="5"
+        HeightRequest="40"
+        Grid.Column="1"
+        Margin="5"
+        Clicked="OnQuitarTodosClicked" />
             </Grid>
 
             <Grid Grid.Row="3" 
