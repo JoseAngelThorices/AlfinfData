@@ -1,15 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="AlfinfData.Views.Fin.FinPage"
-             Title="FinPage"
-             BackgroundColor="#e9e9e9"
-             Shell.NavBarIsVisible="True">
+          xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+          x:Class="AlfinfData.Views.Fin.FinPage"
+          Title="FinPage"
+          BackgroundColor="#e9e9e9"
+          Shell.NavBarIsVisible="True">
 
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsVisible="False" />
     </Shell.BackButtonBehavior>
 
-    <Grid Padding="20" RowSpacing="20"
+    <Grid Padding="10" RowSpacing="20"
           RowDefinitions="Auto, Auto, Auto, Auto, Auto, *, *">
 
         <!-- Botón generar -->
@@ -79,23 +80,23 @@
                 Grid.Row="3" />
 
         <!-- Resultado -->
-        <!-- Resultado completamente plano -->
         <Border Stroke="#a0a0a0"
-        StrokeThickness="1"
-        BackgroundColor="White"
-        StrokeShape="RoundRectangle 10"
-        Padding="10"
-        Grid.Row="4"
-        Grid.RowSpan="3"
-        VerticalOptions="FillAndExpand"
-        HorizontalOptions="FillAndExpand">
+                StrokeThickness="1"
+                BackgroundColor="White"
+                StrokeShape="RoundRectangle 10"
+                Padding="10"
+                Margin="5,0"
+                Grid.Row="4"
+                Grid.RowSpan="3"
+                VerticalOptions="FillAndExpand"
+                HorizontalOptions="FillAndExpand">
             <ScrollView>
                 <Label x:Name="ResultadoLabel"
-               Text=""
-               FontSize="16"
-               TextColor="Black"
-               VerticalOptions="FillAndExpand"
-               HorizontalOptions="FillAndExpand" />
+                       Text=""
+                       FontSize="16"
+                       TextColor="Black"
+                       VerticalOptions="FillAndExpand"
+                       HorizontalOptions="FillAndExpand" />
             </ScrollView>
         </Border>
     </Grid>

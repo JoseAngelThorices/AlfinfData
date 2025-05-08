@@ -5,12 +5,11 @@
              BackgroundColor="#f0f0f0"
              Title="Producción">
 
-    <!-- Oculta botón de volver -->
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsVisible="False" />
     </Shell.BackButtonBehavior>
 
-    <Grid RowDefinitions="*,Auto">
+    <Grid RowDefinitions="*,Auto" Padding="10">
         <ScrollView Grid.Row="0">
             <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" 
                   Padding="3" 
@@ -27,21 +26,22 @@
         SelectedItem="{Binding CuadrillaSeleccionada, Mode=TwoWay}" />
 
                 <Grid Grid.Row="3" 
-                      ColumnDefinitions="80,*,Auto" 
-                      Padding="8">
-                    <Label Text="N.L." FontAttributes="Bold" TextColor="Black"/>
-                    <Label Text="Nombre" FontAttributes="Bold" TextColor="Black" Grid.Column="1"/>
-                    <Label Text="Cajas" FontAttributes="Bold" TextColor="Black" Grid.Column="2"/>
+                      ColumnDefinitions="0.3*,*,0.2*" 
+                      Padding="0">
+                    <Label Text="N.L." FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
+                    <Label Text="Nombre" FontAttributes="Bold" TextColor="Black" Grid.Column="1" VerticalOptions="Center"/>
+                    <Label Text="Cajas" FontAttributes="Bold" TextColor="Black" Grid.Column="2" VerticalOptions="Center"/>
                 </Grid>
 
                 <Border Grid.Row="4"
                         Stroke="#a0a0a0"
                         StrokeShape="RoundRectangle 10"
                         BackgroundColor="White"
-                        Margin="5">
-                    <CollectionView ItemsSource="{Binding JornalerosConCajas}"
-                        x:Name="ListaDeJornaleros"
-                        SelectionMode="Multiple">
+
+                        Margin="5,0">
+                    <CollectionView x:Name="ListaDeJornaleros"
+                                  SelectionMode="Multiple">
+
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <Grid Padding="8" ColumnDefinitions="70,*,Auto,Auto">

@@ -1,4 +1,4 @@
-using CommunityToolkit.Maui.Views;
+ï»¿using CommunityToolkit.Maui.Views;
 using Microsoft.Maui.Controls;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +18,7 @@ namespace AlfinfData.Views.Horas
             var datosPrueba = new List<HorasItem>
             {
                 new HorasItem { NumeroLista = 1, Nombre = "Juan", HN = 8, HE1 = 1, HE2 = 0, Falta = false },
-                new HorasItem { NumeroLista = 2, Nombre = "María", HN = 7.5, HE1 = 0, HE2 = 1, Falta = false },
+                new HorasItem { NumeroLista = 2, Nombre = "MarÃ­a", HN = 7.5, HE1 = 0, HE2 = 1, Falta = false },
                 new HorasItem { NumeroLista = 3, Nombre = "Carlos", HN = 8, HE1 = 0.5, HE2 = 0, Falta = false },
             };
 
@@ -39,7 +39,7 @@ namespace AlfinfData.Views.Horas
 
     if (persona == null)
     {
-        await DisplayAlert("Atención", "Por favor selecciona una persona de la lista.", "OK");
+        await DisplayAlert("AtenciÃ³n", "Por favor selecciona una persona de la lista.", "OK");
         return;
     }
 
@@ -75,11 +75,11 @@ namespace AlfinfData.Views.Horas
                         HorizontalOptions = LayoutOptions.Center
                     },
                     new Label { Text = $"Nombre: {persona.Nombre}" },
-                    new Label { Text = $"Nº Lista: {persona.NumeroLista}" },
+                    new Label { Text = $"NÂº Lista: {persona.NumeroLista}" },
                     new Label { Text = $"HN: {persona.HN}" },
                     new Label { Text = $"HE1: {persona.HE1}" },
                     new Label { Text = $"HE2: {persona.HE2}" },
-                    new Label { Text = $"Faltó: {(persona.Falta ? "Sí" : "No")}" },
+                    new Label { Text = $"FaltÃ³: {(persona.Falta ? "SÃ­" : "No")}" },
                     cerrarButton
                 }
             }
@@ -90,7 +90,7 @@ namespace AlfinfData.Views.Horas
 }
 
 
-        // Botón de "Calcular"
+        // BotÃ³n de "Calcular"
         private async void OnCalcularClicked(object sender, EventArgs e)
         {
             await Shell.Current.GoToAsync(nameof(CalcularPage));

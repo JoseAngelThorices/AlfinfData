@@ -122,8 +122,8 @@ namespace AlfinfData.Views.Produccion
                 "OK");
         }
 
-
         private string pluralizar(string palabra, int cantidad)
+
         {
             return cantidad == 1 ? palabra : palabra + "s";
         }

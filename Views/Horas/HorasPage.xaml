@@ -10,47 +10,48 @@
         <BackButtonBehavior IsVisible="False" />
     </Shell.BackButtonBehavior>
 
-    <Grid Padding="5" RowSpacing="5" ColumnSpacing="5" RowDefinitions="Auto, Auto, 3*, *">
+    <Grid Padding="10" RowSpacing="5" ColumnSpacing="5" RowDefinitions="Auto, Auto, 3*, *">
 
         <!-- Fila amarilla con Picker -->
         <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Padding="0,5" Margin="0">
             <Picker x:Name="GrupoPicker"
-            Title="Selecciona grupo"
-            BackgroundColor="#fbffb8"
-            TitleColor="Black"
-            TextColor="Black"
-            FontSize="16"
-            HeightRequest="45"
-            Margin="5"
-            HorizontalOptions="FillAndExpand"
-            Grid.Column="0" />
+                    Title="Selecciona grupo"
+                    BackgroundColor="#fbffb8"
+                    TitleColor="Black"
+                    TextColor="Black"
+                    FontSize="16"
+                    HeightRequest="45"
+                    Margin="5"
+                    HorizontalOptions="FillAndExpand"
+                    Grid.Column="0" />
 
             <ImageButton Source="iconlist.png"
-                 Grid.Column="1"
-                 WidthRequest="40"
-                 HeightRequest="40"
-                 Margin="5,0"
-                 HorizontalOptions="End"
-                 VerticalOptions="Center"
-                 BackgroundColor="Transparent"
-                 Clicked="OnDetalleClicked"/>
+                         Grid.Column="1"
+                         WidthRequest="40"
+                         HeightRequest="40"
+                         Margin="5,0"
+                         Padding="0"
+                         HorizontalOptions="End"
+                         VerticalOptions="Center"
+                         BackgroundColor="Transparent"
+                         Clicked="OnDetalleClicked"/>
+        </Grid>
+
+        <!-- Cabecera tabla -->
+        <Grid Grid.Row="1"
+      ColumnSpacing="0"
+      ColumnDefinitions="0.8*,2.5*,1.2*,1.2*,1.2*,1.1*"
+      Padding="5,0">
+            <Label Text="N.L" Grid.Column="0" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
+            <Label Text="Nombre" Grid.Column="1" HorizontalTextAlignment="Start" FontSize="13" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
+            <Label Text="HN" Grid.Column="2" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
+            <Label Text="HE1" Grid.Column="3" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
+            <Label Text="HE2" Grid.Column="4" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
+            <Label Text="Falta" Grid.Column="5" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
         </Grid>
 
 
-        <!-- Cabecera tabla - Ajusté los anchos de columna -->
-        <Grid Grid.Row="1" ColumnSpacing="0"
-              ColumnDefinitions="30,*,50,50,60,50,70"
-              Padding="7,0">
-            <Label Text="N.L" FontSize="13" TextColor="Black" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0" HorizontalTextAlignment="Center"/>
-            <Label Text="Nombre" FontSize="13" TextColor="Black" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="1" HorizontalTextAlignment="Center"/>
-            <Label Text="HN" FontSize="13" TextColor="Black" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="2" HorizontalTextAlignment="Center"/>
-            <Label Text="HE1" FontSize="13" TextColor="Black" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="3" HorizontalTextAlignment="Center"/>
-            <Label Text="HE2" FontSize="13" TextColor="Black" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="4" HorizontalTextAlignment="Center"/>
-            <Label Text="Falta" FontSize="13" TextColor="Black" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="5" HorizontalTextAlignment="Center"/>
-            <Label Text="Detalles" FontSize="13" TextColor="Black" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="6" HorizontalTextAlignment="Center"/>
-        </Grid>
 
-        <!-- Lista - Ajusté los elementos para perfecta alineación -->
         <Frame Grid.Row="2"
                Grid.RowSpan="2"
                CornerRadius="10"
@@ -59,74 +60,72 @@
                VerticalOptions="FillAndExpand"
                HorizontalOptions="FillAndExpand"
                Padding="5"
+               Margin="5,0"
                HasShadow="False">
-            
+
             <CollectionView x:Name="ListaHoras"
-                SelectionMode="Single"
-                SelectionChanged="OnPersonaSeleccionada">
+                    SelectionMode="Single"
+                    SelectionChanged="OnPersonaSeleccionada">
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
+                        <Grid ColumnDefinitions="0.5*,2.5*,1.2*,1.2*,1.2*,1.1*"
+                      Padding="0"
+                      HeightRequest="45"
+                      VerticalOptions="Center">
 
-                        <Grid ColumnDefinitions="30,*,50,50,50,50,70" 
-                              Padding="0" 
-                              VerticalOptions="Center"
-                              HeightRequest="40">
-
-                            <!-- Número de lista -->
-                            <Label Text="{Binding NumeroLista}" 
-                                   Grid.Column="0"
-                                   TextColor="Black" 
-                                   FontSize="14"
-                                   VerticalOptions="Center" 
-                                   HorizontalTextAlignment="Center"/>
+                            <!-- N.L. -->
+                            <Label Text="{Binding NumeroLista}"
+                           Grid.Column="0"
+                           FontSize="14"
+                           TextColor="Black"
+                           VerticalOptions="Center"
+                           HorizontalTextAlignment="Center"/>
 
                             <!-- Nombre -->
-
-                            <Label Text="{Binding Nombre}" 
-                                   Grid.Column="1"
-                                   TextColor="Black"
-                                   FontSize="14"
-                                   VerticalOptions="Center"
-                                   HorizontalOptions="Start"
-                                   Margin="30,0"/>
+                            <Label Text="{Binding Nombre}"
+                           Grid.Column="1"
+                           FontSize="14"
+                           TextColor="Black"
+                           VerticalOptions="Center"
+                           HorizontalTextAlignment="Start"
+                           Margin="5,0"/>
 
                             <!-- HN -->
                             <Entry Text="{Binding HN}"
-                                   Grid.Column="2"
-                                   FontSize="14"
-                                   BackgroundColor="Transparent"
-                                   HorizontalTextAlignment="Center"
-                                   VerticalOptions="Center"
-                                   HeightRequest="40"/>
+                           Grid.Column="2"
+                           FontSize="14"
+                           BackgroundColor="Transparent"
+                           HorizontalTextAlignment="Center"
+                           VerticalOptions="Center"/>
 
                             <!-- HE1 -->
                             <Entry Text="{Binding HE1}"
-                                   Grid.Column="3"
-                                   FontSize="14"
-                                   BackgroundColor="Transparent"
-                                   HorizontalTextAlignment="Center"
-                                   VerticalOptions="Center"
-                                   HeightRequest="40"/>
+                           Grid.Column="3"
+                           FontSize="14"
+                           BackgroundColor="Transparent"
+                           HorizontalTextAlignment="Center"
+                           VerticalOptions="Center"/>
 
                             <!-- HE2 -->
                             <Entry Text="{Binding HE2}"
-                                   Grid.Column="4"
-                                   FontSize="14"
-                                   BackgroundColor="Transparent"
-                                   HorizontalTextAlignment="Center"
-                                   VerticalOptions="Center"
-                                   HeightRequest="40"/>
+                           Grid.Column="4"
+                           FontSize="14"
+                           BackgroundColor="Transparent"
+                           HorizontalTextAlignment="Center"
+                           VerticalOptions="Center"/>
 
                             <!-- Falta -->
                             <Switch IsToggled="{Binding Falta}"
-                                    Grid.Column="5"
-                                    HorizontalOptions="Center"
-                                    VerticalOptions="Center"/>
+                            Grid.Column="5"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"/>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
         </Frame>
+
+
     </Grid>
 </ContentPage>
