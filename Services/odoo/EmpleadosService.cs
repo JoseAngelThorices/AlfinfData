@@ -38,7 +38,7 @@ namespace AlfinfData.Services.odoo
                     },
                     fields = new[]
                     {
-                        "id", "name", "department_id", "active" // Campos que queremos traer
+                        "id", "name", "department_id", "active", "nfc_code" // Campos que queremos traer
                     },
                     order = "name",  
                     offset = 0   
@@ -66,7 +66,8 @@ namespace AlfinfData.Services.odoo
                 {
                     Id = item.GetProperty("id").GetInt32(),
                     Nombre = item.GetProperty("name").GetString()!,
-                    Id_Departamento = deptId
+                    Id_Departamento = deptId,
+                    TarjetaNFC = item.GetProperty("nfc_code").GetString()
                 });
             }
 
