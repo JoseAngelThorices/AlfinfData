@@ -18,8 +18,14 @@ namespace AlfinfData
             base.OnCreate(savedInstanceState);
             CrossNFC.Init(this);
 
-            // 2) Inicializa Plugin.CurrentActivity
+            // Inicializa Plugin.CurrentActivity
             CrossCurrentActivity.Current.Init(this, savedInstanceState);
+
+            // Cambia la barra de estado a negro
+            Window.SetStatusBarColor(Android.Graphics.Color.Black);
+
+            
+            Window.SetNavigationBarColor(Android.Graphics.Color.Black);
         }
 
         protected override void OnResume()
@@ -27,16 +33,15 @@ namespace AlfinfData
             base.OnResume();
             CrossNFC.OnResume();
 
-            // 4) Asegura que Plugin.CurrentActivity siga apuntando aquí
+            // Asegura que Plugin.CurrentActivity siga apuntando aquí
             CrossCurrentActivity.Current.Activity = this;
         }
+
         protected override void OnNewIntent(Intent intent)
         {
             base.OnNewIntent(intent);
-            // 5) Reenvía el Intent NFC al plugin para que dispare OnMessageReceived
+            // Reenvía el Intent NFC al plugin para que dispare OnMessageReceived
             CrossNFC.OnNewIntent(intent);
         }
-
-
     }
 }

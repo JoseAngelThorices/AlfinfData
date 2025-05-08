@@ -1,6 +1,7 @@
 using SQLite;
 using System;
 
+
 namespace AlfinfData.Models.SQLITE
 {
     public class Produccion

@@ -13,7 +13,6 @@ using System.Text;
 namespace AlfinfData.ViewModels
 {
 
-
     public partial class DescargasViewModel : ObservableObject
     {
         private readonly IEmpleadosService _empleadosService;     // servicio Odoo Empleado
@@ -235,12 +234,12 @@ namespace AlfinfData.ViewModels
                     IdCuadrilla = o.IdCuadrilla
                 }).ToList(); // ahora es List<Cuadrilla>
                 //Para ver los datos que se estan pasando por la terminal de salida
-                //foreach (var j in listaLocal)
-                //{
-                //   Debug.WriteLine(
-                //        $"[listaLocal] IdOdoo={j.IdOdoo}, Nombre=\"{j.Descripcion}\""
-                //    );
-                //}
+                foreach (var j in listaLocal)
+                {
+                   Debug.WriteLine(
+                        $"[listaLocal] IdOdoo={j.IdCuadrilla}, Nombre=\"{j.Descripcion}\""
+                    );
+                }
                 await _cuadrillaRepo.UpsertCuadrillaAsync(listaLocal);
 
                 await Shell.Current.DisplayAlert("Success", "Se han bajado con exito los datos!", "OK");
