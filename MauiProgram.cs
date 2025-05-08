@@ -18,6 +18,7 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
 
         // Configura la aplicación MAUI
+        
         builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit() // Activa el CommunityToolkit
@@ -64,7 +65,7 @@ public static class MauiProgram
         // Servicios de negocio (inyección de dependencias)
         builder.Services.AddScoped<IEmpleadosService, EmpleadosService>();
         builder.Services.AddScoped<ICuadrillasService, CuadrillaService>();
-
+        builder.Services.AddScoped<ITarjetaNFCServices, TarjetaNFCServices>();
         // ViewModels y páginas para navegación e inyección
         builder.Services.AddTransient<DescargasViewModel>();
         builder.Services.AddTransient<SeleccionViewModels>();

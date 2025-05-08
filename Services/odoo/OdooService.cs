@@ -82,8 +82,10 @@ namespace AlfinfData.Services.odoo
             using var doc = JsonDocument.Parse(content);// Parseamos el JSON de respuesta
             if (doc.RootElement.TryGetProperty("error", out var err))
             {
-                var msg = err.GetProperty("message").GetString() ?? "Unknown error";
-                throw new Exception($"Odoo RPC error: {msg}");
+                var data = err.GetProperty("data");
+                var detalle = data.GetProperty("message").GetString();
+                var debug = data.GetProperty("debug").GetString();
+                throw new Exception($"Odoo RPC error: {detalle}\nDEBUG: {debug}");
             }
             // Devolvemos solo el contenido del campo "result" (respuesta del método de Odoo)
             return doc.RootElement.GetProperty("result").Clone();

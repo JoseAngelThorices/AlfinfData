@@ -18,6 +18,7 @@ namespace AlfinfData.ViewModels
     {
         private readonly IEmpleadosService _empleadosService;     // servicio Odoo Empleado
         private readonly ICuadrillasService _cuadrillaService;    // servicio Odoo Cuadrilla
+        private readonly ITarjetaNFCServices _tarjetaNFCService;
         private readonly JornaleroRepository _jornaleroRepo;      // repositorio SQLite
         private readonly CuadrillaRepository _cuadrillaRepo;
         private readonly List<int> _rangoValores = new List<int>();
@@ -27,10 +28,12 @@ namespace AlfinfData.ViewModels
         private readonly List<string> _hexIds = new List<string>();
         private int _startValue;
         private int _endValue;
-        public DescargasViewModel(IEmpleadosService empleadosService, ICuadrillasService cuadrillaService, JornaleroRepository jornaleroRepo, CuadrillaRepository cuadrillaRepo)
+        public DescargasViewModel(IEmpleadosService empleadosService, ICuadrillasService cuadrillaService, ITarjetaNFCServices tarjetaNFCService,
+            JornaleroRepository jornaleroRepo, CuadrillaRepository cuadrillaRepo )
         {
             _empleadosService = empleadosService;
             _cuadrillaService = cuadrillaService;
+            _tarjetaNFCService = tarjetaNFCService;
             _jornaleroRepo = jornaleroRepo;
             _cuadrillaRepo = cuadrillaRepo;
             Empleados = new ObservableCollection<Empleado>();
@@ -157,6 +160,9 @@ namespace AlfinfData.ViewModels
                     // La añades a la colección
                     TagsLeidas.Add(tarjeta);
             }
+            await _tarjetaNFCService.CreateTarjetasNFCAsync(TagsLeidas);
+            TagsLeidas.Clear();
+            _hexIds.Clear();
             IsAltaPopupVisible = false;
             CrossNFC.Current.StopListening();
             CrossNFC.Current.OnMessageReceived -= OnTagReceived;
@@ -184,7 +190,8 @@ namespace AlfinfData.ViewModels
                     Nombre = o.Nombre,
                     IdCuadrilla = o.Id_Departamento,   
                     IdJornalero = o.Id,
-                    Activo = o.Activo
+                    Activo = o.Activo,
+                    TarjetaNFC = o.TarjetaNFC,
                 }).ToList(); // ahora es List<Jornalero>
                 //Para ver los datos que se estan pasando por la terminal de salida
                 //foreach (var j in listaLocal)
