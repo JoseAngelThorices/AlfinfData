@@ -2,7 +2,7 @@ using SQLite;
 
 namespace AlfinfData.Models.SQLITE
 {
-    public partial class Jornalero : ObservableObject
+    public partial class Jornalero
     {
         [PrimaryKey]
         public int IdJornalero { get; set; }
