@@ -15,6 +15,16 @@
             <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" 
                   Padding="3" 
                   RowSpacing="3">
+                <Picker x:Name="GrupoPicker"
+        Title="Selecciona cuadrilla"
+        BackgroundColor="#fbffb8"
+        TitleColor="Black"
+        TextColor="Black"
+        HeightRequest="40"
+        Margin="5"
+        ItemsSource="{Binding Cuadrillas}"
+        ItemDisplayBinding="{Binding Descripcion}"
+        SelectedItem="{Binding CuadrillaSeleccionada, Mode=TwoWay}" />
 
                 <Grid Grid.Row="3" 
                       ColumnDefinitions="80,*,Auto" 
@@ -29,14 +39,15 @@
                         StrokeShape="RoundRectangle 10"
                         BackgroundColor="White"
                         Margin="5">
-                    <CollectionView x:Name="ListaDeJornaleros"
-                                  SelectionMode="Multiple">
+                    <CollectionView ItemsSource="{Binding JornalerosConCajas}"
+                        x:Name="ListaDeJornaleros"
+                        SelectionMode="Multiple">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <Grid Padding="8" ColumnDefinitions="70,*,Auto,Auto">
                                     <Label Text="{Binding IdJornalero}" VerticalOptions="Center" TextColor="Black" />
                                     <Label Text="{Binding Nombre}" VerticalOptions="Center" Grid.Column="1" TextColor="Black"/>
-                                    <Label Text="{Binding Cajas}" VerticalOptions="Center" Grid.Column="2" TextColor="Black" FontAttributes="Bold"/>
+                                    <Label Text="{Binding TotalCajas}" VerticalOptions="Center" Grid.Column="2" TextColor="Black" FontAttributes="Bold"/>
                                 </Grid>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
