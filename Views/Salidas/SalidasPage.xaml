@@ -66,7 +66,7 @@
                 Stroke="#a0a0a0"
                 StrokeShape="RoundRectangle 10"
                 BackgroundColor="White"
-                Margin="5">
+                Margin="5,0">
             <CollectionView x:Name="ListaActual" SelectionMode="None" />
         </Border>
 
@@ -75,7 +75,7 @@
                Text="Pendientes:"
                FontAttributes="Bold"
                TextColor="Black"
-               Margin="5,10,5,0" />
+               Margin="5,0" />
 
         <Border Grid.Row="5"
                 Stroke="#a0a0a0"

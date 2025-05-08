@@ -26,7 +26,7 @@ namespace AlfinfData.ViewModels
         public async Task CargarEmpleadosAsync()
         {
             TodosLosJornaleros = await _repo.GetAllAsync();
-            FiltrarJornaleros(); // Mostrar todos al inicio
+            FiltrarJornaleros();
         }
 
         public async Task CargarCuadrillaAsync()
@@ -59,7 +59,6 @@ namespace AlfinfData.ViewModels
                 Jornaleros.Add(j);
         }
 
-
         public void SeleccionarTodos()
         {
             foreach (var jornalero in Jornaleros)
@@ -71,6 +70,5 @@ namespace AlfinfData.ViewModels
             foreach (var jornalero in Jornaleros)
                 jornalero.Activo = false;
         }
-
     }
 }

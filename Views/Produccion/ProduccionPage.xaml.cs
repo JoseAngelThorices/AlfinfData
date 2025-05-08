@@ -133,6 +133,7 @@ namespace AlfinfData.Views.Produccion
         }
 
         // Construye el mensaje resumen para la confirmación
+
         private string CrearResumenAccion(int cajas, int cantidadJornaleros)
         {
             string verbo = cajas > 0 ? "Añadir" : "Restar";
