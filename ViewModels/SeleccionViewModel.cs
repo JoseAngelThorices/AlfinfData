@@ -45,6 +45,8 @@ namespace AlfinfData.ViewModels
             FiltrarJornaleros();
         }
 
+
+
         private void FiltrarJornaleros()
         {
             Jornaleros.Clear();
