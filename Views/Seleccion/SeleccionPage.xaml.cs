@@ -17,9 +17,7 @@ public partial class SeleccionPage : ContentPage
         base.OnAppearing();
 
         if (_viewModel.Jornaleros.Count == 0)
-        {
             await _viewModel.CargarEmpleadosAsync();
-        }
 
         await _viewModel.CargarCuadrillaAsync();
     }

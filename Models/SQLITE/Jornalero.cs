@@ -1,10 +1,8 @@
-﻿using SQLite;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using SQLite;
 
 namespace AlfinfData.Models.SQLITE
 {
-    public class Jornalero
+    public partial class Jornalero : ObservableObject
     {
         [PrimaryKey]
         public int IdJornalero { get; set; }

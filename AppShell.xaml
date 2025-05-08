@@ -12,18 +12,24 @@
 
     <!-- Barra superior -->
     <Shell.TitleView>
-        <Grid ColumnDefinitions="Auto,*,Auto" BackgroundColor="#71639e">
-            <Button ImageSource="btncuadrados.png"
-                    Clicked="OnBackToMainClicked"
-                    BackgroundColor="Transparent"
-                    HeightRequest="30"
-                    WidthRequest="30"
-                    Padding="0"/>
+    <Grid ColumnDefinitions="Auto,*,Auto" BackgroundColor="#71639e" Padding="10,0">
+        <!-- Botón de cuadrados -->
+        <Button ImageSource="btncuadrados.png"
+                Clicked="OnBackToMainClicked"
+                BackgroundColor="Transparent"
+                HeightRequest="30"
+                WidthRequest="30"
+                Padding="0"
+                HorizontalOptions="Start"
+                VerticalOptions="Center"/>
+
+        <!-- Título y fecha -->
+        <Grid Grid.Column="1"
+              HorizontalOptions="Center"
+              VerticalOptions="Center">
             <VerticalStackLayout x:Name="TituloStack"
-                                 Grid.Column="1"
+                                 HorizontalOptions="Center"
                                  VerticalOptions="Center"
-                                 HorizontalOptions="Start"
-                                 Margin="10,0,0,0"
                                  Spacing="0">
                 <Label Text="{Binding Titulo}"
                        TextColor="White"
@@ -34,15 +40,22 @@
                        FontSize="12"
                        HorizontalTextAlignment="Center"/>
             </VerticalStackLayout>
-            <Button ImageSource="trespuntos.png"
-                    Grid.Column="2"
-                    Clicked="OnAbrirConfiguracionClicked"
-                    BackgroundColor="Transparent"
-                    HeightRequest="50"
-                    WidthRequest="40"
-                    Padding="0"/>
         </Grid>
-    </Shell.TitleView>
+
+        <!-- Botón tres puntos con margen hacia la izquierda -->
+        <Button ImageSource="trespuntos.png"
+                Grid.Column="2"
+                Clicked="OnAbrirConfiguracionClicked"
+                BackgroundColor="Transparent"
+                HeightRequest="50"
+                WidthRequest="40"
+                Padding="0"
+                Margin="10,0,0,0"
+                HorizontalOptions="End"
+                VerticalOptions="Center"/>
+    </Grid>
+</Shell.TitleView>
+
 
     <!-- Menú lateral -->
     <Shell.FlyoutHeader>
