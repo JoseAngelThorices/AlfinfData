@@ -1,4 +1,3 @@
-using CommunityToolkit.Mvvm.ComponentModel;
 using SQLite;
 
 namespace AlfinfData.Models.SQLITE
@@ -10,10 +9,7 @@ namespace AlfinfData.Models.SQLITE
         public int IdCuadrilla { get; set; }
         public string? Nombre { get; set; }
         public int? NumeroLista { get; set; }
-
-        [ObservableProperty]
-        private bool activo;
-
+        public bool Activo { get; set; }
         public string? TarjetaNFC { get; set; }
     }
 }

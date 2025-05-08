@@ -13,7 +13,6 @@ using System.Text;
 namespace AlfinfData.ViewModels
 {
 
-
     public partial class DescargasViewModel : ObservableObject
     {
         private readonly IEmpleadosService _empleadosService;     // servicio Odoo Empleado
