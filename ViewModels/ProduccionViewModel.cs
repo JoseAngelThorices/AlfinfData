@@ -67,7 +67,7 @@ namespace AlfinfData.ViewModels
                 JornalerosConCajas.Add(j);
         }
 
-        // ✅ Método para añadir o restar cajas
+        // Método para añadir o restar cajas
         public async Task ProcesarCajasAsync(int cantidad)
         {
             if (Seleccionados is null || Seleccionados.Count == 0)
