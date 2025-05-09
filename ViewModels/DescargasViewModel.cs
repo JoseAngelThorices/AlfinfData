@@ -17,21 +17,29 @@ namespace AlfinfData.ViewModels
     {
         private readonly IEmpleadosService _empleadosService;     // servicio Odoo Empleado
         private readonly ICuadrillasService _cuadrillaService;    // servicio Odoo Cuadrilla
+        private readonly ITarjetaNFCServices _tarjetaNFCService;
         private readonly JornaleroRepository _jornaleroRepo;      // repositorio SQLite
         private readonly CuadrillaRepository _cuadrillaRepo;
-        public DescargasViewModel(IEmpleadosService empleadosService, ICuadrillasService cuadrillaService, JornaleroRepository jornaleroRepo, CuadrillaRepository cuadrillaRepo)
+        private readonly List<int> _rangoValores = new List<int>();
+        public ObservableCollection<Empleado> Empleados { get; }
+        public ObservableCollection<CuadrillaOdoo> Cuadrillas { get; }
+        public ObservableCollection<TarjetaNFC> TagsLeidas { get; } = new();
+        private readonly List<string> _hexIds = new List<string>();
+        private int _startValue;
+        private int _endValue;
+        public DescargasViewModel(IEmpleadosService empleadosService, ICuadrillasService cuadrillaService, ITarjetaNFCServices tarjetaNFCService,
+            JornaleroRepository jornaleroRepo, CuadrillaRepository cuadrillaRepo )
         {
             _empleadosService = empleadosService;
             _cuadrillaService = cuadrillaService;
+            _tarjetaNFCService = tarjetaNFCService;
             _jornaleroRepo = jornaleroRepo;
             _cuadrillaRepo = cuadrillaRepo;
             Empleados = new ObservableCollection<Empleado>();
             Cuadrillas = new ObservableCollection<CuadrillaOdoo>();
         }
 
-        public ObservableCollection<Empleado> Empleados { get; }
-        public ObservableCollection<CuadrillaOdoo> Cuadrillas { get; }
-        public ObservableCollection<string> TagsLeidas { get; } = new();
+       
 
         [ObservableProperty]
         private bool isBusy;
@@ -56,7 +64,7 @@ namespace AlfinfData.ViewModels
             CrossNFC.Current.OnMessageReceived += OnTagReceived;
             try
             {
-                var valor = RangoValores();
+                await SolicitarYRellenarRangoAsync();
                 CrossNFC.Current.StartListening();
                 IsAltaPopupVisible = true;
             }
@@ -70,23 +78,23 @@ namespace AlfinfData.ViewModels
 
         void OnTagReceived(ITagInfo tagInfo)
         {
-        // raw bytes
-        var idBytes = tagInfo.Identifier;
-        var idHex = BitConverter.ToString(idBytes);
+            // raw bytes
+            var idBytes = tagInfo.Identifier;
+            var idHex = BitConverter.ToString(idBytes);
 
-        // serial como string
-        var serial = tagInfo.SerialNumber;
-
-        MainThread.BeginInvokeOnMainThread(async () =>
-            {
-                await Shell.Current.DisplayAlert(
-                    "NFC leído",
-                    $"ID bytes: {idHex}\nSerialNumber: {serial}",
-                    "OK");
-                });
+            // serial como string
+            var serial = tagInfo.SerialNumber;
+            _hexIds.Add(serial);
+            //MainThread.BeginInvokeOnMainThread(async () =>
+            //    {
+            //        await Shell.Current.DisplayAlert(
+            //            "NFC leído",
+            //            $"ID bytes: {idBytes}\nSerialNumber: {serial}",
+            //            "OK");
+            //    });
         }
 
-        async Task<(int start, int end)?> RangoValores()
+        public async Task<(int start, int end)?> RangoValores()
         {
             // Pedir inicio
             var startStr = await Shell.Current.DisplayPromptAsync(
@@ -114,9 +122,46 @@ namespace AlfinfData.ViewModels
             return (start, end);
         }
 
+        // 3) Método que llama a RangoValores y guarda el resultado
+        public async Task SolicitarYRellenarRangoAsync()
+        {
+            var resultado = await RangoValores();
+            if (resultado.HasValue)
+            {
+                _startValue = resultado.Value.start;
+                _endValue = resultado.Value.end;
+
+                // 1) Limpiamos la lista
+                _rangoValores.Clear();
+
+                // 2) La llenamos con cada valor entre start y end
+                for (int i = _startValue; i <= _endValue; i++)
+                {
+                    _rangoValores.Add(i);
+                }
+            }
+            else
+            {
+                // Cancelado o error…
+            }
+        }
         [RelayCommand]
         private async void CancelarAlta()
         {
+            for (int i = 0;i < _hexIds.Count; i++)
+            {
+                    var tarjeta = new TarjetaNFC
+                    {
+                        IdTarjetaNFC = _rangoValores[i],
+                        NumeroSerie = _hexIds[i],
+                    };
+
+                    // La añades a la colección
+                    TagsLeidas.Add(tarjeta);
+            }
+            await _tarjetaNFCService.CreateTarjetasNFCAsync(TagsLeidas);
+            TagsLeidas.Clear();
+            _hexIds.Clear();
             IsAltaPopupVisible = false;
             CrossNFC.Current.StopListening();
             CrossNFC.Current.OnMessageReceived -= OnTagReceived;
@@ -144,7 +189,8 @@ namespace AlfinfData.ViewModels
                     Nombre = o.Nombre,
                     IdCuadrilla = o.Id_Departamento,   
                     IdJornalero = o.Id,
-                    Activo = o.Activo
+                    Activo = o.Activo,
+                    TarjetaNFC = o.TarjetaNFC,
                 }).ToList(); // ahora es List<Jornalero>
                 //Para ver los datos que se estan pasando por la terminal de salida
                 //foreach (var j in listaLocal)

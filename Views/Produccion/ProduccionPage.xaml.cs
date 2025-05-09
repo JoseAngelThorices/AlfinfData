@@ -6,6 +6,7 @@ using System;
 
 namespace AlfinfData.Views.Produccion
 {
+
     public partial class ProduccionPage : ContentPage
     {
         private readonly ProduccionViewModel _viewModel;
@@ -142,3 +143,7 @@ namespace AlfinfData.Views.Produccion
         }
     }
 }
+
+
+
+

@@ -25,12 +25,10 @@
         ItemDisplayBinding="{Binding Descripcion}"
         SelectedItem="{Binding CuadrillaSeleccionada, Mode=TwoWay}" />
 
-                <Grid Grid.Row="3" 
-                      ColumnDefinitions="0.3*,*,0.2*" 
-                      Padding="0">
-                    <Label Text="N.L." FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
-                    <Label Text="Nombre" FontAttributes="Bold" TextColor="Black" Grid.Column="1" VerticalOptions="Center"/>
-                    <Label Text="Cajas" FontAttributes="Bold" TextColor="Black" Grid.Column="2" VerticalOptions="Center"/>
+                <Grid Grid.Row="2" ColumnDefinitions="70,200*,40*" Padding="8">
+                    <Label Text="N.L." FontAttributes="Bold" TextColor="Black" />
+                    <Label Text="Nombre" FontAttributes="Bold" TextColor="Black" Grid.Column="1" />
+                    <Label Text="Cajas" FontAttributes="Bold" TextColor="Black" Grid.Column="2" />
                 </Grid>
 
                 <Border Grid.Row="4"
