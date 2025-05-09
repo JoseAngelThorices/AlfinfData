@@ -71,7 +71,7 @@ public static class MauiProgram
         builder.Services.AddTransient<SeleccionViewModels>();
         builder.Services.AddTransient<ProduccionViewModel>();
         builder.Services.AddTransient<DescargasPage>();
-
+        builder.Services.AddTransient<InicioViewModel>();
 
         // Configuración de base de datos local SQLite
         var dbPath = Path.Combine(FileSystem.AppDataDirectory, "BaseDeDatosLocal.db3");

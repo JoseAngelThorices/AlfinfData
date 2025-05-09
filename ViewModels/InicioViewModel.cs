@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using AlfinfData.Popups;
 using CommunityToolkit.Maui.Views;
+using AlfinfData.Services.BdLocal;
+using AlfinfData.Models.SQLITE;
 
 
 namespace AlfinfData.ViewModels
@@ -8,8 +10,24 @@ namespace AlfinfData.ViewModels
     public class InicioViewModel : BindableObject
     {
         private readonly Page _page;
-
         private string _titulo;
+        private readonly FichajeRepository _fichajeRepository;
+        public string FechaSistema => $"F.T.: {DateTime.Now:dd-MM-yyyy}";
+        public Command NuevoDiaCommand { get; }
+        public Command EntradaCommand { get; }
+        public Command DescargasCommand { get; }
+
+        public InicioViewModel(Page page, FichajeRepository fichajeRepository)
+        {
+            _page = page;
+
+            Titulo = "MENÚ INICIO";
+            _fichajeRepository = fichajeRepository;
+            NuevoDiaCommand = new Command(async () => await OnNuevoDiaClicked());
+            EntradaCommand = new Command(async () => await OnEntradaClicked());
+            DescargasCommand = new Command(async () => await OnDescargasClicked());
+        }
+
         public string Titulo
         {
             get => _titulo;
@@ -18,23 +36,6 @@ namespace AlfinfData.ViewModels
                 _titulo = value;
                 OnPropertyChanged();
             }
-        }
-
-        public string FechaSistema => $"F.T.: {DateTime.Now:dd-MM-yyyy}";
-
-        public Command NuevoDiaCommand { get; }
-        public Command EntradaCommand { get; }
-        public Command DescargasCommand { get; }
-
-        public InicioViewModel(Page page)
-        {
-            _page = page;
-
-            Titulo = "MENÚ INICIO";
-
-            NuevoDiaCommand = new Command(async () => await OnNuevoDiaClicked());
-            EntradaCommand = new Command(async () => await OnEntradaClicked());
-            DescargasCommand = new Command(async () => await OnDescargasClicked());
         }
 
 
@@ -61,7 +62,13 @@ namespace AlfinfData.ViewModels
                         var fechaHora = fechaHoy.Add(horaSeleccionada);
 
                         Titulo = $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}"; // <-- ESTA LÍNEA CAMBIA EL TÍTULO
-
+                        var nuevoDia = new Fichaje
+                        {
+                            HoraEficaz = fechaHora,
+                            TipoFichaje = "Entrada",
+                            InstanteFichaje = DateTime.Today
+                        };
+                       await _fichajeRepository.CrearFichajesAsync(nuevoDia);
                         await _page.DisplayAlert("Nuevo Día", $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}", "OK");
 
                     }

@@ -1,4 +1,5 @@
  using Microsoft.Maui.Controls;
+using AlfinfData.Services.BdLocal;
 using AlfinfData.ViewModels;
 using AlfinfData.Popups;
 using CommunityToolkit.Maui.Views;
@@ -8,10 +9,11 @@ namespace AlfinfData.Views.Inicio
 {
     public partial class InicioPage : ContentPage
     {
-        public InicioPage()
+        private readonly FichajeRepository _fichajeRepository;
+        public InicioPage(InicioViewModel viewModel)
         {
             InitializeComponent();
-            BindingContext = new InicioViewModel(this);
+            BindingContext = new InicioViewModel(this, _fichajeRepository);
         }
         private async void OnNuevoDiaClicked(object sender, EventArgs e)
         {
