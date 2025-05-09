@@ -7,3 +7,5 @@ public partial class ProduccionPage : ContentPage
 		InitializeComponent();
 	}
 }
+
+// This file is part of AlfinfData
