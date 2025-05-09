@@ -18,7 +18,7 @@
         <!-- Fila superior - Picker y Botón -->
         <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
             <Picker x:Name="GrupoPicker"
-                    Title="Selecciona grupo"
+                    Title="Selecciona cuarilla"
                     BackgroundColor="#fbffb8"
                     TitleColor="Black"
                     TextColor="Black"
@@ -55,7 +55,7 @@
         </Grid>
 
         <!-- Cabecera de lista -->
-        <Grid Grid.Row="2" ColumnDefinitions="70,200,Auto" Padding="5,0">
+        <Grid Grid.Row="2" ColumnDefinitions="70*,200*,40*" Padding="5,0">
             <Label Text="N.L." FontAttributes="Bold" TextColor="Black" />
             <Label Text="Nombre" FontAttributes="Bold" TextColor="Black" Grid.Column="1" />
             <Label Text="Hora" FontAttributes="Bold" TextColor="Black" Grid.Column="2" />
