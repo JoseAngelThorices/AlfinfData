@@ -40,6 +40,7 @@
 
                         Margin="5,0">
                     <CollectionView x:Name="ListaDeJornaleros"
+                     ItemsSource="{Binding JornalerosConCajas}"
                                   SelectionMode="Multiple">
 
                         <CollectionView.ItemTemplate>

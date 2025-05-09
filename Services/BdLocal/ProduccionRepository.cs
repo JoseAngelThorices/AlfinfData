@@ -4,6 +4,7 @@ using System.Linq;
 using AlfinfData.Models.SQLITE;
 using SQLite;
 
+
 namespace AlfinfData.Services.BdLocal
 {
     public class ProduccionRepository
@@ -14,6 +15,23 @@ namespace AlfinfData.Services.BdLocal
         {
             _db = databaseService.Conn;
         }
+
+        public async Task UpdateAsync(JornaleroConCajas jornalero)
+        {
+            await _db.UpdateAsync(jornalero);
+        }
+        public async Task InsertProduccionAsync(int idJornalero, int cajas)
+        {
+            var produccion = new Produccion
+            {
+                IdJornalero = idJornalero,
+                Cajas = cajas,
+                Timestamp = DateTime.Now
+            };
+
+            await _db.InsertAsync(produccion);
+        }
+
 
         // Método para obtener todas las producciones
         public Task<List<Produccion>> GetAllAsync()

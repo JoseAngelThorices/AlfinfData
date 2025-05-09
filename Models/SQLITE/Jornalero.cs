@@ -1,5 +1,5 @@
 using SQLite;
-
+using CommunityToolkit.Mvvm.ComponentModel;
 namespace AlfinfData.Models.SQLITE
 {
     public partial class Jornalero : ObservableObject
