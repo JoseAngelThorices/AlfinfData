@@ -144,11 +144,6 @@ namespace AlfinfData.Views.Produccion
     }
 }
 
-	public ProduccionPage()
-	{
-		InitializeComponent();
-	}
-}
 
 
 
