@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace AlfinfData.Models.SQLITE
 {
-    public partial class Jornalero : ObservableObject
+    public partial class Jornalero
     {
         [PrimaryKey, AutoIncrement]
         public int IdJornalero { get; set; }
