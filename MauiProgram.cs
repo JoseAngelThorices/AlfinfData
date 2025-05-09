@@ -70,7 +70,11 @@ public static class MauiProgram
         builder.Services.AddTransient<DescargasViewModel>();
         builder.Services.AddTransient<SeleccionViewModels>();
         builder.Services.AddTransient<ProduccionViewModel>();
+        builder.Services.AddTransient<HorasViewModel>();
+
+
         builder.Services.AddTransient<DescargasPage>();
+
 
 
         // Configuración de base de datos local SQLite
@@ -80,11 +84,8 @@ public static class MauiProgram
         // Repositorios para acceder a datos desde la base local
         builder.Services.AddTransient<JornaleroRepository>();
         builder.Services.AddTransient<CuadrillaRepository>();
-
+        builder.Services.AddTransient<HorasRepository>();
         builder.Services.AddTransient<ProduccionRepository>();
-
-        builder.Services.AddTransient<ProduccionViewModel>();
-
 #if DEBUG
         // Activar logging en modo depuración
         builder.Logging.AddDebug();
