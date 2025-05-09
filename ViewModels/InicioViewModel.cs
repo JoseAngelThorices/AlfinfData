@@ -60,7 +60,7 @@ namespace AlfinfData.ViewModels
                         var fechaHoy = DateTime.Today;
                         var fechaHora = fechaHoy.Add(horaSeleccionada);
 
-                        Titulo = $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}"; // <-- ESTA LÍNEA CAMBIA EL TÍTULO
+                        Titulo = $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}"; 
 
                         await _page.DisplayAlert("Nuevo Día", $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}", "OK");
 
