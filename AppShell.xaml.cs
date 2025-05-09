@@ -59,7 +59,6 @@ namespace AlfinfData
             Routing.RegisterRoute(nameof(SalidasPage), typeof(SalidasPage));
             Routing.RegisterRoute(nameof(SeleccionPage), typeof(SeleccionPage));
             Routing.RegisterRoute(nameof(ConfiguracionPage), typeof(ConfiguracionPage));
-            Routing.RegisterRoute(nameof(CalcularPage), typeof(CalcularPage));
         }
 
         private async void OnBackToMainClicked(object sender, EventArgs e)
