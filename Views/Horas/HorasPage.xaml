@@ -15,7 +15,7 @@
         <!-- Fila amarilla con Picker -->
         <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Padding="0,5" Margin="0">
             <Picker x:Name="GrupoPicker"
-                    Title="Selecciona grupo"
+                    Title="Selecciona cuadrilla"
                     BackgroundColor="#fbffb8"
                     TitleColor="Black"
                     TextColor="Black"

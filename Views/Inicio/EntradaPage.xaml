@@ -17,20 +17,20 @@
         <!-- Fila superior - Picker y Botón -->
         <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
             <Picker x:Name="GrupoPicker"
-                    Title="Selecciona grupo"
+                    Title="Selecciona cuadrilla"
                     BackgroundColor="#fbffb8"
                     TitleColor="Black"
                     TextColor="Black"
                     HeightRequest="40"
                     Margin="5" />
 
-            <Button Text="NO FALTA"
+            <!--<Button Text="NO FALTA"
                     BackgroundColor="#8d8d8d"
                     TextColor="White"
                     FontAttributes="Bold"
                     HeightRequest="40"
                     Grid.Column="1"
-                    Margin="5" />
+                    Margin="5" />-->
         </Grid>
 
         <!-- Fila hora y F. TAREA -->
@@ -44,13 +44,13 @@
                     Margin="5"
                     Clicked="OnHoraButtonClicked" />
 
-            <Button Text="F. TAREA"
+            <!--<Button Text="F. TAREA"
                     BackgroundColor="#8d8d8d"
                     TextColor="White"
                     FontAttributes="Bold"
                     HeightRequest="40"
                     Grid.Column="1"
-                    Margin="5" />
+                    Margin="5" />-->
         </Grid>
 
         <!-- Cabecera de lista -->
