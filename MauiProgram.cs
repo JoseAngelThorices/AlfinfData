@@ -62,6 +62,7 @@ public static class MauiProgram
             };
         });
 
+
         // Servicios de negocio (inyección de dependencias)
         builder.Services.AddScoped<IEmpleadosService, EmpleadosService>();
         builder.Services.AddScoped<ICuadrillasService, CuadrillaService>();

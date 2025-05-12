@@ -13,7 +13,7 @@ namespace AlfinfData.ViewModels
     {
         private readonly FichajeRepository _fichajeRepo;
         private readonly JornaleroRepository _jornalerojeRepo;
-        public ObservableCollection<JornaleroEntrada> JornalerosE { get; set; } = new();
+        public ObservableCollection<JornaleroEntrada> JornalerosE { get; set; }  = new ObservableCollection<JornaleroEntrada>();
 
         [ObservableProperty]
         private string _horaTexto = "HORA";
@@ -37,8 +37,26 @@ namespace AlfinfData.ViewModels
 
             if (!string.IsNullOrEmpty(seleccion) && seleccion != "Cancelar")
             {
-                _horaTexto = seleccion.ToString();
+                HoraTexto = seleccion.ToString();
+                TimeSpan horaSeleccionada = TimeSpan.ParseExact(HoraTexto, @"HH\:mm", CultureInfo.InvariantCulture);
+                var fechaHoy = DateTime.Today;
+                var fechaHora = fechaHoy.Add(horaSeleccionada);
+                await _fichajeRepo.ActualizarHoraEficazAsync(999999, fechaHora);
+                
             }
+        }
+        public async Task CargarFichajeAsync()
+        {
+            var lista = await _fichajeRepo.GetJornaleroEntradasAsync();
+            if (lista != null)
+            {
+                JornalerosE.Clear();
+                foreach (var e in lista)
+                {           
+                    JornalerosE.Add(e);                   
+               }
+            }
+
         }
         public async Task<bool> EntradaNFCAsync()
         {
@@ -96,20 +114,29 @@ namespace AlfinfData.ViewModels
                         InstanteFichaje = DateTime.Today
                     };
 
-                    await _fichajeRepo.CrearFichajesAsync(nuevoFichaje);
-                    var JornaleroEntrando = new JornaleroEntrada
+                    bool resultado = await _fichajeRepo.CrearFichajesAsync(nuevoFichaje);
+
+                    if (resultado)
                     {
-                        IdJornalero = jornalero.IdJornalero,
-                        Nombre = jornalero.Nombre,
-                        HoraEficaz = fechaHora.ToString(@"hh\:mm")
-                    };
-                    JornalerosE.Add(JornaleroEntrando);
-                    await _jornalerojeRepo.SetActiveAsync(jornalero.IdJornalero, true);
+                        var JornaleroEntrando = new JornaleroEntrada
+                        {
+                            IdJornalero = jornalero.IdJornalero,
+                            Nombre = jornalero.Nombre,
+                            HoraEficaz = fechaHora
+                        };
+                        JornalerosE.Add(JornaleroEntrando);
+                        await _jornalerojeRepo.SetActiveAsync(jornalero.IdJornalero, true);
+                    }
+                    else
+                    {
+                        await Shell.Current.DisplayAlert("Importante", "El jornalero ya fichó su entrada.", "OK");
+                    }
+                    
                 }
                 else
                 {
-                    // No existe
-                    Console.WriteLine("No se encontró ningún jornalero con ese serial.");
+                    await Shell.Current.DisplayAlert("Importante", "No se encontró ningún jornalero con ese serial. Debería de descargar de nuevo los jornaleros.", "OK");
+                    
                 }
             }
             catch (FormatException fe)
@@ -141,28 +168,24 @@ namespace AlfinfData.ViewModels
 
                 // Obtén la lista (puede devolver null)
                 var fichaje = await _fichajeRepo.GetFirstByJornaleroAsync(999999);
-               
-                if (fichaje == null)
-                {
-                    // No hay registros → valor por defecto
-                    HoraTexto = "—";
-                    return;
-                }
-
+  
                 // Supongamos que Hora es TimeSpan
-                HoraTexto = fichaje.HoraEficaz.ToString(@"hh\:mm");
+                HoraTexto = fichaje.HoraEficaz.ToString(@"HH\:mm");
+                
             }
             catch (NullReferenceException nre)
             {
                 // Captura explicita de NRE
                 Debug.WriteLine($"NullReferenceException en CargarHoraAsync: {nre}");
                 HoraTexto = "—";
+                
             }
             catch (Exception ex)
             {
                 // Cualquier otra excepción
                 Debug.WriteLine($"Error en CargarHoraAsync: {ex}");
                 HoraTexto = "Error";
+               
             }
 
         }
