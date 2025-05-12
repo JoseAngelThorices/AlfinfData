@@ -62,7 +62,7 @@
         <Grid BackgroundColor="#FFFFFF" Padding="20">
             <VerticalStackLayout HorizontalOptions="Center" Spacing="5">
                 <Image Source="menusuperior.png" WidthRequest="200" HeightRequest="80"/>
-                <Label Text="Menú"
+                <Label Text="Fecha"
                    FontSize="Medium"
                    TextColor="Black"
                    FontAttributes="Bold"

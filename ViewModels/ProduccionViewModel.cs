@@ -39,14 +39,14 @@ namespace AlfinfData.ViewModels
         public async Task CargarJornalerosConCajasAsync()
         {
             var jornalerosConCajas = await _produccionRepository.GetJornalerosConCajasAsync();
-
             TodosLosJornaleros = jornalerosConCajas.ToList();
 
             JornalerosConCajas.Clear();
             JornalerosConCajas = new ObservableCollection<JornaleroConCajas>(jornalerosConCajas);
-            OnPropertyChanged(nameof(JornalerosConCajas));  // Notifica al UI que cambió la lista
-
+            OnPropertyChanged(nameof(JornalerosConCajas));
         }
+
+
 
         partial void OnCuadrillaSeleccionadaChanged(Cuadrilla value)
         {
@@ -67,7 +67,20 @@ namespace AlfinfData.ViewModels
                 JornalerosConCajas.Add(j);
         }
 
-        // Método para añadir o restar cajas
+        // Método para añadir un registro de producción
+        public async Task InsertProduccionAsync(int idJornalero, int cajas)
+        {
+            var produccion = new Produccion
+            {
+                IdJornalero = idJornalero,
+                Cajas = cajas,
+                Timestamp = DateTime.Now
+            };
+
+            await _produccionRepository.InsertProduccionAsync(produccion);
+        }
+
+        // Método para añadir o restar cajas a los seleccionados
         public async Task ProcesarCajasAsync(int cantidad)
         {
             if (Seleccionados is null || Seleccionados.Count == 0)
@@ -75,12 +88,11 @@ namespace AlfinfData.ViewModels
 
             foreach (var j in Seleccionados)
             {
-                await _produccionRepository.InsertProduccionAsync(j.IdJornalero, cantidad);
+                await InsertProduccionAsync(j.IdJornalero, cantidad);
             }
 
-            await CargarJornalerosConCajasAsync(); // vuelve a calcular TotalCajas
-            FiltrarJornaleros();                   // mantiene el filtro si hay
+            await CargarJornalerosConCajasAsync();
+            FiltrarJornaleros();
         }
-
     }
 }

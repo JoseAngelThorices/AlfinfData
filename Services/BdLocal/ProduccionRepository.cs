@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
-using AlfinfData.Models.SQLITE;
+﻿using AlfinfData.Models.SQLITE;
 using SQLite;
-
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AlfinfData.Services.BdLocal
 {
@@ -16,36 +14,42 @@ namespace AlfinfData.Services.BdLocal
             _db = databaseService.Conn;
         }
 
-        public async Task UpdateAsync(JornaleroConCajas jornalero)
+        // Insertar un nuevo registro de producción
+        public async Task InsertProduccionAsync(Produccion produccion)
         {
-            await _db.UpdateAsync(jornalero);
-        }
-        public async Task InsertProduccionAsync(int idJornalero, int cajas)
-        {
-            var produccion = new Produccion
-            {
-                IdJornalero = idJornalero,
-                Cajas = cajas,
-                Timestamp = DateTime.Now
-            };
-
             await _db.InsertAsync(produccion);
         }
 
-
-        // Método para obtener todas las producciones
+        // Obtener todas las producciones (opcional)
         public Task<List<Produccion>> GetAllAsync()
-            => _db.Table<Produccion>().ToListAsync();
+        {
+            return _db.Table<Produccion>().ToListAsync();
+        }
 
-        // Método que obtiene la lista combinada de jornaleros con sus cajas
+        public Task<List<Produccion>> GetProduccionPorFechaAsync(DateTime fecha)
+        {
+            return _db.Table<Produccion>()
+                      .Where(p => p.Timestamp.Date == fecha.Date)
+                      .ToListAsync();
+        }
+        public Task<List<Produccion>> GetProduccionEntreFechasAsync(DateTime desde, DateTime hasta)
+        {
+            return _db.Table<Produccion>()
+                      .Where(p => p.Timestamp >= desde && p.Timestamp <= hasta)
+                      .ToListAsync();
+        }
+
+
+        // Obtener lista combinada de jornaleros con sus cajas totales
         public Task<List<JornaleroConCajas>> GetJornalerosConCajasAsync()
         {
             return _db.QueryAsync<JornaleroConCajas>(
-                @"SELECT j.IdJornalero, j.IdCuadrilla, j.Nombre, IFNULL(SUM(p.Cajas), 0) as TotalCajas
+                @"SELECT j.IdJornalero, j.IdCuadrilla, j.Nombre, 
+                 IFNULL(SUM(p.Cajas), 0) AS TotalCajas
           FROM Jornalero j
           LEFT JOIN Produccion p ON j.IdJornalero = p.IdJornalero
           GROUP BY j.IdJornalero, j.IdCuadrilla, j.Nombre
           ORDER BY j.Nombre");
         }
     }
- }
+}
