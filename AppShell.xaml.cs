@@ -59,7 +59,6 @@ namespace AlfinfData
             Routing.RegisterRoute(nameof(SalidasPage), typeof(SalidasPage));
             Routing.RegisterRoute(nameof(SeleccionPage), typeof(SeleccionPage));
             Routing.RegisterRoute(nameof(ConfiguracionPage), typeof(ConfiguracionPage));
-            Routing.RegisterRoute(nameof(CalcularPage), typeof(CalcularPage));
         }
 
         private async void OnBackToMainClicked(object sender, EventArgs e)
@@ -95,6 +94,8 @@ namespace AlfinfData
                 "horaspage" => "Horas",
                 "salidaspage" => "Salidas",
                 "finpage" => "Fin",
+                "entradapage" => "Entrada",
+                "descargaspage" => "Descargas",
                 "configuracionpage" => "Configuración",
                 _ => "AlfinfData"
             };
@@ -134,5 +135,10 @@ namespace AlfinfData
                 await Application.Current.MainPage.DisplayAlert("Acceso denegado", "Contraseña incorrecta.", "OK");
             }
         }
+        private async void OnAccesoDirectoAltaNFC(object sender, EventArgs e)
+        {
+            await Shell.Current.GoToAsync($"{nameof(DescargasPage)}?accion=alta");
+        }
+
     }
 }

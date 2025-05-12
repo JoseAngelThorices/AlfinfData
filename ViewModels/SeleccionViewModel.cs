@@ -14,7 +14,6 @@ namespace AlfinfData.ViewModels
 
         public ObservableCollection<Jornalero> Jornaleros { get; } = new();
         public ObservableCollection<Cuadrilla> Cuadrillas { get; } = new();
-
         private List<Jornalero> TodosLosJornaleros { get; set; } = new();
 
         public SeleccionViewModels(JornaleroRepository repo, CuadrillaRepository repoC)
@@ -45,12 +44,9 @@ namespace AlfinfData.ViewModels
             FiltrarJornaleros();
         }
 
-
-
         private void FiltrarJornaleros()
         {
             Jornaleros.Clear();
-
             var cuadrillaId = CuadrillaSeleccionada?.IdCuadrilla ?? 0;
 
             var listaFiltrada = CuadrillaSeleccionada == null
