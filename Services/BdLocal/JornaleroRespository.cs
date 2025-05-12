@@ -46,6 +46,18 @@ namespace AlfinfData.Services.BdLocal
         public Task<List<Jornalero>> GetAllAsync()
             => _db.Table<Jornalero>().ToListAsync();
 
-      
+
+        // Actualiza un solo jornalero
+        public Task UpdateAsync(Jornalero jornalero)
+        {
+            return _db.UpdateAsync(jornalero);
+        }
+
+        // Actualiza varios jornaleros a la vez
+        public Task UpdateManyAsync(IEnumerable<Jornalero> jornaleros)
+        {
+            return _db.UpdateAllAsync(jornaleros.ToList());
+        }
+
     }
 }

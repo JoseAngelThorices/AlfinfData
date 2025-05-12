@@ -95,6 +95,8 @@ namespace AlfinfData
                 "salidaspage" => "Salidas",
                 "finpage" => "Fin",
                 "configuracionpage" => "Configuración",
+                "entradapage" => "Entrada",
+                "descargaspage" => "Descargas",
                 _ => "AlfinfData"
             };
 

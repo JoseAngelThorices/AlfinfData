@@ -16,6 +16,12 @@ namespace AlfinfData.ViewModels
         public ObservableCollection<Cuadrilla> Cuadrillas { get; } = new();
         private List<Jornalero> TodosLosJornaleros { get; set; } = new();
 
+        [ObservableProperty]
+        private Cuadrilla? _cuadrillaSeleccionada;
+
+        [ObservableProperty]
+        private int seleccionados;
+
         public SeleccionViewModels(JornaleroRepository repo, CuadrillaRepository repoC)
         {
             _repo = repo;
@@ -36,10 +42,7 @@ namespace AlfinfData.ViewModels
                 Cuadrillas.Add(c);
         }
 
-        [ObservableProperty]
-        private Cuadrilla cuadrillaSeleccionada;
-
-        partial void OnCuadrillaSeleccionadaChanged(Cuadrilla value)
+        partial void OnCuadrillaSeleccionadaChanged(Cuadrilla? value)
         {
             FiltrarJornaleros();
         }
@@ -55,18 +58,60 @@ namespace AlfinfData.ViewModels
 
             foreach (var j in listaFiltrada)
                 Jornaleros.Add(j);
+
+            ActualizarContador();
         }
 
-        public void SeleccionarTodos()
+        public async void SeleccionarTodos()
         {
-            foreach (var jornalero in Jornaleros)
-                jornalero.Activo = true;
+            foreach (var j in Jornaleros)
+                j.Activo = true;
+
+            await _repo.UpdateManyAsync(Jornaleros);
+
+            // Recargar desde la BD los datos actualizados
+            await RecargarDesdeBD();
         }
 
-        public void QuitarTodos()
+        public async void QuitarTodos()
         {
-            foreach (var jornalero in Jornaleros)
-                jornalero.Activo = false;
+            foreach (var j in Jornaleros)
+                j.Activo = false;
+
+            await _repo.UpdateManyAsync(Jornaleros);
+
+            await RecargarDesdeBD();
         }
+
+
+        public async Task ActualizarJornaleroAsync(Jornalero j)
+        {
+            await _repo.UpdateAsync(j);
+        }
+
+        public void ActualizarContador()
+        {
+            Seleccionados = Jornaleros.Count(j => j.Activo == true);
+        }
+
+
+        private async Task RecargarDesdeBD()
+        {
+            var cuadrillaId = CuadrillaSeleccionada?.IdCuadrilla ?? 0;
+
+            var actualizados = await _repo.GetAllAsync();
+            TodosLosJornaleros = actualizados;
+
+            var filtrados = CuadrillaSeleccionada == null
+                ? actualizados
+                : actualizados.Where(j => j.IdCuadrilla == cuadrillaId);
+
+            Jornaleros.Clear();
+            foreach (var j in filtrados)
+                Jornaleros.Add(j);
+
+            ActualizarContador();
+        }
+
     }
 }
