@@ -59,19 +59,31 @@
 
     <!-- Menú lateral -->
     <Shell.FlyoutHeader>
-        <Grid BackgroundColor="White" Padding="20">
-            <VerticalStackLayout HorizontalOptions="Center">
+        <Grid BackgroundColor="#FFFFFF" Padding="20">
+            <VerticalStackLayout HorizontalOptions="Center" Spacing="5">
                 <Image Source="menusuperior.png" WidthRequest="200" HeightRequest="80"/>
+                <Label Text="Menú"
+                   FontSize="Medium"
+                   TextColor="Black"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"/>
                 <Label Text="{Binding FechaMenu}"
-                       FontSize="Small"
-                       TextColor="Gray"
-                       HorizontalOptions="Center"/>
+                   FontSize="Small"
+                   TextColor="Gray"
+                   HorizontalOptions="Center"/>
             </VerticalStackLayout>
         </Grid>
     </Shell.FlyoutHeader>
 
+
+
+
     <!-- Página inicial -->
     <ShellContent Route="main" ContentTemplate="{DataTemplate views:MainPage}" />
+
+    <MenuItem 
+        Text="Alta NFC"
+        Clicked="OnAccesoDirectoAltaNFC" />
 
     <!-- Pie de menú -->
     <Shell.FlyoutFooter>
