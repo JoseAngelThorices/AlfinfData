@@ -45,6 +45,7 @@ namespace AlfinfData.ViewModels
         private bool isBusy;
         [ObservableProperty]
         bool isAltaPopupVisible = false;
+
         [RelayCommand]
         private async Task NfcTarjeta()
         {

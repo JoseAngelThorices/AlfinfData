@@ -1,5 +1,5 @@
 using AlfinfData.ViewModels;
-
+using AlfinfData.Models.SQLITE;
 namespace AlfinfData.Views.Seleccion;
 
 public partial class SeleccionPage : ContentPage
@@ -31,4 +31,14 @@ public partial class SeleccionPage : ContentPage
     {
         _viewModel.QuitarTodos();
     }
+
+    private async void OnJornaleroToggled(object sender, ToggledEventArgs e)
+    {
+        if (sender is Switch sw && sw.BindingContext is Jornalero jornalero)
+        {
+            await _viewModel.ActualizarJornaleroAsync(jornalero);
+            _viewModel.ActualizarContador();
+        }
+    }
+
 }
