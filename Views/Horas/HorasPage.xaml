@@ -32,14 +32,14 @@
         <!-- Cabecera tabla -->
         <Grid Grid.Row="1"
       ColumnSpacing="0"
-      ColumnDefinitions="0.8*,2.5*,1.2*,1.2*,1.2*,1.1*"
+      ColumnDefinitions="0.8*,2.1*,1.2*,1.2*,1.2*,1.1*"
       Padding="5,0">
-            <Label Text="N.L" Grid.Column="0" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
-            <Label Text="Nombre" Grid.Column="1" HorizontalTextAlignment="Start" FontSize="13" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
-            <Label Text="HN" Grid.Column="2" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
-            <Label Text="HE1" Grid.Column="3" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
-            <Label Text="HE2" Grid.Column="4" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
-            <Label Text="Falta" Grid.Column="5" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
+            <Label Text="N.L" Grid.Column="0" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
+            <Label Text="Nombre" Grid.Column="1" HorizontalTextAlignment="Start" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
+            <Label Text="HN" Grid.Column="2" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
+            <Label Text="HE1" Grid.Column="3" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
+            <Label Text="HE2" Grid.Column="4" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
+            <Label Text="Falta" Grid.Column="5" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
         </Grid>
 
 

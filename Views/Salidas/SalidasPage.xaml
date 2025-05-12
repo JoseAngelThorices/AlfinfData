@@ -55,7 +55,7 @@
         </Grid>
 
         <!-- Cabecera de lista -->
-        <Grid Grid.Row="2" ColumnDefinitions="70*,200*,40*" Padding="5,0">
+        <Grid Grid.Row="2" ColumnDefinitions="60*,240*,40*" Padding="5,0">
             <Label Text="N.L." FontAttributes="Bold" TextColor="Black" />
             <Label Text="Nombre" FontAttributes="Bold" TextColor="Black" Grid.Column="1" />
             <Label Text="Hora" FontAttributes="Bold" TextColor="Black" Grid.Column="2" />
@@ -67,7 +67,17 @@
                 StrokeShape="RoundRectangle 10"
                 BackgroundColor="White"
                 Margin="5,0">
-            <CollectionView x:Name="ListaActual" SelectionMode="None" />
+            <CollectionView x:Name="ListaActual" SelectionMode="None" >
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="8" ColumnDefinitions="0.2*,1*,0.1*">
+                            <Label Text="{Binding IdJornalero}" TextColor="Black" />
+                            <Label Text="{Binding Nombre}" Grid.Column="1" TextColor="Black"/>
+                            <Label Text="{Binding TotalHoras}" Grid.Column="2" TextColor="Black" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </Border>
 
         <!-- Sección pendientes -->
@@ -85,10 +95,9 @@
             <CollectionView x:Name="ListaPendientes" SelectionMode="None">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Grid ColumnDefinitions="50,*,Auto" Padding="10,5">
-                            <Label Text="{Binding Numero}" TextColor="Black" />
-                            <Label Text="{Binding Nombre}" Grid.Column="1" TextColor="Black" />
-                            <Label Text="{Binding Tarea}" Grid.Column="2" TextColor="Black" />
+                        <Grid Padding="8" ColumnDefinitions="0.2*,1*,0.1*">
+                            <Label Text="{Binding IdJornalero}" TextColor="Black" />
+                            <Label Text="{Binding Nombre}" Grid.Column="1" TextColor="Black"/>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
