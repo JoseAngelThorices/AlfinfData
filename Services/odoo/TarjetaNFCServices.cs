@@ -1,7 +1,4 @@
 ﻿using AlfinfData.Models.Odoo;
-using Grpc.Core;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
 
 namespace AlfinfData.Services.odoo
