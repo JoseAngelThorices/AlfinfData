@@ -135,5 +135,10 @@ namespace AlfinfData
                 await Application.Current.MainPage.DisplayAlert("Acceso denegado", "Contraseña incorrecta.", "OK");
             }
         }
+        private async void OnAccesoDirectoAltaNFC(object sender, EventArgs e)
+        {
+            await Shell.Current.GoToAsync($"{nameof(DescargasPage)}?accion=alta");
+        }
+
     }
 }

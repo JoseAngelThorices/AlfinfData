@@ -116,6 +116,15 @@ namespace AlfinfData.Views.Produccion
                 return;
             }
 
+            foreach (var jornalero in seleccionados)
+            {
+                if (jornalero.TotalCajas + numberOfBoxes < 0)
+                {
+                    numberOfBoxes = -jornalero.TotalCajas;
+                }
+            }
+
+
             _viewModel.Seleccionados = seleccionados;
 
             await _viewModel.ProcesarCajasAsync(numberOfBoxes);
@@ -125,6 +134,9 @@ namespace AlfinfData.Views.Produccion
                 $"{Math.Abs(numberOfBoxes)} {pluralizar("caja", Math.Abs(numberOfBoxes))} " +
                 $"a {seleccionados.Count} {pluralizar("jornalero", seleccionados.Count)}",
                 "OK");
+
+            ListaDeJornaleros.SelectedItems.Clear();
+
         }
 
 
