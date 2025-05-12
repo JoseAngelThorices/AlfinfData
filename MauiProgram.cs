@@ -71,6 +71,7 @@ public static class MauiProgram
         builder.Services.AddTransient<EntradaViewModel>();
         builder.Services.AddTransient<SeleccionViewModels>();
         builder.Services.AddTransient<ProduccionViewModel>();
+        builder.Services.AddTransient<FinViewModel>();
         builder.Services.AddTransient<HorasViewModel>();
 
 
