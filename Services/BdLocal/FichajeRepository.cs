@@ -21,6 +21,10 @@ namespace AlfinfData.Services.BdLocal
              
             });
         }
+        public Task<Fichaje> GetFirstByJornaleroAsync(int idJornalero) =>
+            _db.Table<Fichaje>()
+            .Where(f => f.IdJornalero == idJornalero)
+            .FirstOrDefaultAsync();
 
         public Task<List<Fichaje>> GetAllAsync()
             => _db.Table<Fichaje>().ToListAsync();

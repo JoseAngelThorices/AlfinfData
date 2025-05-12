@@ -36,13 +36,13 @@
         <!-- Fila hora y F. TAREA -->
         <Grid Grid.Row="1" ColumnDefinitions="*,*">
             <Button x:Name="HoraButton"
-                    Text="HORA"
+                    Text="{Binding HoraTexto}"
                     BackgroundColor="#71639e"
                     TextColor="White"
                     FontAttributes="Bold"
                     HeightRequest="40"
                     Margin="5"
-                    Clicked="OnHoraButtonClicked" />
+                    Command="{Binding HoraButtonCommand}"/>
 
             <Button Text="F. TAREA"
                     BackgroundColor="#8d8d8d"
@@ -66,7 +66,19 @@
                 StrokeShape="RoundRectangle 10"
                 BackgroundColor="White"
                 Margin="5,0">
-            <CollectionView x:Name="ListaActual" SelectionMode="None" />
+            <CollectionView x:Name="ListaDeJornaleros"
+                    ItemsSource="{Binding JornalerosE}"
+                    SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="8" ColumnDefinitions="70,*,Auto" RowDefinitions="30">
+                            <Label Text="{Binding IdJornalero}" VerticalOptions="Center" TextColor="Black" />
+                            <Label Text="{Binding Nombre}" VerticalOptions="Center" Grid.Column="1" TextColor="Black"/>
+                            <Label Text="{Binding HoraEficaz}" VerticalOptions="Center" Grid.Column="2" TextColor="Black"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </Border>
     </Grid>
 </ContentPage>

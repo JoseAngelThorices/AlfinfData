@@ -68,6 +68,7 @@ public static class MauiProgram
         builder.Services.AddScoped<ITarjetaNFCServices, TarjetaNFCServices>();
         // ViewModels y páginas para navegación e inyección
         builder.Services.AddTransient<DescargasViewModel>();
+        builder.Services.AddTransient<EntradaViewModel>();
         builder.Services.AddTransient<SeleccionViewModels>();
         builder.Services.AddTransient<ProduccionViewModel>();
         builder.Services.AddTransient<DescargasPage>();
@@ -84,7 +85,6 @@ public static class MauiProgram
         builder.Services.AddTransient<FichajeRepository>();
         builder.Services.AddTransient<ProduccionRepository>();
 
-        
 
 #if DEBUG
         // Activar logging en modo depuración

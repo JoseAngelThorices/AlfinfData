@@ -53,13 +53,14 @@ namespace AlfinfData.ViewModels
                         var fechaHora = fechaHoy.Add(horaSeleccionada);
 
                         Titulo = $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}"; // <-- ESTA LÍNEA CAMBIA EL TÍTULO
-                       // var nuevoDia = new Fichaje
-                       // {
-                       //     HoraEficaz = fechaHora,
-                       //     TipoFichaje = "Entrada",
-                       //     InstanteFichaje = DateTime.Today
-                       // };
-                       //await _fichajeRepository.CrearFichajesAsync(nuevoDia);
+                        var nuevoDia = new Fichaje
+                        {
+                            IdJornalero = 999999,
+                            HoraEficaz = fechaHora,
+                            TipoFichaje = "Entrada",
+                            InstanteFichaje = DateTime.Today
+                        };
+                       await _fichajeRepository.CrearFichajesAsync(nuevoDia);
                        await Shell.Current.DisplayAlert("Nuevo Día", $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}", "OK");
 
                     }
