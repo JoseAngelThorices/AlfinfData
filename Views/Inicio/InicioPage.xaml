@@ -12,13 +12,13 @@
         <Grid RowDefinitions="Auto,Auto,Auto,Auto"
               RowSpacing="20"
               Padding="20,40">
+            
             <Label Text="{Binding Titulo}"
                 FontSize="25"
                 FontAttributes="Bold"
                 TextColor="Black"
                 HorizontalOptions="Center"
-                Margin="0,0,0,10"
-                IsVisible="{Binding Titulo, Converter={StaticResource TituloVisibleConverter}}" />
+                Margin="0,0,0,10"/>
 
 
             <Button Text="NUEVO DÍA"

@@ -49,13 +49,30 @@
             <Label Text="Activo" FontAttributes="Bold" TextColor="Black" Grid.Column="2" />
         </Grid>
 
+
         <!-- Lista de jornaleros -->
         <Border Grid.Row="3"
+
                 Stroke="#a0a0a0"
                 StrokeShape="RoundRectangle 10"
                 BackgroundColor="White"
                 Margin="5,0"
-                VerticalOptions="FillAndExpand">
+                VerticalOptions="FillAndExpand">   
+                <CollectionView x:Name="ListaDeJornaleros"
+                    ItemsSource="{Binding Jornaleros}"
+                    SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="8" ColumnDefinitions="70,*,Auto" RowDefinitions="30">
+                                <Label Text="{Binding IdJornalero}" VerticalOptions="Center" TextColor="Black" />
+                                <Label Text="{Binding Nombre}" VerticalOptions="Center" Grid.Column="1" TextColor="Black"/>
+                                <Switch IsToggled="{Binding Activo, Mode=TwoWay}" Grid.Column="2" HorizontalOptions="End" />
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Border>
+
 
             <CollectionView x:Name="ListaDeJornaleros"
                             ItemsSource="{Binding Jornaleros}"

@@ -12,6 +12,12 @@ namespace AlfinfData.Services.BdLocal
             _db = dbService.Conn;
         }
 
+        public async Task InsertarHorasAsync(Horas horas)
+        {
+            await _db.InsertAsync(horas);
+        }
+
+
         public Task<List<JornaleroConHoras>> GetJornalerosConHorasAsync(DateTime fecha)
         {
             return _db.QueryAsync<JornaleroConHoras>(

@@ -40,6 +40,25 @@ namespace AlfinfData.Services.BdLocal
                 }
             });
         }
+        public Task<int> SetActiveAsync(int idJornalero, bool isActive)
+        {
+            const string sql = @"
+                UPDATE Jornalero
+                SET Activo = ?
+                WHERE IdJornalero = ?;
+            ";
+
+            // sqlite-net sabe mapear bool a INTEGER (1 o 0)
+            return _db.ExecuteAsync(sql, isActive, idJornalero);
+        }
+        public Task<Jornalero> GetJornaleroBySerialAsync(string serial)
+        {
+            // Usamos la tabla mapeada y LINQ para filtrar por el campo Serial
+            return _db
+                .Table<Jornalero>()
+                .Where(j => j.TarjetaNFC == serial)
+                .FirstOrDefaultAsync();
+        }
 
 
         //Obtiene todos los registros que esten en la tabla jornalero

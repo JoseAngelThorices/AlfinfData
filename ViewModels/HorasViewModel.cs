@@ -39,6 +39,29 @@ namespace AlfinfData.ViewModels
                 Cuadrillas.Add(c);
         }
 
+        public async Task GuardarHorasAsync()
+        {
+            if (JornalerosConHoras == null || !JornalerosConHoras.Any())
+                return;
+
+            foreach (var j in JornalerosConHoras)
+            {
+                var horas = new Horas
+                {
+                    IdJornalero = j.IdJornalero,
+                    Fecha = FechaSeleccionada, // este campo ya lo tienes
+                    HN = j.Hn,
+                    HE1 = j.He1,
+                    HE2 = j.He2
+                };
+
+                await _horasRepo.InsertarHorasAsync(horas);
+            }
+        }
+
+
+
+
         public async Task CargarJornalerosConHorasAsync()
         {
             var lista = await _horasRepo.GetJornalerosConHorasAsync(FechaSeleccionada);

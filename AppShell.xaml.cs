@@ -94,6 +94,8 @@ namespace AlfinfData
                 "horaspage" => "Horas",
                 "salidaspage" => "Salidas",
                 "finpage" => "Fin",
+                "entradapage" => "Entrada",
+                "descargaspage" => "Descargas",
                 "configuracionpage" => "Configuración",
                 "entradapage" => "Entrada",
                 "descargaspage" => "Descargas",
