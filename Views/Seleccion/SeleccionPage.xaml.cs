@@ -30,4 +30,13 @@ public partial class SeleccionPage : ContentPage
     {
         _viewModel.QuitarTodos();
     }
+
+    private async void activardesactivarswitch(object sender, ToggledEventArgs e)
+    {
+        if (sender is Switch sw && sw.BindingContext is Jornalero jornalero)
+        {
+            await _viewModel.ActualizarJornaleroAsync(jornalero);
+            _viewModel.ActualizarContador();
+        }
+    }
 }

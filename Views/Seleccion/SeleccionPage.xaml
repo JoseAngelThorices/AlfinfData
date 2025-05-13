@@ -75,7 +75,6 @@
                             <Label Text="{Binding IdJornalero}" VerticalOptions="Center" TextColor="Black"/>
                             <Label Text="{Binding Nombre}" Grid.Column="1" VerticalOptions="Center" TextColor="Black"/>
                             <Switch IsToggled="{Binding Activo}" Grid.Column="2" HorizontalOptions="End"/>
-
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
