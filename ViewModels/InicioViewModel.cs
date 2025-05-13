@@ -80,6 +80,14 @@ namespace AlfinfData.ViewModels
         {
             try
             {
+                var resultado = await _fichajeRepository.GetFirstByJornaleroAsync(999999);
+                
+                if (resultado == null)
+                {
+                    // 2) Si no, avisamos y salimos SIN navegar
+                    await Shell.Current.DisplayAlert("Importante", "Inicie un nuevo Día primero.", "OK");
+                    return;
+                }
                 await Shell.Current.GoToAsync(nameof(AlfinfData.Views.Inicio.EntradaPage));
                 Debug.WriteLine("Navegando a EntradaPage");
             }
