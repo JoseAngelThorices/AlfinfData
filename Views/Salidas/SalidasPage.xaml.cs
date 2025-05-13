@@ -1,17 +1,32 @@
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Storage;
 using System;
+using AlfinfData.ViewModels;
+
 
 namespace AlfinfData.Views.Salidas
 {
     public partial class SalidasPage : ContentPage
     {
         const string HoraGuardadaKey = "HoraSeleccionada";
-
-        public SalidasPage()
+        private readonly SalidasViewModel _viewModel;
+        public SalidasPage(SalidasViewModel viewModel)
         {
             InitializeComponent();
             RecuperarHoraGuardada();
+            BindingContext = _viewModel = viewModel;
+        }
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            await _viewModel.CargarCuadrillasAsync();
+
+            // Si quieres precargar los jornaleros de la primera cuadrilla (opcional):
+            if (_viewModel.Cuadrillas.Any())
+            {
+                _viewModel.CuadrillaSeleccionada = _viewModel.Cuadrillas.First();
+            }
         }
 
         private void RecuperarHoraGuardada()

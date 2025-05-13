@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<VerticalStackLayout
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="AlfinfData.Views.BarraLateral.BarraLateral"
+    BackgroundColor="White"
+    Padding="10"
+    Spacing="0">
+
+    <!-- Logo -->
+    <VerticalStackLayout HorizontalOptions="Center" Spacing="5">
+        <Image Source="menusuperior.png" WidthRequest="200" HeightRequest="90"/>
+    </VerticalStackLayout>
+
+    <!-- Sección FICHAJES -->
+    <Label Text="1. Fichajes" FontAttributes="Bold" FontSize="16" TextColor="Gray" Margin="10,20,0,0"/>
+    <Button Text="Entradas" StyleClass="MenuButton" TextColor="Black" BackgroundColor="White" Command="{Binding EntradasCommand} "/>
+    <Button Text="Salidas" StyleClass="MenuButton" TextColor="Black" BackgroundColor="White" Command="{Binding SalidasCommand}"/>
+    <Button Text="Inicio Descanso" StyleClass="MenuButton" TextColor="Black" BackgroundColor="White" Command="{Binding InicioDescansoCommand}"/>
+    <Button Text="Fin Descanso" StyleClass="MenuButton" TextColor="Black" BackgroundColor="White" Command="{Binding FinDescansoCommand}"/>
+    <Button Text="Alta NFC" StyleClass="MenuButton" TextColor="Black" BackgroundColor="White" Clicked="OnAccesoDirectoAltaNFC"/>
+
+</VerticalStackLayout>

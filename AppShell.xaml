@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:AlfinfData.Views"
+    xmlns:viewsBarraLateral="clr-namespace:AlfinfData.Views.BarraLateral"
     Shell.BackgroundColor="#71639e"
     Shell.TitleColor="White"
     Shell.ForegroundColor="White"
@@ -12,64 +13,45 @@
 
     <!-- Barra superior -->
     <Shell.TitleView>
-    <Grid ColumnDefinitions="Auto,*,Auto" BackgroundColor="#71639e" Padding="10,0">
-        <!-- Botón de cuadrados -->
-        <Button ImageSource="btncuadrados.png"
-                Clicked="OnBackToMainClicked"
-                BackgroundColor="Transparent"
-                HeightRequest="30"
-                WidthRequest="30"
-                Padding="0"
-                HorizontalOptions="Start"
-                VerticalOptions="Center"/>
+        <Grid ColumnDefinitions="Auto,*,Auto" BackgroundColor="#71639e" Padding="10,0">
+            <Button ImageSource="btncuadrados.png"
+                    Clicked="OnBackToMainClicked"
+                    BackgroundColor="Transparent"
+                    HeightRequest="30"
+                    WidthRequest="30"
+                    Padding="0"
+                    HorizontalOptions="Start"
+                    VerticalOptions="Center" />
 
-        <!-- Título y fecha -->
-        <Grid Grid.Column="1"
-              HorizontalOptions="Center"
-              VerticalOptions="Center">
-            <VerticalStackLayout x:Name="TituloStack"
-                                 HorizontalOptions="Center"
-                                 VerticalOptions="Center"
-                                 Spacing="0">
-                <Label Text="{Binding Titulo}"
-                       TextColor="White"
-                       FontSize="Medium"
-                       HorizontalTextAlignment="Center"/>
-                <Label Text="{Binding FechaHora}"
-                       TextColor="White"
-                       FontSize="12"
-                       HorizontalTextAlignment="Center"/>
-            </VerticalStackLayout>
+            <Grid Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center">
+                <VerticalStackLayout x:Name="TituloStack"
+                                     HorizontalOptions="Center"
+                                     VerticalOptions="Center"
+                                     Spacing="0">
+                    <Label Text="{Binding Titulo}" TextColor="White" FontSize="Medium" HorizontalTextAlignment="Center" />
+                    <Label Text="{Binding FechaHora}" TextColor="White" FontSize="12" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </Grid>
+
+            <Button ImageSource="trespuntos.png"
+                    Grid.Column="2"
+                    Clicked="OnAbrirConfiguracionClicked"
+                    BackgroundColor="Transparent"
+                    HeightRequest="50"
+                    WidthRequest="40"
+                    Padding="0"
+                    Margin="10,0,0,0"
+                    HorizontalOptions="End"
+                    VerticalOptions="Center" />
         </Grid>
-
-        <!-- Botón tres puntos con margen hacia la izquierda -->
-        <Button ImageSource="trespuntos.png"
-                Grid.Column="2"
-                Clicked="OnAbrirConfiguracionClicked"
-                BackgroundColor="Transparent"
-                HeightRequest="50"
-                WidthRequest="40"
-                Padding="0"
-                Margin="10,0,0,0"
-                HorizontalOptions="End"
-                VerticalOptions="Center"/>
-    </Grid>
-</Shell.TitleView>
+    </Shell.TitleView>
 
     <!-- Menú lateral -->
     <Shell.FlyoutHeader>
-        <Grid BackgroundColor="#FFFFFF" Padding="20">
-            <VerticalStackLayout HorizontalOptions="Center" Spacing="5">
-                <Image Source="menusuperior.png" WidthRequest="200" HeightRequest="80"/>
-
-            </VerticalStackLayout>
-        </Grid>
+        <viewsBarraLateral:BarraLateral />
     </Shell.FlyoutHeader>
 
     <!-- Página de Inicio -->
-    <ShellContent Title="Inicio" ContentTemplate="{DataTemplate views:MainPage}"/>
-
-    <!-- Alta NFC -->
-    <MenuItem Text="Alta NFC" Clicked="OnAccesoDirectoAltaNFC" />
+    <ShellContent Route="main" ContentTemplate="{DataTemplate views:MainPage}" />
 
 </Shell>
