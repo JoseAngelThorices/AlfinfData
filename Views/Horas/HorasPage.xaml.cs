@@ -19,9 +19,7 @@ namespace AlfinfData.Views.Horas
         {
             base.OnAppearing();
             await _viewModel.CargarCuadrillasAsync();
-            //await _viewModel.CargarJornalerosConHorasAsync();
-            await _viewModel.CargarJornalerosDesdeFichajesAsync();
-
+            await _viewModel.CargarJornalerosConHorasAsync();
         }
     }
 }
