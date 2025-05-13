@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-          xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-          x:Class="AlfinfData.Views.Fin.FinPage"
-          Title="FinPage"
-          BackgroundColor="#e9e9e9"
-          Shell.NavBarIsVisible="True">
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AlfinfData.Views.Fin.FinPage"
+             Title="Histórico"
+             BackgroundColor="#e9e9e9"
+             Shell.NavBarIsVisible="True">
 
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsVisible="False" />
     </Shell.BackButtonBehavior>
+
+    <ContentPage.Resources>
+        <ResourceDictionary xmlns:viewModels="clr-namespace:AlfinfData.ViewModels" />
+    </ContentPage.Resources>
 
     <Grid Padding="10" RowSpacing="20"
           RowDefinitions="Auto, Auto, Auto, Auto, Auto, *, *">
 
         <!-- Botón generar -->
         <Button Text="GENERAR HISTÓRICO"
+                Command="{Binding GenerarHistoricoCommand}"
                 BackgroundColor="#71639e"
                 TextColor="White"
                 FontAttributes="Bold"
@@ -30,7 +35,7 @@
                    TextColor="Black"
                    FontSize="18" />
             <Label x:Name="FechaDesdeLabel"
-                   Text="24/04/2025"
+                   Text="{Binding FechaDesde, StringFormat='{0:dd/MM/yyyy}'}"
                    VerticalOptions="Center"
                    TextColor="Black"
                    FontSize="18" />
@@ -53,7 +58,7 @@
                    TextColor="Black"
                    FontSize="18" />
             <Label x:Name="FechaHastaLabel"
-                   Text="24/04/2025"
+                   Text="{Binding FechaHasta, StringFormat='{0:dd/MM/yyyy}'}"
                    VerticalOptions="Center"
                    TextColor="Black"
                    FontSize="18" />
@@ -91,8 +96,7 @@
                 VerticalOptions="FillAndExpand"
                 HorizontalOptions="FillAndExpand">
             <ScrollView>
-                <Label x:Name="ResultadoLabel"
-                       Text=""
+                <Label Text="{Binding ResultadoTexto}"
                        FontSize="16"
                        TextColor="Black"
                        VerticalOptions="FillAndExpand"

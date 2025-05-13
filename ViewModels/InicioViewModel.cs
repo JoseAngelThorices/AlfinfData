@@ -1,15 +1,24 @@
 ﻿using System.Diagnostics;
 using AlfinfData.Popups;
 using CommunityToolkit.Maui.Views;
-
+using AlfinfData.Services.BdLocal;
+using AlfinfData.Models.SQLITE;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace AlfinfData.ViewModels
 {
-    public class InicioViewModel : BindableObject
+    public partial class InicioViewModel : ObservableObject
     {
-        private readonly Page _page;
-
         private string _titulo;
+        private readonly FichajeRepository _fichajeRepository;
+        public string FechaSistema => $"F.T.: {DateTime.Now:dd-MM-yyyy}";
+        public InicioViewModel( FichajeRepository fichajeRepository)
+        {
+            Titulo = "MENÚ INICIO";
+            _fichajeRepository = fichajeRepository;
+        }
+
         public string Titulo
         {
             get => _titulo;
@@ -20,29 +29,12 @@ namespace AlfinfData.ViewModels
             }
         }
 
-        public string FechaSistema => $"F.T.: {DateTime.Now:dd-MM-yyyy}";
-
-        public Command NuevoDiaCommand { get; }
-        public Command EntradaCommand { get; }
-        public Command DescargasCommand { get; }
-
-        public InicioViewModel(Page page)
-        {
-            _page = page;
-
-            Titulo = "MENÚ INICIO";
-
-            NuevoDiaCommand = new Command(async () => await OnNuevoDiaClicked());
-            EntradaCommand = new Command(async () => await OnEntradaClicked());
-            DescargasCommand = new Command(async () => await OnDescargasClicked());
-        }
-
-
-        private async Task OnNuevoDiaClicked()
+        [RelayCommand]
+        private async Task NuevoDiaAsync()
         {
             try
             {
-                string password = await _page.DisplayPromptAsync(
+                string password = await Shell.Current.DisplayPromptAsync(
                     "Contraseña requerida",
                     "Introduce la contraseña para registrar un nuevo día:",
                     "Aceptar", "Cancelar", "",
@@ -53,7 +45,7 @@ namespace AlfinfData.ViewModels
                 {
                     // Mostrar popup para seleccionar hora
                     var popup = new HoraPopup();
-                    var resultado = await _page.ShowPopupAsync(popup);
+                    var resultado = await Shell.Current.ShowPopupAsync(popup);
 
                     if (resultado is TimeSpan horaSeleccionada)
                     {
@@ -61,26 +53,41 @@ namespace AlfinfData.ViewModels
                         var fechaHora = fechaHoy.Add(horaSeleccionada);
 
                         Titulo = $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}"; // <-- ESTA LÍNEA CAMBIA EL TÍTULO
-
-                        await _page.DisplayAlert("Nuevo Día", $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}", "OK");
+                        var nuevoDia = new Fichaje
+                        {
+                            IdJornalero = 999999,
+                            HoraEficaz = fechaHora,
+                            TipoFichaje = "Entrada",
+                            InstanteFichaje = DateTime.Today
+                        };
+                       await _fichajeRepository.CrearFichajesAsync(nuevoDia);
+                       await Shell.Current.DisplayAlert("Nuevo Día", $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}", "OK");
 
                     }
                 }
                 else if (!string.IsNullOrWhiteSpace(password))
                 {
-                    await _page.DisplayAlert("Error", "Contraseña incorrecta.", "OK");
+                    await Shell.Current.DisplayAlert("Error", "Contraseña incorrecta.", "OK");
                 }
             }
             catch (Exception ex)
             {
-                await _page.DisplayAlert("Error", "No se pudo registrar el nuevo día", "OK");
+                await Shell.Current.DisplayAlert("Error", "No se pudo registrar el nuevo día", "OK");
             }
         }
-
-        private async Task OnEntradaClicked()
+        [RelayCommand]
+        private async Task EntradaAsync()
         {
             try
             {
+                var resultado = await _fichajeRepository.GetFirstByJornaleroAsync(999999);
+                
+                if (resultado == null)
+                {
+                    // 2) Si no, avisamos y salimos SIN navegar
+                    await Shell.Current.DisplayAlert("Importante", "Inicie un nuevo Día primero.", "OK");
+                    return;
+                }
                 await Shell.Current.GoToAsync(nameof(AlfinfData.Views.Inicio.EntradaPage));
                 Debug.WriteLine("Navegando a EntradaPage");
             }
@@ -90,8 +97,8 @@ namespace AlfinfData.ViewModels
                 await Shell.Current.DisplayAlert("Error", "No se pudo abrir Entrada", "OK");
             }
         }
-
-        private async Task OnDescargasClicked()
+        [RelayCommand]
+        private async Task DescargasAsync()
         {
             try
             {

@@ -51,7 +51,7 @@ namespace AlfinfData.Views.Produccion
             bool esSuma = accion == "Añadir cajas";
             int cajasFinal = esSuma ? cantidad : -cantidad;
 
-            var seleccionados = ListaDeJornaleros.SelectedItems.Cast<Jornalero>().ToList();
+            var seleccionados = ListaDeJornaleros.SelectedItems.Cast<JornaleroConCajas>().ToList();
             if (!seleccionados.Any())
             {
                 await DisplayAlert("Error", "Selecciona al menos un jornalero", "OK");
@@ -103,7 +103,7 @@ namespace AlfinfData.Views.Produccion
                 AddBoxes(cajasFinal);
         }
 
-            private async void AddBoxes(int numberOfBoxes)
+        private async void AddBoxes(int numberOfBoxes)
         {
             var seleccionados = ListaDeJornaleros
                 .SelectedItems
@@ -116,12 +116,29 @@ namespace AlfinfData.Views.Produccion
                 return;
             }
 
+            foreach (var jornalero in seleccionados)
+            {
+                if (jornalero.TotalCajas + numberOfBoxes < 0)
+                {
+                    numberOfBoxes = -jornalero.TotalCajas;
+                }
+            }
+
+
+            _viewModel.Seleccionados = seleccionados;
+
+            await _viewModel.ProcesarCajasAsync(numberOfBoxes);
+
             await DisplayAlert("Éxito",
                 $"{(numberOfBoxes >= 0 ? "Se han añadido" : "Se han restado")} " +
                 $"{Math.Abs(numberOfBoxes)} {pluralizar("caja", Math.Abs(numberOfBoxes))} " +
                 $"a {seleccionados.Count} {pluralizar("jornalero", seleccionados.Count)}",
                 "OK");
+
+            ListaDeJornaleros.SelectedItems.Clear();
+
         }
+
 
         private string pluralizar(string palabra, int cantidad)
 
@@ -138,10 +155,6 @@ namespace AlfinfData.Views.Produccion
         }
     }
 }
-	public ProduccionPage()
-	{
-		InitializeComponent();
-	}
-}
+
 
 

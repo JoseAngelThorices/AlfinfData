@@ -6,15 +6,21 @@ using System.Threading.Tasks;
 
 namespace AlfinfData.ViewModels
 {
-    public partial  class ProduccionViewModel : ObservableObject
+    public partial class ProduccionViewModel : ObservableObject
     {
         private readonly ProduccionRepository _produccionRepository;
         private readonly CuadrillaRepository _repoC;
 
+        [ObservableProperty]
+        private List<JornaleroConCajas> seleccionados = new();
+
         public ObservableCollection<JornaleroConCajas> JornalerosConCajas { get; set; } = new();
         public ObservableCollection<Cuadrilla> Cuadrillas { get; } = new();
+
         private List<JornaleroConCajas> TodosLosJornaleros { get; set; } = new();
 
+        [ObservableProperty]
+        private Cuadrilla cuadrillaSeleccionada;
 
         public ProduccionViewModel(ProduccionRepository produccionRepository, CuadrillaRepository repoC)
         {
@@ -30,8 +36,17 @@ namespace AlfinfData.ViewModels
                 Cuadrillas.Add(c);
         }
 
-        [ObservableProperty]
-        private Cuadrilla cuadrillaSeleccionada;
+        public async Task CargarJornalerosConCajasAsync()
+        {
+            var jornalerosConCajas = await _produccionRepository.GetJornalerosConCajasAsync();
+            TodosLosJornaleros = jornalerosConCajas.ToList();
+
+            JornalerosConCajas.Clear();
+            JornalerosConCajas = new ObservableCollection<JornaleroConCajas>(jornalerosConCajas);
+            OnPropertyChanged(nameof(JornalerosConCajas));
+        }
+
+
 
         partial void OnCuadrillaSeleccionadaChanged(Cuadrilla value)
         {
@@ -52,15 +67,32 @@ namespace AlfinfData.ViewModels
                 JornalerosConCajas.Add(j);
         }
 
-        public async Task CargarJornalerosConCajasAsync()
+        // Método para añadir un registro de producción
+        public async Task InsertProduccionAsync(int idJornalero, int cajas)
         {
-            var jornalerosConCajas = await _produccionRepository.GetJornalerosConCajasAsync();
-
-            JornalerosConCajas.Clear();
-            foreach (var jornalero in jornalerosConCajas)
+            var produccion = new Produccion
             {
-                JornalerosConCajas.Add(jornalero);
+                IdJornalero = idJornalero,
+                Cajas = cajas,
+                Timestamp = DateTime.Now
+            };
+
+            await _produccionRepository.InsertProduccionAsync(produccion);
+        }
+
+        // Método para añadir o restar cajas a los seleccionados
+        public async Task ProcesarCajasAsync(int cantidad)
+        {
+            if (Seleccionados is null || Seleccionados.Count == 0)
+                return;
+
+            foreach (var j in Seleccionados)
+            {
+                await InsertProduccionAsync(j.IdJornalero, cantidad);
             }
+
+            await CargarJornalerosConCajasAsync();
+            FiltrarJornaleros();
         }
     }
 }

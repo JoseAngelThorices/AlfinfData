@@ -6,11 +6,13 @@ using AlfinfData.Views.Produccion;
 using AlfinfData.Views.Salidas;
 using AlfinfData.Views.Seleccion;
 using AlfinfData.Views;
+using AlfinfData.Services.BdLocal;
 
 namespace AlfinfData
 {
     public partial class AppShell : Shell
     {
+        
         public static readonly BindableProperty TituloProperty =
             BindableProperty.Create(nameof(Titulo), typeof(string), typeof(AppShell), "AlfinfData");
 
@@ -40,11 +42,14 @@ namespace AlfinfData
 
         public AppShell()
         {
+            
             InitializeComponent();
+            
             BindingContext = this;
             RegisterRoutes();
             Dispatcher.StartTimer(TimeSpan.FromSeconds(1), ActualizarFechaHora);
             Navigated += OnShellNavigated;
+            
         }
 
         private void RegisterRoutes()
@@ -59,7 +64,6 @@ namespace AlfinfData
             Routing.RegisterRoute(nameof(SalidasPage), typeof(SalidasPage));
             Routing.RegisterRoute(nameof(SeleccionPage), typeof(SeleccionPage));
             Routing.RegisterRoute(nameof(ConfiguracionPage), typeof(ConfiguracionPage));
-            Routing.RegisterRoute(nameof(CalcularPage), typeof(CalcularPage));
         }
 
         private async void OnBackToMainClicked(object sender, EventArgs e)
@@ -77,6 +81,7 @@ namespace AlfinfData
             FechaHora = DateTime.Now.ToString("dd/MM/yyyy");
             return true;
         }
+       
 
         private void OnShellNavigated(object? sender, ShellNavigatedEventArgs e)
         {
@@ -95,6 +100,8 @@ namespace AlfinfData
                 "horaspage" => "Horas",
                 "salidaspage" => "Salidas",
                 "finpage" => "Fin",
+                "entradapage" => "Entrada",
+                "descargaspage" => "Descargas",
                 "configuracionpage" => "Configuración",
                 _ => "AlfinfData"
             };
@@ -134,5 +141,10 @@ namespace AlfinfData
                 await Application.Current.MainPage.DisplayAlert("Acceso denegado", "Contraseña incorrecta.", "OK");
             }
         }
+        private async void OnAccesoDirectoAltaNFC(object sender, EventArgs e)
+        {
+            await Shell.Current.GoToAsync($"{nameof(DescargasPage)}?accion=alta");
+        }
+
     }
 }

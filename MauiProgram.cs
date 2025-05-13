@@ -62,15 +62,23 @@ public static class MauiProgram
             };
         });
 
+
         // Servicios de negocio (inyección de dependencias)
         builder.Services.AddScoped<IEmpleadosService, EmpleadosService>();
         builder.Services.AddScoped<ICuadrillasService, CuadrillaService>();
         builder.Services.AddScoped<ITarjetaNFCServices, TarjetaNFCServices>();
         // ViewModels y páginas para navegación e inyección
         builder.Services.AddTransient<DescargasViewModel>();
+        builder.Services.AddTransient<EntradaViewModel>();
         builder.Services.AddTransient<SeleccionViewModels>();
         builder.Services.AddTransient<ProduccionViewModel>();
+        builder.Services.AddTransient<FinViewModel>();
+        builder.Services.AddTransient<HorasViewModel>();
+
+
         builder.Services.AddTransient<DescargasPage>();
+        builder.Services.AddTransient<InicioViewModel>();
+        builder.Services.AddTransient<ProduccionViewModel>();
 
 
         // Configuración de base de datos local SQLite
@@ -80,10 +88,9 @@ public static class MauiProgram
         // Repositorios para acceder a datos desde la base local
         builder.Services.AddTransient<JornaleroRepository>();
         builder.Services.AddTransient<CuadrillaRepository>();
-
+        builder.Services.AddTransient<FichajeRepository>();
         builder.Services.AddTransient<ProduccionRepository>();
-
-        builder.Services.AddTransient<ProduccionViewModel>();
+        builder.Services.AddTransient<HorasRepository>();
 
 #if DEBUG
         // Activar logging en modo depuración
