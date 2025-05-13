@@ -38,7 +38,7 @@ namespace AlfinfData.ViewModels
             if (!string.IsNullOrEmpty(seleccion) && seleccion != "Cancelar")
             {
                 HoraTexto = seleccion.ToString();
-                TimeSpan horaSeleccionada = TimeSpan.ParseExact(HoraTexto, @"HH\:mm", CultureInfo.InvariantCulture);
+                TimeSpan horaSeleccionada = TimeSpan.ParseExact(HoraTexto, @"hh\:mm", CultureInfo.InvariantCulture);
                 var fechaHoy = DateTime.Today;
                 var fechaHora = fechaHoy.Add(horaSeleccionada);
                 await _fichajeRepo.ActualizarHoraEficazAsync(999999, fechaHora);

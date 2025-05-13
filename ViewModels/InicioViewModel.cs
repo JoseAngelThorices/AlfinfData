@@ -60,8 +60,35 @@ namespace AlfinfData.ViewModels
                             TipoFichaje = "Entrada",
                             InstanteFichaje = DateTime.Today
                         };
-                       await _fichajeRepository.CrearFichajesAsync(nuevoDia);
-                       await Shell.Current.DisplayAlert("Nuevo Día", $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}", "OK");
+                        bool resultadoNuevoDia = await _fichajeRepository.CrearFichajesAsync(nuevoDia);
+                        if (resultadoNuevoDia)
+                        {
+                            bool quiereBorrar = await Shell.Current.DisplayAlert(
+                                                "Nuevo Día",
+                                                "Ya hay un nuevo día creado. Si quieres seguir creando un nuevo día, se borrará todo para empezar de nuevo. ¿Estás de acuerdo?",
+                                                "Aceptar",   // texto del botón positivo
+                                                "Cancelar"   // texto del botón negativo
+                                                 );
+                            if (quiereBorrar)
+                            {
+                                // Usuario pulsó “Aceptar”
+                                // Aquí borras todo y creas el nuevo día
+                                //await _fichajeRepo.BorrarTodosLosFichajesAsync();
+                                //await CrearNuevoDiaAsync();
+                                await _fichajeRepository.ActualizarHoraEficazAsync(999999, fechaHora);
+                            }
+                            else
+                            {
+                                // Usuario pulsó “Cancelar”
+                                // Aquí simplemente cierras el diálogo y no haces nada
+                                // Podrías mostrar un mensaje de confirmación si quieres:
+                                await Shell.Current.DisplayAlert("Operación cancelada", "No se ha borrado nada.", "OK");
+                            }
+                        }
+                        else
+                        {
+                            await Shell.Current.DisplayAlert("Nuevo Día", $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}", "OK");
+                        }
 
                     }
                 }
