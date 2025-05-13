@@ -167,7 +167,7 @@ namespace AlfinfData.ViewModels
                     throw new InvalidOperationException("_fichajeRepo no está inicializado");
 
                 // Obtén la lista (puede devolver null)
-                var fichaje = await _fichajeRepo.GetFirstByJornaleroAsync(999999);
+                var fichaje = await _fichajeRepo.BuscarFichajeNuevoDiaDatos();
   
                 // Supongamos que Hora es TimeSpan
                 HoraTexto = fichaje.HoraEficaz.ToString(@"HH\:mm");
