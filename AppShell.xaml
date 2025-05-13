@@ -67,7 +67,7 @@
     </Shell.FlyoutHeader>
 
     <!-- Página de Inicio -->
-    <ShellContent Title="Inicio" ContentTemplate="{DataTemplate views:MainPage}"/>
+    <ShellContent Route="main" ContentTemplate="{DataTemplate views:MainPage}"/>
 
     <!-- Alta NFC -->
     <MenuItem Text="Alta NFC" Clicked="OnAccesoDirectoAltaNFC" />

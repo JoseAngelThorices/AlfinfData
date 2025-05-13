@@ -22,13 +22,14 @@ namespace AlfinfData.Services.BdLocal
         {
             return _db.QueryAsync<JornaleroConHoras>(
             @"SELECT j.IdJornalero, j.IdCuadrilla, j.Nombre,
-                 IFNULL(h.HN, 0) AS HN,
-                 IFNULL(h.HE1, 0) AS HE1,
-                 IFNULL(h.HE2, 0) AS HE2,
-                 CASE WHEN h.Id IS NULL THEN 1 ELSE 0 END AS Falta
-          FROM Jornalero j
-          LEFT JOIN Horas h ON j.IdJornalero = h.IdJornalero AND h.Fecha = ?
-          ORDER BY j.Nombre", fecha);
+             IFNULL(h.HN, 0) AS HN,
+             IFNULL(h.HE1, 0) AS HE1,
+             IFNULL(h.HE2, 0) AS HE2,
+             CASE WHEN h.Id IS NULL THEN 1 ELSE 0 END AS Falta
+      FROM Jornalero j
+      LEFT JOIN Horas h ON j.IdJornalero = h.IdJornalero AND h.Fecha = ?
+      WHERE j.Activo = 1
+      ORDER BY j.Nombre", fecha);
         }
     }
 }
