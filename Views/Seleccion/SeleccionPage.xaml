@@ -74,7 +74,10 @@
                         <Grid Padding="8" ColumnDefinitions="0.2*,1*,0.1*" HeightRequest="35">
                             <Label Text="{Binding IdJornalero}" VerticalOptions="Center" TextColor="Black"/>
                             <Label Text="{Binding Nombre}" Grid.Column="1" VerticalOptions="Center" TextColor="Black"/>
-                            <Switch IsToggled="{Binding Activo}" Grid.Column="2" HorizontalOptions="End"/>
+                            <Switch IsToggled="{Binding Activo, Mode=TwoWay}"
+                            Toggled="activardesactivarswitch"
+                            Grid.Column="2"
+                            HorizontalOptions="End" />
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

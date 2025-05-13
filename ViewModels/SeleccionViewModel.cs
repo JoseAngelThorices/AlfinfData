@@ -1,10 +1,7 @@
 ﻿using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
 using AlfinfData.Models.SQLITE;
 using AlfinfData.Services.BdLocal;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.Maui.Storage;
 
 namespace AlfinfData.ViewModels
 {
@@ -19,6 +16,9 @@ namespace AlfinfData.ViewModels
 
         [ObservableProperty]
         private Cuadrilla? cuadrillaSeleccionada;
+
+        [ObservableProperty]
+        private int seleccionados;
 
         public SeleccionViewModels(JornaleroRepository repo, CuadrillaRepository repoC)
         {
@@ -63,7 +63,9 @@ namespace AlfinfData.ViewModels
 
             foreach (var j in filtrados)
                 Jornaleros.Add(j);
+            ActualizarContador();
         }
+
         public async void SeleccionarTodos()
         {
             foreach (var j in Jornaleros)
@@ -71,7 +73,6 @@ namespace AlfinfData.ViewModels
 
             await _repo.UpdateManyAsync(Jornaleros.ToList());
 
-            // Recargar lista manualmente con nuevos objetos para refrescar UI
             var id = CuadrillaSeleccionada?.IdCuadrilla ?? 0;
             var recargados = await _repo.GetAllAsync();
 
@@ -96,7 +97,18 @@ namespace AlfinfData.ViewModels
             }
         }
 
+        public void ActualizarContador()
+        {
+            if (Jornaleros != null)
+                Seleccionados = Jornaleros.Count(j => j.Activo == true);
+            else
+                Seleccionados = 0;
+        }
 
+        public async Task ActualizarJornaleroAsync(Jornalero j)
+        {
+            await _repo.SetActiveAsync(j.IdJornalero, j.Activo == true);
+        }
 
         public async void QuitarTodos()
         {
@@ -128,7 +140,5 @@ namespace AlfinfData.ViewModels
                 Jornaleros.Add(j);
             }
         }
-
-
     }
 }
