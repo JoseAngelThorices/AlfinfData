@@ -5,7 +5,8 @@ namespace AlfinfData.Models.SQLITE
     {
         public int IdJornalero { get; set; }
         public string Nombre { get; set; }
-        public String HoraEficaz { get; set; }
+        public DateTime HoraEficaz { get; set; }
+        public string HoraFormateada => HoraEficaz.ToString("HH:mm");
 
     }
 }

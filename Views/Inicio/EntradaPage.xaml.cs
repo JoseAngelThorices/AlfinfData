@@ -20,6 +20,7 @@ public partial class EntradaPage : ContentPage
             if( resultado == true)
             {
                 await viewModel.CargarHoraAsync();
+                await viewModel.CargarFichajeAsync();
             }
             
         
