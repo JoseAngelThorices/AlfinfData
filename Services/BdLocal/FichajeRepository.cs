@@ -51,17 +51,24 @@ namespace AlfinfData.Services.BdLocal
         }
             
 
-        public Task ActualizarHoraEficazAsync(int id, DateTime nuevaHora)
+        public async Task ActualizarHoraEficazAsync(int id, DateTime nuevaHora)
         {
-            return _db.RunInTransactionAsync(conn =>
-            {
-                // El placeholder ? se sustituye por los parámetros en orden
-                conn.Execute(
-                  "UPDATE Fichaje SET HoraEficaz = ? WHERE IdJornalero = ?",
-                  nuevaHora,
-                  id
-                );
-            });
+            var inicioHoy = DateTime.Today;
+            var inicioManana = inicioHoy.AddDays(1);
+
+            // 1) Intenta actualizar mediante SQL con parámetros de rango
+            var filasAfectadas = await _db.ExecuteAsync(
+              @"UPDATE Fichaje
+                SET HoraEficaz = ?
+                WHERE IdJornalero = ?
+                  AND TipoFichaje = 'Entrada'
+                  AND InstanteFichaje >= ?
+                  AND InstanteFichaje <  ?;",
+              nuevaHora,
+              id,
+              inicioHoy,
+              inicioManana
+            );
         }
         public async Task<Fichaje> BuscarFichajeNuevoDiaDatos()
         {
@@ -77,15 +84,20 @@ namespace AlfinfData.Services.BdLocal
         }
 
         public Task<List<JornaleroEntrada>> GetJornaleroEntradasAsync() =>
-        _db.QueryAsync<JornaleroEntrada>(
-        @"SELECT 
-            f.IdJornalero,
-            j.Nombre,
-            f.HoraEficaz
-          FROM Fichaje AS f
-          INNER JOIN Jornalero AS j
-            ON f.IdJornalero = j.IdJornalero;"
-        );
+            _db.QueryAsync<JornaleroEntrada>(@"
+                SELECT 
+                  f.IdJornalero,
+                  j.Nombre,
+                  f.HoraEficaz
+                FROM Fichaje AS f
+                INNER JOIN Jornalero AS j
+                ON f.IdJornalero = j.IdJornalero
+                WHERE date(
+                        (f.HoraEficaz - 621355968000000000) / 10000000, 
+                        'unixepoch', 
+                        'localtime'
+                      )
+                  = date('now', 'localtime');");
         public Task<List<Fichaje>> GetAllAsync()
             => _db.Table<Fichaje>().ToListAsync();
     }
