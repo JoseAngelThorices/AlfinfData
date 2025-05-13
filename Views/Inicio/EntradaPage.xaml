@@ -72,7 +72,7 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
 
-                        <Grid Padding="8" ColumnDefinitions="0.2*,1*,0.1*">
+                        <Grid Padding="8" ColumnDefinitions="0.2*,1*,0.2*">
 
                             <Label Text="{Binding IdJornalero}" VerticalOptions="Center" TextColor="Black" />
                             <Label Text="{Binding Nombre}" VerticalOptions="Center" Grid.Column="1" TextColor="Black"/>

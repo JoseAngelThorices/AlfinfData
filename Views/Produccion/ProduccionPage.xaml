@@ -35,7 +35,6 @@
                         Stroke="#a0a0a0"
                         StrokeShape="RoundRectangle 10"
                         BackgroundColor="White"
-
                         Margin="5,0">
                     <CollectionView x:Name="ListaDeJornaleros"
                      ItemsSource="{Binding JornalerosConCajas}" 
