@@ -19,6 +19,9 @@
         <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
             <Picker x:Name="GrupoPicker"
                     Title="Selecciona cuarilla"
+                    ItemsSource="{Binding Cuadrillas}"
+                    ItemDisplayBinding="{Binding Descripcion}"
+                    SelectedItem="{Binding CuadrillaSeleccionada}"
                     BackgroundColor="#fbffb8"
                     TitleColor="Black"
                     TextColor="Black"
@@ -92,7 +95,7 @@
                 StrokeShape="RoundRectangle 10"
                 BackgroundColor="White"
                 Margin="5">
-            <CollectionView x:Name="ListaPendientes" SelectionMode="None">
+            <CollectionView x:Name="ListaPendientes"  ItemsSource="{Binding JornalerosPendientes}" SelectionMode="None">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Grid Padding="8" ColumnDefinitions="0.2*,1*,0.1*">

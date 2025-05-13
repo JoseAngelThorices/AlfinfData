@@ -48,6 +48,7 @@ namespace AlfinfData.Services.BdLocal
                  IFNULL(SUM(p.Cajas), 0) AS TotalCajas
           FROM Jornalero j
           LEFT JOIN Produccion p ON j.IdJornalero = p.IdJornalero
+          WHERE j.Activo = 1
           GROUP BY j.IdJornalero, j.IdCuadrilla, j.Nombre
           ORDER BY j.Nombre");
         }
