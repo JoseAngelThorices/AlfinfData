@@ -6,6 +6,7 @@ namespace AlfinfData.Views.Seleccion;
 public partial class SeleccionPage : ContentPage
 {
     private readonly SeleccionViewModels _viewModel;
+    
 
     public SeleccionPage(SeleccionViewModels viewModel)
     {
@@ -30,11 +31,11 @@ public partial class SeleccionPage : ContentPage
     {
         _viewModel.QuitarTodos();
     }
-
     private async void activardesactivarswitch(object sender, ToggledEventArgs e)
     {
         if (sender is Switch sw && sw.BindingContext is Jornalero jornalero)
         {
+            jornalero.Activo = e.Value;
             await _viewModel.ActualizarJornaleroAsync(jornalero);
             _viewModel.ActualizarContador();
         }
