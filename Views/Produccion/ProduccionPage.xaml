@@ -25,12 +25,10 @@
         ItemDisplayBinding="{Binding Descripcion}"
         SelectedItem="{Binding CuadrillaSeleccionada, Mode=TwoWay}" />
 
-                <Grid Grid.Row="3" 
-                      ColumnDefinitions="0.3*,*,0.2*" 
-                      Padding="0">
-                    <Label Text="N.L." FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
-                    <Label Text="Nombre" FontAttributes="Bold" TextColor="Black" Grid.Column="1" VerticalOptions="Center"/>
-                    <Label Text="Cajas" FontAttributes="Bold" TextColor="Black" Grid.Column="2" VerticalOptions="Center"/>
+                <Grid Grid.Row="2" ColumnDefinitions="60*,240*,40*" Padding="5">
+                    <Label Text="N.L." FontAttributes="Bold" TextColor="Black" />
+                    <Label Text="Nombre" FontAttributes="Bold" TextColor="Black" Grid.Column="1" />
+                    <Label Text="Cajas" FontAttributes="Bold" TextColor="Black" Grid.Column="2" />
                 </Grid>
 
                 <Border Grid.Row="4"
@@ -40,15 +38,15 @@
 
                         Margin="5,0">
                     <CollectionView x:Name="ListaDeJornaleros"
-                     ItemsSource="{Binding JornalerosConCajas}"
+                     ItemsSource="{Binding JornalerosConCajas}" 
                                   SelectionMode="Multiple">
 
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Grid Padding="8" ColumnDefinitions="70,*,Auto,Auto">
-                                    <Label Text="{Binding IdJornalero}" VerticalOptions="Center" TextColor="Black" />
-                                    <Label Text="{Binding Nombre}" VerticalOptions="Center" Grid.Column="1" TextColor="Black"/>
-                                    <Label Text="{Binding TotalCajas}" VerticalOptions="Center" Grid.Column="2" TextColor="Black" FontAttributes="Bold"/>
+                                <Grid Padding="8" ColumnDefinitions="0.2*,1*,0.1*">
+                                    <Label Text="{Binding IdJornalero}" TextColor="Black" />
+                                    <Label Text="{Binding Nombre}" Grid.Column="1" TextColor="Black"/>
+                                    <Label Text="{Binding TotalCajas}" Grid.Column="2" TextColor="Black" FontAttributes="Bold"/>
                                 </Grid>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>

@@ -16,6 +16,9 @@
         <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Padding="0,5" Margin="0">
             <Picker x:Name="GrupoPicker"
                     Title="Selecciona grupo"
+                    ItemsSource="{Binding Cuadrillas}"
+                            ItemDisplayBinding="{Binding Descripcion}"
+                            SelectedItem="{Binding CuadrillaSeleccionada, Mode=TwoWay}"
                     BackgroundColor="#fbffb8"
                     TitleColor="Black"
                     TextColor="Black"
@@ -24,30 +27,19 @@
                     Margin="5"
                     HorizontalOptions="FillAndExpand"
                     Grid.Column="0" />
-
-            <ImageButton Source="iconlist.png"
-                         Grid.Column="1"
-                         WidthRequest="40"
-                         HeightRequest="40"
-                         Margin="5,0"
-                         Padding="0"
-                         HorizontalOptions="End"
-                         VerticalOptions="Center"
-                         BackgroundColor="Transparent"
-                         Clicked="OnDetalleClicked"/>
         </Grid>
 
         <!-- Cabecera tabla -->
         <Grid Grid.Row="1"
       ColumnSpacing="0"
-      ColumnDefinitions="0.8*,2.5*,1.2*,1.2*,1.2*,1.1*"
+      ColumnDefinitions="0.8*,2.1*,1.2*,1.2*,1.2*,1.1*"
       Padding="5,0">
-            <Label Text="N.L" Grid.Column="0" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
-            <Label Text="Nombre" Grid.Column="1" HorizontalTextAlignment="Start" FontSize="13" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
-            <Label Text="HN" Grid.Column="2" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
-            <Label Text="HE1" Grid.Column="3" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
-            <Label Text="HE2" Grid.Column="4" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
-            <Label Text="Falta" Grid.Column="5" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
+            <Label Text="N.L" Grid.Column="0" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
+            <Label Text="Nombre" Grid.Column="1" HorizontalTextAlignment="Start" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
+            <Label Text="HN" Grid.Column="2" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
+            <Label Text="HE1" Grid.Column="3" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
+            <Label Text="HE2" Grid.Column="4" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
+            <Label Text="Falta" Grid.Column="5" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
         </Grid>
 
 
@@ -63,9 +55,9 @@
                Margin="5,0"
                HasShadow="False">
 
-            <CollectionView x:Name="ListaHoras"
-                    SelectionMode="Single"
-                    SelectionChanged="OnPersonaSeleccionada">
+            <CollectionView ItemsSource="{Binding JornalerosConHoras}"
+                SelectionMode="None"
+                x:Name="ListaHoras">
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
@@ -75,7 +67,7 @@
                       VerticalOptions="Center">
 
                             <!-- N.L. -->
-                            <Label Text="{Binding NumeroLista}"
+                            <Label Text="{Binding IdJornalero}"
                            Grid.Column="0"
                            FontSize="14"
                            TextColor="Black"

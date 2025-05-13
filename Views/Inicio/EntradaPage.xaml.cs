@@ -1,40 +1,35 @@
+using System.Diagnostics;
+using System.Threading.Tasks;
+using AlfinfData.ViewModels;
+using Plugin.NFC;
 namespace AlfinfData.Views.Inicio;
 
 public partial class EntradaPage : ContentPage
 {
-    const string HoraGuardadaKey = "HoraSeleccionada";
-
-        public EntradaPage()
+    private readonly EntradaViewModel viewModel;
+    public EntradaPage(EntradaViewModel vm)
         {
             InitializeComponent();
-            RecuperarHoraGuardada();
+            viewModel = vm;
+            BindingContext = viewModel;
         }
-
-        private void RecuperarHoraGuardada()
+        protected override async void OnAppearing()
         {
-            var hora = Preferences.Get(HoraGuardadaKey, string.Empty);
-            if (!string.IsNullOrEmpty(hora))
+            base.OnAppearing();
+            var resultado = await viewModel.EntradaNFCAsync();
+            if( resultado == true)
             {
-                HoraButton.Text = hora;
+                await viewModel.CargarHoraAsync();
+                await viewModel.CargarFichajeAsync();
             }
+            
+        
         }
-
-        private async void OnHoraButtonClicked(object sender, EventArgs e)
+        protected override async void OnDisappearing()
         {
-            string[] horas = new string[48];
-            for (int i = 0; i < 24; i++)
-            {
-                horas[i * 2] = $"{i:D2}:00";
-                horas[i * 2 + 1] = $"{i:D2}:30";
-            }
-
-            string seleccion = await DisplayActionSheet("Selecciona hora", "Cancelar", null, horas);
-
-            if (!string.IsNullOrEmpty(seleccion) && seleccion != "Cancelar")
-            {
-                HoraButton.Text = seleccion;
-                Preferences.Set(HoraGuardadaKey, seleccion);
-            }
+            base.OnDisappearing();
+            await viewModel.cancelarNFC();
         }
-    }
+
+}
 
