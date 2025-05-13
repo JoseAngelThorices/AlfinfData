@@ -4,6 +4,11 @@
              x:Class="AlfinfData.Views.Seleccion.SeleccionPage"
              Title="SeleccionPage"
              BackgroundColor="#e9e9e9">
+    
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsVisible="False" />
+    </Shell.BackButtonBehavior>
+
 
     <Grid RowDefinitions="Auto,Auto,Auto,*,Auto"
           Padding="10"
@@ -22,7 +27,7 @@
                 SelectedItem="{Binding CuadrillaSeleccionada, Mode=TwoWay}" />
 
         <!-- Botones de selección -->
-        <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="10">
+        <Grid Grid.Row="1" ColumnDefinitions="*,*">
             <Button Text="SEL. TODOS"
                     BackgroundColor="#71639e"
                     TextColor="White"
@@ -42,48 +47,29 @@
                     Clicked="OnQuitarTodosClicked" />
         </Grid>
 
-        <!-- Encabezado de columnas -->
+        <!-- Encabezado -->
         <Grid Grid.Row="2" ColumnDefinitions="60*,240*,40*" Padding="5">
-            <Label Text="N.L." FontAttributes="Bold" TextColor="Black" />
-            <Label Text="Nombre" FontAttributes="Bold" TextColor="Black" Grid.Column="1" />
-            <Label Text="Activo" FontAttributes="Bold" TextColor="Black" Grid.Column="2" />
+            <Label Text="N.L." FontAttributes="Bold" TextColor="Black"/>
+            <Label Text="Nombre" FontAttributes="Bold" TextColor="Black" Grid.Column="1"/>
+            <Label Text="Activo" FontAttributes="Bold" TextColor="Black" Grid.Column="2"/>
         </Grid>
-
 
         <!-- Lista de jornaleros -->
         <Border Grid.Row="3"
-
                 Stroke="#a0a0a0"
                 StrokeShape="RoundRectangle 10"
                 BackgroundColor="White"
                 Margin="5,0"
-                VerticalOptions="FillAndExpand">   
-                <CollectionView x:Name="ListaDeJornaleros"
-                    ItemsSource="{Binding Jornaleros}"
-                    SelectionMode="None">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Padding="8" ColumnDefinitions="70,*,Auto" RowDefinitions="30">
-                                <Label Text="{Binding IdJornalero}" VerticalOptions="Center" TextColor="Black" />
-                                <Label Text="{Binding Nombre}" VerticalOptions="Center" Grid.Column="1" TextColor="Black"/>
-                                <Switch IsToggled="{Binding Activo, Mode=TwoWay}" Grid.Column="2" HorizontalOptions="End" />
-                            </Grid>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </Border>
-
-
-            <CollectionView x:Name="ListaDeJornaleros"
-                            ItemsSource="{Binding Jornaleros}"
+                VerticalOptions="FillAndExpand">
+            <CollectionView ItemsSource="{Binding Jornaleros}"
                             SelectionMode="None"
                             VerticalOptions="FillAndExpand">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Grid Padding="8" ColumnDefinitions="70,*,auto" RowDefinitions="30">
-                            <Label Text="{Binding IdJornalero}" VerticalOptions="Center" TextColor="Black" />
-                            <Label Text="{Binding Nombre}" VerticalOptions="Center" Grid.Column="1" TextColor="Black" />
-                            <Switch IsToggled="{Binding Activo}" Grid.Column="2" HorizontalOptions="End" Toggled="OnJornaleroToggled" />
+                        <Grid Padding="8" ColumnDefinitions="0.2*,1*,0.1*" HeightRequest="35">
+                            <Label Text="{Binding IdJornalero}" VerticalOptions="Center" TextColor="Black"/>
+                            <Label Text="{Binding Nombre}" Grid.Column="1" VerticalOptions="Center" TextColor="Black"/>
+                            <Switch IsToggled="{Binding Activo}" Grid.Column="2" HorizontalOptions="End"/>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

@@ -42,6 +42,7 @@ namespace AlfinfData
         {
             InitializeComponent();
             BindingContext = this;
+            this.FlyoutWidth = 280;
             RegisterRoutes();
             Dispatcher.StartTimer(TimeSpan.FromSeconds(1), ActualizarFechaHora);
             Navigated += OnShellNavigated;
@@ -97,8 +98,6 @@ namespace AlfinfData
                 "entradapage" => "Entrada",
                 "descargaspage" => "Descargas",
                 "configuracionpage" => "Configuración",
-                "entradapage" => "Entrada",
-                "descargaspage" => "Descargas",
                 _ => "AlfinfData"
             };
 
