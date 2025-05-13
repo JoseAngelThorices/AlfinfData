@@ -115,8 +115,8 @@ namespace AlfinfData.Views.Configuracion
             EnviarAsistencia = Preferences.Default.Get("EnviarAsistencia", false);
             AceptarFichajesDesconocidos = Preferences.Default.Get("AceptarFichajesDesconocidos", false);
 
-            IpLabel.Text = Preferences.Default.Get("ServerIp", "IP del servidor");
-            IpLabel.TextColor = IpLabel.Text == "IP del servidor" ? Colors.Gray : Colors.Black;
+            UrlLabel.Text = Preferences.Default.Get("ServerUrl", "URL del servidor");
+            UrlLabel.TextColor = UrlLabel.Text == "URL del servidor" ? Colors.Gray : Colors.Black;
 
             PortLabel.Text = Preferences.Default.Get("ServerPort", "Puerto del servidor");
             PortLabel.TextColor = PortLabel.Text == "Puerto del servidor" ? Colors.Gray : Colors.Black;
@@ -129,16 +129,16 @@ namespace AlfinfData.Views.Configuracion
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private async void OnIpClicked(object sender, System.EventArgs e)
+        private async void OnUrlClicked(object sender, EventArgs e)
         {
-            var result = await DisplayPromptAsync("Configurar IP", "Ingrese la dirección IP del servidor:",
-                initialValue: IpLabel.Text == "IP del servidor" ? "" : IpLabel.Text);
+            var result = await DisplayPromptAsync("Configurar URL", "Introduce la URL del servidor:",
+                initialValue: UrlLabel.Text == "URL del servidor" ? "" : UrlLabel.Text);
 
             if (result != null)
             {
-                IpLabel.Text = string.IsNullOrWhiteSpace(result) ? "IP del servidor" : result;
-                IpLabel.TextColor = string.IsNullOrWhiteSpace(result) ? Colors.Gray : Colors.Black;
-                Preferences.Default.Set("ServerIp", IpLabel.Text);
+                UrlLabel.Text = string.IsNullOrWhiteSpace(result) ? "URL del servidor" : result;
+                UrlLabel.TextColor = string.IsNullOrWhiteSpace(result) ? Colors.Gray : Colors.Black;
+                Preferences.Default.Set("ServerUrl", UrlLabel.Text);
             }
         }
 

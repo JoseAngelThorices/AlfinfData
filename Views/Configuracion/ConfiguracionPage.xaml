@@ -23,12 +23,12 @@
                            FontSize="Medium"
                            TextColor="Black"/>
 
-                    <!-- Campo IP -->
+                    <!-- Campo URL del Servidor -->
                     <VerticalStackLayout Spacing="5">
-                        <Label Text="IP"
+                        <Label Text="URL"
                                FontAttributes="Bold"
                                FontSize="Small"
-                               TextColor="Black"/>
+                               TextColor="Black" />
 
                         <Border Stroke="LightGray"
                                 StrokeShape="RoundRectangle 5"
@@ -36,13 +36,13 @@
                                 Padding="0"
                                 HeightRequest="40">
                             <Grid>
-                                <Label x:Name="IpLabel" 
-                                       Text="IP del servidor"
+                                <Label x:Name="UrlLabel"
+                                       Text="URL del servidor"
                                        Margin="10,0"
                                        VerticalOptions="Center"
-                                       TextColor="Gray"/>
+                                       TextColor="Gray" />
                                 <Button BackgroundColor="Transparent"
-                                        Clicked="OnIpClicked"/>
+                                        Clicked="OnUrlClicked"/>
                             </Grid>
                         </Border>
                     </VerticalStackLayout>

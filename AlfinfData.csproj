@@ -93,6 +93,9 @@
 		<MauiXaml Update="Popups\HoraPopup.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\BarraLateral\BarraLateral.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\ConfiguracionPage.xaml" />
 		<MauiXaml Update="Views\InicioPage.xaml" />
 		<MauiXaml Update="Views\Inicio\DescargasPage.xaml">
