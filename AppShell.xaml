@@ -53,4 +53,5 @@
 
     <!-- Página de Inicio -->
     <ShellContent Route="main" ContentTemplate="{DataTemplate views:MainPage}" />
+
 </Shell>

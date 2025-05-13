@@ -72,6 +72,16 @@ namespace AlfinfData.Services.BdLocal
             return _db.UpdateAsync(jornalero);
         }
 
+        public Task<List<Jornalero>> GetJornalerosActivosPorCuadrillaAsync(int idCuadrilla)
+        {
+            return _db.Table<Jornalero>()
+                      .Where(j => j.IdCuadrilla == idCuadrilla && j.Activo == true)
+                      .ToListAsync();
+        }
+
+
+
+
         // Actualiza varios jornaleros a la vez
         public Task UpdateManyAsync(IEnumerable<Jornalero> jornaleros)
         {

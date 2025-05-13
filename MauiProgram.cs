@@ -62,6 +62,7 @@ public static class MauiProgram
             };
         });
 
+
         // Servicios de negocio (inyección de dependencias)
         builder.Services.AddScoped<IEmpleadosService, EmpleadosService>();
         builder.Services.AddScoped<ICuadrillasService, CuadrillaService>();
@@ -70,6 +71,7 @@ public static class MauiProgram
         builder.Services.AddTransient<DescargasViewModel>();
         builder.Services.AddTransient<EntradaViewModel>();
         builder.Services.AddTransient<SeleccionViewModels>();
+        builder.Services.AddTransient<SalidasViewModel>();
         builder.Services.AddTransient<ProduccionViewModel>();
         builder.Services.AddTransient<FinViewModel>();
         builder.Services.AddTransient<HorasViewModel>();

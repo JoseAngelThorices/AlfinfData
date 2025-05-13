@@ -52,6 +52,7 @@
             <Label Text="N.L." FontAttributes="Bold" TextColor="Black"/>
             <Label Text="Nombre" FontAttributes="Bold" TextColor="Black" Grid.Column="1"/>
             <Label Text="Activo" FontAttributes="Bold" TextColor="Black" Grid.Column="2"/>
+
         </Grid>
 
         <!-- Lista de jornaleros -->
@@ -61,15 +62,20 @@
                 BackgroundColor="White"
                 Margin="5,0"
                 VerticalOptions="FillAndExpand">
-            <CollectionView ItemsSource="{Binding Jornaleros}"
+
+
+            <CollectionView x:Name="ListaDeJornaleros"
+                            ItemsSource="{Binding Jornaleros}"
                             SelectionMode="None"
                             VerticalOptions="FillAndExpand">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
+
                         <Grid Padding="8" ColumnDefinitions="0.2*,1*,0.1*" HeightRequest="35">
                             <Label Text="{Binding IdJornalero}" VerticalOptions="Center" TextColor="Black"/>
                             <Label Text="{Binding Nombre}" Grid.Column="1" VerticalOptions="Center" TextColor="Black"/>
                             <Switch IsToggled="{Binding Activo}" Grid.Column="2" HorizontalOptions="End"/>
+
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

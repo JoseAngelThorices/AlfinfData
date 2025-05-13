@@ -6,11 +6,13 @@ using AlfinfData.Views.Produccion;
 using AlfinfData.Views.Salidas;
 using AlfinfData.Views.Seleccion;
 using AlfinfData.Views;
+using AlfinfData.Services.BdLocal;
 
 namespace AlfinfData
 {
     public partial class AppShell : Shell
     {
+        
         public static readonly BindableProperty TituloProperty =
             BindableProperty.Create(nameof(Titulo), typeof(string), typeof(AppShell), "AlfinfData");
 
@@ -40,12 +42,15 @@ namespace AlfinfData
 
         public AppShell()
         {
+            
             InitializeComponent();
+            
             BindingContext = this;
             this.FlyoutWidth = 280;
             RegisterRoutes();
             Dispatcher.StartTimer(TimeSpan.FromSeconds(1), ActualizarFechaHora);
             Navigated += OnShellNavigated;
+            
         }
 
         private void RegisterRoutes()
@@ -77,6 +82,7 @@ namespace AlfinfData
             FechaHora = DateTime.Now.ToString("dd/MM/yyyy");
             return true;
         }
+       
 
         private void OnShellNavigated(object? sender, ShellNavigatedEventArgs e)
         {

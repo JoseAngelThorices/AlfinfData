@@ -76,7 +76,7 @@
 
                             <Label Text="{Binding IdJornalero}" VerticalOptions="Center" TextColor="Black" />
                             <Label Text="{Binding Nombre}" VerticalOptions="Center" Grid.Column="1" TextColor="Black"/>
-                            <Label Text="{Binding HoraEficaz}" VerticalOptions="Center" Grid.Column="2" TextColor="Black"/>
+                            <Label Text="{Binding HoraFormateada}" VerticalOptions="Center" Grid.Column="2" TextColor="Black"/>
 
                         </Grid>
                     </DataTemplate>
