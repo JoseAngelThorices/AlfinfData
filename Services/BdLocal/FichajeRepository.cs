@@ -15,7 +15,9 @@ namespace AlfinfData.Services.BdLocal
         }
         public async Task<bool> CrearFichajesAsync(Fichaje fichaje)
         {
-            var existente = await _db.FindAsync<Fichaje>(fichaje.IdJornalero);
+             var existente = await _db.Table<Fichaje>()
+                        .Where(f => f.IdJornalero == fichaje.IdJornalero)
+                        .FirstOrDefaultAsync();
             if (existente != null)
             {
                 // Ya había un registro con ese Id ⇒ no insertamos
