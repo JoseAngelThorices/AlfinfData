@@ -10,7 +10,6 @@ namespace AlfinfData.ViewModels
     {
         private readonly HorasRepository _horasRepo;
         private readonly CuadrillaRepository _cuadrillaRepo;
-        private readonly FichajeRepository _fichajeRepo;
 
         [ObservableProperty]
         private DateTime fechaSeleccionada = DateTime.Today;
@@ -26,11 +25,10 @@ namespace AlfinfData.ViewModels
 
         public ObservableCollection<Cuadrilla> Cuadrillas { get; } = new();
 
-        public HorasViewModel(HorasRepository horasRepo, CuadrillaRepository cuadrillaRepo, FichajeRepository fichajeRepo)
+        public HorasViewModel(HorasRepository horasRepo, CuadrillaRepository cuadrillaRepo)
         {
             _horasRepo = horasRepo;
             _cuadrillaRepo = cuadrillaRepo;
-            _fichajeRepo = fichajeRepo;
         }
 
         public async Task CargarCuadrillasAsync()
@@ -88,80 +86,5 @@ namespace AlfinfData.ViewModels
             foreach (var j in filtrados)
                 JornalerosConHoras.Add(j);
         }
-
-
-        public async Task CargarJornalerosDesdeFichajesAsync()
-        {
-            var fichajes = await _fichajeRepo.GetAllAsync();
-
-            var fichajesDelDia = fichajes
-                .Where(f => f.InstanteFichaje.HasValue &&
-                            f.IdJornalero.HasValue &&
-                            f.InstanteFichaje.Value.Date == FechaSeleccionada.Date)
-                .OrderBy(f => f.InstanteFichaje)
-                .GroupBy(f => f.IdJornalero.Value);
-
-            todosLosJornaleros.Clear();
-
-            foreach (var grupo in fichajesDelDia)
-            {
-                double hn = 0;
-                double he1 = 0;
-                var lista = grupo.ToList();
-
-                for (int i = 0; i < lista.Count - 1; i += 2)
-                {
-                    var entrada = lista[i];
-                    var salida = lista[i + 1];
-
-                    if (entrada.TipoFichaje != "Entrada" || salida.TipoFichaje != "Salida")
-                        continue;
-
-                    if (!entrada.InstanteFichaje.HasValue || !salida.InstanteFichaje.HasValue)
-                        continue;
-
-                    var horas = (salida.InstanteFichaje.Value - entrada.InstanteFichaje.Value).TotalHours;
-
-                    if (horas <= 6.5)
-                        hn += horas;
-                    else
-                    {
-                        hn += 6.5;
-                        he1 += horas - 6.5;
-                    }
-                }
-
-                // Si hay una entrada sin su salida correspondiente
-                if (lista.Count % 2 != 0 && lista.Last().TipoFichaje == "Entrada" && lista.Last().InstanteFichaje.HasValue)
-                {
-                    var horas = (DateTime.Now - lista.Last().InstanteFichaje.Value).TotalHours;
-
-                    if (horas <= 6.5)
-                        hn += horas;
-                    else
-                    {
-                        hn += 6.5;
-                        he1 += horas - 6.5;
-                    }
-                }
-
-                todosLosJornaleros.Add(new JornaleroConHoras
-                {
-                    IdJornalero = grupo.Key,
-                    Hn = Math.Round(hn, 2),
-                    He1 = Math.Round(he1, 2),
-                    He2 = 0,
-                    IdCuadrilla = 0, // Puedes mejorarlo si tienes el dato
-                    Nombre = $"Jornalero {grupo.Key}" // Puedes buscarlo si tienes lista de jornaleros
-                });
-            }
-
-            FiltrarJornaleros();
-        }
-
-
-
-
-
     }
 }

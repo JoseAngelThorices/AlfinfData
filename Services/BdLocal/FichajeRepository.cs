@@ -15,7 +15,7 @@ namespace AlfinfData.Services.BdLocal
         }
         public async Task<bool> CrearFichajesAsync(Fichaje fichaje)
         {
-            var existente = await _db.FindAsync<Fichaje>(fichaje.Id);
+            var existente = await _db.FindAsync<Fichaje>(fichaje.IdJornalero);
             if (existente != null)
             {
                 // Ya había un registro con ese Id ⇒ no insertamos
@@ -24,33 +24,80 @@ namespace AlfinfData.Services.BdLocal
             await _db.InsertAsync(fichaje);
             return true;
         }
-        public Task ActualizarHoraEficazAsync(int id, DateTime nuevaHora)
+        public async Task<bool> BuscarFichajeNuevoDia()
         {
-            return _db.RunInTransactionAsync(conn =>
-            {
-                // El placeholder ? se sustituye por los parámetros en orden
-                conn.Execute(
-                  "UPDATE Fichaje SET HoraEficaz = ? WHERE IdJornalero = ?",
-                  nuevaHora,
-                  id
-                );
-            });
+            // 1) Definimos el inicio y fin de “hoy”
+            var inicioHoy = DateTime.Today;               // p.ej. 2025-05-13 00:00:00
+            var inicioManana = inicioHoy.AddDays(1);        // p.ej. 2025-05-14 00:00:00
+
+            // 2) Buscamos cualquier fichaje de este jornalero entre [hoy, mañana)
+            var existentes = await _db.Table<Fichaje>()
+                .Where(x => x.IdJornalero == 999999
+                         && x.InstanteFichaje >= inicioHoy
+                         && x.InstanteFichaje < inicioManana)
+                .ToListAsync();
+
+            // 3) Si hay al menos uno, devolvemos true (ya existe ficha hoy)
+            if (existentes.Any())
+                return true;
+
+            // 4) Si no existe, devolvemos false (puedes crear el nuevo)
+            return false;
         }
-        public Task<Fichaje> GetFirstByJornaleroAsync(int idJornalero) =>
-            _db.Table<Fichaje>()
-            .Where(f => f.IdJornalero == idJornalero)
-            .FirstOrDefaultAsync();
+        public void BorrarDatosAsync()
+        {
+            _db.DeleteAllAsync<Produccion>();
+            _db.DeleteAllAsync<Horas>();
+        }
+            
+
+        public async Task ActualizarHoraEficazAsync(int id, DateTime nuevaHora)
+        {
+            var inicioHoy = DateTime.Today;
+            var inicioManana = inicioHoy.AddDays(1);
+
+            // 1) Intenta actualizar mediante SQL con parámetros de rango
+            var filasAfectadas = await _db.ExecuteAsync(
+              @"UPDATE Fichaje
+                SET HoraEficaz = ?
+                WHERE IdJornalero = ?
+                  AND TipoFichaje = 'Entrada'
+                  AND InstanteFichaje >= ?
+                  AND InstanteFichaje <  ?;",
+              nuevaHora,
+              id,
+              inicioHoy,
+              inicioManana
+            );
+        }
+        public async Task<Fichaje> BuscarFichajeNuevoDiaDatos()
+        {
+            var inicioHoy = DateTime.Today;               
+            var inicioManana = inicioHoy.AddDays(1);      
+            var lista = await _db.Table<Fichaje>()
+                .Where(x => x.IdJornalero == 999999
+                         && x.InstanteFichaje >= inicioHoy
+                         && x.InstanteFichaje < inicioManana)
+                .ToListAsync();
+            Fichaje primero = lista.FirstOrDefault();
+            return primero;
+        }
 
         public Task<List<JornaleroEntrada>> GetJornaleroEntradasAsync() =>
-        _db.QueryAsync<JornaleroEntrada>(
-        @"SELECT 
-            f.IdJornalero,
-            j.Nombre,
-            f.HoraEficaz
-          FROM Fichaje AS f
-          INNER JOIN Jornalero AS j
-            ON f.IdJornalero = j.IdJornalero;"
-    );
+            _db.QueryAsync<JornaleroEntrada>(@"
+                SELECT 
+                  f.IdJornalero,
+                  j.Nombre,
+                  f.HoraEficaz
+                FROM Fichaje AS f
+                INNER JOIN Jornalero AS j
+                ON f.IdJornalero = j.IdJornalero
+                WHERE date(
+                        (f.HoraEficaz - 621355968000000000) / 10000000, 
+                        'unixepoch', 
+                        'localtime'
+                      )
+                  = date('now', 'localtime');");
         public Task<List<Fichaje>> GetAllAsync()
             => _db.Table<Fichaje>().ToListAsync();
     }
