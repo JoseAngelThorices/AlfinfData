@@ -75,8 +75,9 @@ namespace AlfinfData.Services.BdLocal
         public Task<List<Jornalero>> GetJornalerosActivosPorCuadrillaAsync(int idCuadrilla)
         {
             return _db.Table<Jornalero>()
-                      .Where(j => j.IdCuadrilla == idCuadrilla && j.Activo == true)
-                      .ToListAsync();
+                .Where(j => j.IdCuadrilla == idCuadrilla && j.Activo == true) // si Activo es nullable (bool?)
+                .ToListAsync();
+
         }
 
 
