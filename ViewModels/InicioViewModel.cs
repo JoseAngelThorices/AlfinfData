@@ -73,7 +73,7 @@ namespace AlfinfData.ViewModels
                                     InstanteFichaje = DateTime.Today
                                 };
                                 
-                                _fichajeRepository.BorrarDatosAsync();
+                                await _fichajeRepository.BorrarDatosAsync();
                                 await _fichajeRepository.CrearFichajeNuevoDiaAsync(nuevoDia);
                                 await Shell.Current.DisplayAlert("Nuevo Día", $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}", "OK");
                             }

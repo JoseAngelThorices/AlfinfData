@@ -71,7 +71,7 @@ namespace AlfinfData.Services.BdLocal
             // 4) Si no existe, devolvemos false (puedes crear el nuevo)
             return false;
         }
-        public async void BorrarDatosAsync()
+        public async Task<bool> BorrarDatosAsync()
         {
             await _db.DeleteAllAsync<Produccion>();
             await _db.DeleteAllAsync<Fichaje>();
@@ -82,6 +82,7 @@ namespace AlfinfData.Services.BdLocal
                 ";
 
             await _db.ExecuteAsync(sql, false);
+            return true;
         }
             
 
