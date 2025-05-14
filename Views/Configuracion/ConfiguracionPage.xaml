@@ -37,7 +37,7 @@
                                 HeightRequest="40">
                             <Grid>
                                 <Label x:Name="UrlLabel"
-                                       Text="URL del servidor"
+                                       Text="{Binding OdooUrl}"
                                        Margin="10,0"
                                        VerticalOptions="Center"
                                        TextColor="Gray" />
