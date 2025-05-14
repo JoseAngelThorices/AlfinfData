@@ -75,7 +75,8 @@ public static class MauiProgram
         builder.Services.AddTransient<ProduccionViewModel>();
         builder.Services.AddTransient<FinViewModel>();
         builder.Services.AddTransient<HorasViewModel>();
-
+        builder.Services.AddTransient<ConfiguracionViewModel>();
+        
 
         builder.Services.AddTransient<DescargasPage>();
         builder.Services.AddTransient<InicioViewModel>();
