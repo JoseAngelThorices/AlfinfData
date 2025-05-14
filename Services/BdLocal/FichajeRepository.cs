@@ -120,19 +120,71 @@ namespace AlfinfData.Services.BdLocal
 
         public Task<List<JornaleroEntrada>> GetJornaleroEntradasAsync() =>
             _db.QueryAsync<JornaleroEntrada>(@"
-                SELECT 
-                    f.IdJornalero,
-                    j.Nombre,
-                    f.HoraEficaz
-                FROM Fichaje AS f
-                INNER JOIN Jornalero AS j
-                ON f.IdJornalero = j.IdJornalero
-                WHERE date(
-                    (f.HoraEficaz - 621355968000000000) / 10000000, 
-                    'unixepoch', 
-                    'localtime')= date('now', 'localtime')
-                AND f.TipoFichaje = 'Entrada';");
+        SELECT 
+            f.IdJornalero,
+            j.Nombre,
+            f.HoraEficaz
+        FROM Fichaje AS f
+        INNER JOIN Jornalero AS j
+        ON f.IdJornalero = j.IdJornalero
+        WHERE date(
+            (f.HoraEficaz - 621355968000000000) / 10000000, 
+            'unixepoch', 
+            'localtime')= date('now', 'localtime')
+        AND f.TipoFichaje = 'Entrada';");
+
+
+
+        public Task<List<JornaleroEntrada>> GetJornaleroSalidasAsync() =>
+    _db.QueryAsync<JornaleroEntrada>(@"
+        SELECT 
+            f.IdJornalero,
+            j.Nombre,
+            f.HoraEficaz
+        FROM Fichaje AS f
+        INNER JOIN Jornalero AS j
+        ON f.IdJornalero = j.IdJornalero
+        WHERE date(
+            (f.HoraEficaz - 621355968000000000) / 10000000, 
+            'unixepoch', 
+            'localtime')= date('now', 'localtime')
+        AND f.TipoFichaje = 'Salida';");
+
+
         public Task<List<Fichaje>> GetAllAsync()
             => _db.Table<Fichaje>().ToListAsync();
+
+
+
+
+
+
+        ////////Fichaje salida.
+        ///
+        //Sirve para saber si ese jornalero ya ha fichado la salida hoy.
+        public async Task<bool> ExisteFichajeSalidaAsync(int idJornalero)
+        {
+            var hoy = DateTime.Today;
+            var manana = hoy.AddDays(1);
+
+            var salida = await _db.Table<Fichaje>()
+                .Where(f =>
+                    f.IdJornalero == idJornalero &&
+                    f.TipoFichaje == "Salida" &&
+                    f.InstanteFichaje >= hoy &&
+                    f.InstanteFichaje < manana)
+                .FirstOrDefaultAsync();
+
+            return salida != null;
+        }
+
+        //Con esto sabre cuando tiempo ha trabajado el jornalero 
+        public async Task<Fichaje?> ObtenerEntradaPorJornaleroAsync(int idJornalero)
+        {
+            return await _db.Table<Fichaje>()
+                .Where(f => f.IdJornalero == idJornalero && f.TipoFichaje == "Entrada")
+                .OrderByDescending(f => f.HoraEficaz)
+                .FirstOrDefaultAsync();
+        }
     }
 }
