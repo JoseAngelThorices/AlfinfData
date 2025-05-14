@@ -94,21 +94,43 @@ namespace AlfinfData.Services.BdLocal
 
         public Task<List<JornaleroEntrada>> GetJornaleroEntradasAsync() =>
             _db.QueryAsync<JornaleroEntrada>(@"
-                SELECT 
-                  f.IdJornalero,
-                  j.Nombre,
-                  f.HoraEficaz
-                FROM Fichaje AS f
-                INNER JOIN Jornalero AS j
-                ON f.IdJornalero = j.IdJornalero
-                WHERE date(
-                        (f.HoraEficaz - 621355968000000000) / 10000000, 
-                        'unixepoch', 
-                        'localtime'
-                      )
-                  = date('now', 'localtime');");
+        SELECT 
+            f.IdJornalero,
+            j.Nombre,
+            f.HoraEficaz
+        FROM Fichaje AS f
+        INNER JOIN Jornalero AS j
+        ON f.IdJornalero = j.IdJornalero
+        WHERE date(
+            (f.HoraEficaz - 621355968000000000) / 10000000, 
+            'unixepoch', 
+            'localtime')= date('now', 'localtime')
+        AND f.TipoFichaje = 'Entrada';");
+
+
+
+        public Task<List<JornaleroEntrada>> GetJornaleroSalidasAsync() =>
+    _db.QueryAsync<JornaleroEntrada>(@"
+        SELECT 
+            f.IdJornalero,
+            j.Nombre,
+            f.HoraEficaz
+        FROM Fichaje AS f
+        INNER JOIN Jornalero AS j
+        ON f.IdJornalero = j.IdJornalero
+        WHERE date(
+            (f.HoraEficaz - 621355968000000000) / 10000000, 
+            'unixepoch', 
+            'localtime')= date('now', 'localtime')
+        AND f.TipoFichaje = 'Salida';");
+
+
+
         public Task<List<Fichaje>> GetAllAsync()
             => _db.Table<Fichaje>().ToListAsync();
+
+
+
 
 
 

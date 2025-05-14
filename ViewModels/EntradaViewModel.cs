@@ -75,7 +75,7 @@ namespace AlfinfData.ViewModels
                 await Shell.Current.DisplayAlert("NFC", "Activa NFC en los ajustes.", "OK");
                 return false; 
             }
-            
+            CrossNFC.Current.OnMessageReceived += OnTagReceived;
             try
             {
                 CrossNFC.Current.OnMessageReceived += OnTagReceived;
