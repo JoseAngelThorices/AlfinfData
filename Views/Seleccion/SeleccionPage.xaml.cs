@@ -1,33 +1,45 @@
-using AlfinfData.Models.SQLITE;
 using AlfinfData.ViewModels;
+using AlfinfData.Models.SQLITE;
 
-namespace AlfinfData.Views.Seleccion;
-
-public partial class SeleccionPage : ContentPage
+namespace AlfinfData.Views.Seleccion
 {
-    private readonly SeleccionViewModels _viewModel;
-
-    public SeleccionPage(SeleccionViewModels viewModel)
+    public partial class SeleccionPage : ContentPage
     {
-        InitializeComponent();
-        BindingContext = _viewModel = viewModel;
-    }
+        private readonly SeleccionViewModels _viewModel;
 
-    protected override async void OnAppearing()
-    {
-        base.OnAppearing();
+        public SeleccionPage(SeleccionViewModels viewModel)
+        {
+            InitializeComponent();
+            BindingContext = _viewModel = viewModel;
+        }
 
-        await _viewModel.CargarCuadrillaAsync();
-        await _viewModel.CargarEmpleadosAsync();
-    }
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
 
-    private void OnSeleccionarTodosClicked(object sender, EventArgs e)
-    {
-        _viewModel.SeleccionarTodos();
-    }
+            if (_viewModel.Jornaleros.Count == 0)
+                await _viewModel.CargarEmpleadosAsync();
 
-    private void OnQuitarTodosClicked(object sender, EventArgs e)
-    {
-        _viewModel.QuitarTodos();
+            await _viewModel.CargarCuadrillaAsync();
+        }
+
+        private void OnSeleccionarTodosClicked(object sender, EventArgs e)
+        {
+            _viewModel.SeleccionarTodos();
+        }
+
+        private void OnQuitarTodosClicked(object sender, EventArgs e)
+        {
+            _viewModel.QuitarTodos();
+        }
+
+        private async void OnJornaleroToggled(object sender, ToggledEventArgs e)
+        {
+            if (sender is Switch sw && sw.BindingContext is Jornalero jornalero)
+            {
+                await _viewModel.ActualizarJornaleroAsync(jornalero);
+                _viewModel.ActualizarContador();
+            }
+        }
     }
 }

@@ -11,7 +11,7 @@
     Shell.NavBarHasShadow="False"
     FlyoutBehavior="Flyout">
 
-    <!-- Barra superior -->
+    <!-- Título superior -->
     <Shell.TitleView>
         <Grid ColumnDefinitions="Auto,*,Auto" BackgroundColor="#71639e" Padding="10,0">
             <Button ImageSource="btncuadrados.png"
@@ -46,12 +46,14 @@
         </Grid>
     </Shell.TitleView>
 
-    <!-- Menú lateral -->
+    <!-- Menú lateral personalizado -->
     <Shell.FlyoutHeader>
         <viewsBarraLateral:BarraLateral />
     </Shell.FlyoutHeader>
 
-    <!-- Página de Inicio -->
-    <ShellContent Route="main" ContentTemplate="{DataTemplate views:MainPage}" />
+    <!-- Página raíz oculta pero funcional -->
+    <ShellItem Route="main" FlyoutItemIsVisible="False">
+        <ShellContent ContentTemplate="{DataTemplate views:MainPage}" />
+    </ShellItem>
 
 </Shell>

@@ -2,13 +2,12 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AlfinfData.Views.Seleccion.SeleccionPage"
-             Title="SeleccionPage"
-             BackgroundColor="#e9e9e9">
-    
+             BackgroundColor="#e9e9e9"
+             Title="SeleccionPage">
+
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsVisible="False" />
     </Shell.BackButtonBehavior>
-
 
     <Grid RowDefinitions="Auto,Auto,Auto,*,Auto"
           Padding="10"
@@ -48,11 +47,10 @@
         </Grid>
 
         <!-- Encabezado -->
-        <Grid Grid.Row="2" ColumnDefinitions="60*,240*,40*" Padding="5">
+        <Grid Grid.Row="2" ColumnDefinitions="0.2*,1*,0.2*" Padding="5,2">
             <Label Text="N.L." FontAttributes="Bold" TextColor="Black"/>
             <Label Text="Nombre" FontAttributes="Bold" TextColor="Black" Grid.Column="1"/>
             <Label Text="Activo" FontAttributes="Bold" TextColor="Black" Grid.Column="2"/>
-
         </Grid>
 
         <!-- Lista de jornaleros -->
@@ -62,20 +60,18 @@
                 BackgroundColor="White"
                 Margin="5,0"
                 VerticalOptions="FillAndExpand">
-
-
-            <CollectionView x:Name="ListaDeJornaleros"
-                            ItemsSource="{Binding Jornaleros}"
+            <CollectionView ItemsSource="{Binding Jornaleros}"
                             SelectionMode="None"
                             VerticalOptions="FillAndExpand">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-
-                        <Grid Padding="8" ColumnDefinitions="0.2*,1*,0.1*" HeightRequest="35">
+                        <Grid Padding="4" ColumnDefinitions="0.2*,1*,0.2*" HeightRequest="35">
                             <Label Text="{Binding IdJornalero}" VerticalOptions="Center" TextColor="Black"/>
                             <Label Text="{Binding Nombre}" Grid.Column="1" VerticalOptions="Center" TextColor="Black"/>
-                            <Switch IsToggled="{Binding Activo}" Grid.Column="2" HorizontalOptions="End"/>
-
+                            <Switch IsToggled="{Binding Activo}"
+                                    Grid.Column="2"
+                                    HorizontalOptions="End"
+                                    Toggled="OnJornaleroToggled"/>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
