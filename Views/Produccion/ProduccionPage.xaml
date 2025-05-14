@@ -15,15 +15,15 @@
                   Padding="3" 
                   RowSpacing="3">
                 <Picker x:Name="GrupoPicker"
-        Title="Selecciona cuadrilla"
-        BackgroundColor="#fbffb8"
-        TitleColor="Black"
-        TextColor="Black"
-        HeightRequest="40"
-        Margin="5"
-        ItemsSource="{Binding Cuadrillas}"
-        ItemDisplayBinding="{Binding Descripcion}"
-        SelectedItem="{Binding CuadrillaSeleccionada, Mode=TwoWay}" />
+                        Title="Selecciona cuadrilla"
+                        BackgroundColor="#fbffb8"
+                        TitleColor="Black"
+                        TextColor="Black"
+                        HeightRequest="40"
+                        Margin="5"
+                        ItemsSource="{Binding Cuadrillas}"
+                        ItemDisplayBinding="{Binding Descripcion}"
+                        SelectedItem="{Binding CuadrillaSeleccionada, Mode=TwoWay}" />
 
                 <Grid Grid.Row="2" ColumnDefinitions="60*,240*,40*" Padding="5">
                     <Label Text="N.L." FontAttributes="Bold" TextColor="Black" />

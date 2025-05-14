@@ -1,6 +1,7 @@
 ﻿using AlfinfData.Models.SQLITE;
 using AlfinfData.Services.BdLocal;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Maui.Storage; // NUEVO
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
@@ -32,24 +33,28 @@ namespace AlfinfData.ViewModels
         {
             var lista = await _repoC.GetAllAsync();
             Cuadrillas.Clear();
+
+            // Agregar opción TODOS
+            Cuadrillas.Add(new Cuadrilla { IdCuadrilla = 0, Descripcion = "TODOS" });
+
             foreach (var c in lista)
                 Cuadrillas.Add(c);
+
+            // Restaurar cuadrilla previa
+            var savedId = Preferences.Default.Get("CuadrillaSeleccionada_Produccion", 0);
+            CuadrillaSeleccionada = Cuadrillas.FirstOrDefault(c => c.IdCuadrilla == savedId);
         }
 
         public async Task CargarJornalerosConCajasAsync()
         {
             var jornalerosConCajas = await _produccionRepository.GetJornalerosConCajasAsync();
             TodosLosJornaleros = jornalerosConCajas.ToList();
-
-            JornalerosConCajas.Clear();
-            JornalerosConCajas = new ObservableCollection<JornaleroConCajas>(jornalerosConCajas);
-            OnPropertyChanged(nameof(JornalerosConCajas));
+            FiltrarJornaleros();
         }
-
-
 
         partial void OnCuadrillaSeleccionadaChanged(Cuadrilla value)
         {
+            Preferences.Default.Set("CuadrillaSeleccionada_Produccion", value?.IdCuadrilla ?? 0);
             FiltrarJornaleros();
         }
 
@@ -57,17 +62,16 @@ namespace AlfinfData.ViewModels
         {
             JornalerosConCajas.Clear();
 
-            var cuadrillaId = CuadrillaSeleccionada?.IdCuadrilla ?? 0;
+            int id = CuadrillaSeleccionada?.IdCuadrilla ?? 0;
 
-            var listaFiltrada = CuadrillaSeleccionada == null
+            var filtrados = id == 0
                 ? TodosLosJornaleros
-                : TodosLosJornaleros.Where(j => j.IdCuadrilla == cuadrillaId);
+                : TodosLosJornaleros.Where(j => j.IdCuadrilla == id);
 
-            foreach (var j in listaFiltrada)
+            foreach (var j in filtrados)
                 JornalerosConCajas.Add(j);
         }
 
-        // Método para añadir un registro de producción
         public async Task InsertProduccionAsync(int idJornalero, int cajas)
         {
             var produccion = new Produccion
@@ -80,19 +84,15 @@ namespace AlfinfData.ViewModels
             await _produccionRepository.InsertProduccionAsync(produccion);
         }
 
-        // Método para añadir o restar cajas a los seleccionados
         public async Task ProcesarCajasAsync(int cantidad)
         {
             if (Seleccionados is null || Seleccionados.Count == 0)
                 return;
 
             foreach (var j in Seleccionados)
-            {
                 await InsertProduccionAsync(j.IdJornalero, cantidad);
-            }
 
             await CargarJornalerosConCajasAsync();
-            FiltrarJornaleros();
         }
     }
 }
