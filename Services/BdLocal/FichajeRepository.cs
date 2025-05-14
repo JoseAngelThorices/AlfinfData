@@ -44,10 +44,17 @@ namespace AlfinfData.Services.BdLocal
             // 4) Si no existe, devolvemos false (puedes crear el nuevo)
             return false;
         }
-        public void BorrarDatosAsync()
+        public async void BorrarDatosAsync()
         {
-            _db.DeleteAllAsync<Produccion>();
-            _db.DeleteAllAsync<Horas>();
+            await _db.DeleteAllAsync<Produccion>();
+            await _db.DeleteAllAsync<Fichaje>();
+            await _db.DeleteAllAsync<Horas>();
+            const string sql = @"
+                UPDATE Jornalero
+                SET Activo = ?;
+                ";
+
+            await _db.ExecuteAsync(sql, false);
         }
             
 
