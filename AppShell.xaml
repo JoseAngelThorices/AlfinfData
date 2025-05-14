@@ -52,6 +52,7 @@
     </Shell.FlyoutHeader>
 
     <!-- Página de Inicio -->
-    <ShellContent Route="main" ContentTemplate="{DataTemplate views:MainPage}" />
-
+    <ShellItem Route="main" FlyoutItemIsVisible="False">
+        <ShellContent Route="main" ContentTemplate="{DataTemplate views:MainPage}" />
+    </ShellItem>
 </Shell>
