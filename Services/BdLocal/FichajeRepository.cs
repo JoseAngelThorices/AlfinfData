@@ -44,10 +44,17 @@ namespace AlfinfData.Services.BdLocal
             // 4) Si no existe, devolvemos false (puedes crear el nuevo)
             return false;
         }
-        public void BorrarDatosAsync()
+        public async void BorrarDatosAsync()
         {
-            _db.DeleteAllAsync<Produccion>();
-            _db.DeleteAllAsync<Horas>();
+            await _db.DeleteAllAsync<Produccion>();
+            await _db.DeleteAllAsync<Fichaje>();
+            await _db.DeleteAllAsync<Horas>();
+            const string sql = @"
+                UPDATE Jornalero
+                SET Activo = ?;
+                ";
+
+            await _db.ExecuteAsync(sql, false);
         }
             
 
@@ -100,5 +107,35 @@ namespace AlfinfData.Services.BdLocal
                   = date('now', 'localtime');");
         public Task<List<Fichaje>> GetAllAsync()
             => _db.Table<Fichaje>().ToListAsync();
+
+
+
+        ////////Fichaje salida.
+        ///
+        //Sirve para saber si ese jornalero ya ha fichado la salida hoy.
+        public async Task<bool> ExisteFichajeSalidaAsync(int idJornalero)
+        {
+            var hoy = DateTime.Today;
+            var manana = hoy.AddDays(1);
+
+            var salida = await _db.Table<Fichaje>()
+                .Where(f =>
+                    f.IdJornalero == idJornalero &&
+                    f.TipoFichaje == "Salida" &&
+                    f.InstanteFichaje >= hoy &&
+                    f.InstanteFichaje < manana)
+                .FirstOrDefaultAsync();
+
+            return salida != null;
+        }
+
+        //Con esto sabre cuando tiempo ha trabajado el jornalero 
+        public async Task<Fichaje?> ObtenerEntradaPorJornaleroAsync(int idJornalero)
+        {
+            return await _db.Table<Fichaje>()
+                .Where(f => f.IdJornalero == idJornalero && f.TipoFichaje == "Entrada")
+                .OrderByDescending(f => f.HoraEficaz)
+                .FirstOrDefaultAsync();
+        }
     }
 }

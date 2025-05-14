@@ -1,4 +1,4 @@
-using Microsoft.Maui.Controls;
+﻿using Microsoft.Maui.Controls;
 using Microsoft.Maui.Storage;
 using System;
 using AlfinfData.ViewModels;
@@ -27,6 +27,18 @@ namespace AlfinfData.Views.Salidas
             {
                 _viewModel.CuadrillaSeleccionada = _viewModel.Cuadrillas.First();
             }
+
+            // 🔄 Activar NFC automáticamente al entrar
+            bool iniciado = await _viewModel.SalidaNFCAsync();
+            if (!iniciado)
+            {
+                await DisplayAlert("Error", "No se pudo iniciar la lectura NFC.", "OK");
+            }
+        }
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            _viewModel.CancelarNFC();
         }
 
         private void RecuperarHoraGuardada()

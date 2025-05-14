@@ -65,8 +65,16 @@ namespace AlfinfData.ViewModels
                                 Titulo = $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}"; // <-- ESTA LÍNEA CAMBIA EL TÍTULO
                                 // Usuario pulsó “Aceptar”
                                 // Aquí borras todo y creas el nuevo día
-                                await _fichajeRepository.ActualizarHoraEficazAsync(999999, fechaHora);
+                                var nuevoDia = new Fichaje
+                                {
+                                    IdJornalero = 999999,
+                                    HoraEficaz = fechaHora,
+                                    TipoFichaje = "Entrada",
+                                    InstanteFichaje = DateTime.Today
+                                };
+                                
                                 _fichajeRepository.BorrarDatosAsync();
+                                await _fichajeRepository.CrearFichajesAsync(nuevoDia);
                                 await Shell.Current.DisplayAlert("Nuevo Día", $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}", "OK");
                             }
                         }
@@ -93,6 +101,7 @@ namespace AlfinfData.ViewModels
                                 TipoFichaje = "Entrada",
                                 InstanteFichaje = DateTime.Today
                             };
+                            _fichajeRepository.BorrarDatosAsync();
                             await _fichajeRepository.CrearFichajesAsync(nuevoDia);
                         }
                     }     
