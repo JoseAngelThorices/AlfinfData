@@ -13,7 +13,7 @@ namespace AlfinfData.Services.BdLocal
         {
             _db = databaseService.Conn;
         }
-        public async Task<bool> CrearFichajesAsync(Fichaje fichaje)
+        public async Task<bool> CrearFichajeNuevoDiaAsync(Fichaje fichaje)
         {
              var existente = await _db.Table<Fichaje>()
                         .Where(f => f.IdJornalero == fichaje.IdJornalero)
@@ -21,6 +21,31 @@ namespace AlfinfData.Services.BdLocal
             if (existente != null)
             {
                 // Ya había un registro con ese Id ⇒ no insertamos
+                return false;
+            }
+            await _db.InsertAsync(fichaje);
+            return true;
+        }
+        public async Task<bool> CrearFichajesJornalerosAsync(Fichaje fichaje)
+        {
+            var inicioHoy = DateTime.Today;               
+            var inicioManana = inicioHoy.AddDays(1);
+            var ultimoHoy = await _db.Table<Fichaje>()
+            .Where(f =>
+                f.IdJornalero == fichaje.IdJornalero
+                && f.InstanteFichaje >= inicioHoy
+                && f.InstanteFichaje < inicioManana)                                    
+            .OrderByDescending(f => f.Id)               
+            .FirstOrDefaultAsync();
+
+            if(ultimoHoy == null)
+            {
+                await _db.InsertAsync(fichaje);
+                return true;
+            }
+            if (ultimoHoy.TipoFichaje == fichaje.TipoFichaje)
+            {
+                //Significará que el último registro que recoge, el tipo de fichaje coincide con el que le estás pasando por lo que ya existirá
                 return false;
             }
             await _db.InsertAsync(fichaje);
@@ -46,7 +71,7 @@ namespace AlfinfData.Services.BdLocal
             // 4) Si no existe, devolvemos false (puedes crear el nuevo)
             return false;
         }
-        public async void BorrarDatosAsync()
+        public async Task<bool> BorrarDatosAsync()
         {
             await _db.DeleteAllAsync<Produccion>();
             await _db.DeleteAllAsync<Fichaje>();
@@ -57,6 +82,7 @@ namespace AlfinfData.Services.BdLocal
                 ";
 
             await _db.ExecuteAsync(sql, false);
+            return true;
         }
             
 
@@ -123,7 +149,6 @@ namespace AlfinfData.Services.BdLocal
             'unixepoch', 
             'localtime')= date('now', 'localtime')
         AND f.TipoFichaje = 'Salida';");
-
 
 
         public Task<List<Fichaje>> GetAllAsync()

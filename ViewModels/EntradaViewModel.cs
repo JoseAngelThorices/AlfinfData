@@ -115,7 +115,7 @@ namespace AlfinfData.ViewModels
                         InstanteFichaje = DateTime.Today
                     };
 
-                    bool resultado = await _fichajeRepo.CrearFichajesAsync(nuevoFichaje);
+                    bool resultado = await _fichajeRepo.CrearFichajesJornalerosAsync(nuevoFichaje);
 
                     if (resultado)
                     {
