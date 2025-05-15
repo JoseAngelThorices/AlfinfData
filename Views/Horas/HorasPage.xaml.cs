@@ -21,6 +21,9 @@ namespace AlfinfData.Views.Horas
             await _viewModel.CargarCuadrillasAsync();
             //await _viewModel.CargarJornalerosConHorasAsync();
             await _viewModel.CargarDesdeActivosAsync();
+            //Guardar horas en tabla horas.
+            await _viewModel.GuardarHorasAsync();
+
 
             // Temporizador que actualiza las horas automáticamente
             Dispatcher.StartTimer(TimeSpan.FromSeconds(30), () =>
