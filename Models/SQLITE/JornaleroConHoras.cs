@@ -7,6 +7,7 @@ namespace AlfinfData.Models.SQLITE
         public int IdJornalero { get; set; }
         public int IdCuadrilla { get; set; }
         public string Nombre { get; set; }
+        
 
         [ObservableProperty] private double hn;
         [ObservableProperty] private double he1;

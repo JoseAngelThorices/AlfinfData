@@ -20,6 +20,7 @@
            Margin="10,20,0,10"/>
 
     <!-- Entradas -->
+
     <Grid Padding="15,10" BackgroundColor="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -35,10 +36,8 @@
                TextColor="Black"
                VerticalOptions="Center"
                Grid.Column="1"/>
-        <Grid.GestureRecognizers>
-            <TapGestureRecognizer Command="{Binding EntradasCommand}" />
-        </Grid.GestureRecognizers>
-    </Grid>
+
+   
 
     <!-- Salidas -->
     <Grid Padding="15,10" BackgroundColor="White">
@@ -57,11 +56,14 @@
                VerticalOptions="Center"
                Grid.Column="1"/>
         <Grid.GestureRecognizers>
-            <TapGestureRecognizer Command="{Binding NavigateToSalidasCommand}" />
+
+            <TapGestureRecognizer Tapped="OnAccesoDirectoSalidas" />
         </Grid.GestureRecognizers>
     </Grid>
 
-    <!-- Inicio Descanso -->
+    
+
+    <!-- Inicio Descanso --><!--
     <Grid Padding="15,10" BackgroundColor="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -80,9 +82,9 @@
         <Grid.GestureRecognizers>
             <TapGestureRecognizer Command="{Binding InicioDescansoCommand}" />
         </Grid.GestureRecognizers>
-    </Grid>
+    </Grid>-->
 
-    <!-- Fin Descanso -->
+    <!-- Fin Descanso --><!--
     <Grid Padding="15,10" BackgroundColor="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -101,7 +103,48 @@
         <Grid.GestureRecognizers>
             <TapGestureRecognizer Command="{Binding FinDescansoCommand}" />
         </Grid.GestureRecognizers>
+    </Grid>-->
+
+    <!-- Inicio -->
+    <Grid Padding="15,10" BackgroundColor="White">
+        <Label Text="Inicio" TextColor="Black" VerticalOptions="Center" />
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Tapped="OnAccesoDirectoInicio"/>
+        </Grid.GestureRecognizers>
     </Grid>
+
+    <!-- Producción -->
+    <Grid Padding="15,10" BackgroundColor="White">
+        <Label Text="Producción" TextColor="Black" VerticalOptions="Center" />
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Tapped="OnAccesoDirectoProduccion"/>
+        </Grid.GestureRecognizers>
+    </Grid>
+
+    <!-- Selección -->
+    <Grid Padding="15,10" BackgroundColor="White">
+        <Label Text="Selección" TextColor="Black" VerticalOptions="Center" />
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Tapped="OnAccesoDirectoSeleccion"/>
+        </Grid.GestureRecognizers>
+    </Grid>
+
+    <!-- Horas -->
+    <Grid Padding="15,10" BackgroundColor="White">
+        <Label Text="Horas" TextColor="Black" VerticalOptions="Center" />
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Tapped="OnAccesoDirectoHoras"/>
+        </Grid.GestureRecognizers>
+    </Grid>
+
+    <!-- Fin -->
+    <Grid Padding="15,10" BackgroundColor="White">
+        <Label Text="Fin" TextColor="Black" VerticalOptions="Center" />
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Tapped="OnAccesoDirectoFin"/>
+        </Grid.GestureRecognizers>
+    </Grid>
+
 
     <!-- Alta NFC -->
     <Grid Padding="15,10" BackgroundColor="White">
