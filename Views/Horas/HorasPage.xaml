@@ -84,7 +84,7 @@
                            Margin="5,0"/>
 
                             <!-- HN -->
-                            <Entry Text="{Binding HN}"
+                            <Entry Text="{Binding Hn}"
                            Grid.Column="2"
                            FontSize="14"
                            BackgroundColor="Transparent"
@@ -92,7 +92,7 @@
                            VerticalOptions="Center"/>
 
                             <!-- HE1 -->
-                            <Entry Text="{Binding HE1}"
+                            <Entry Text="{Binding He1}"
                            Grid.Column="3"
                            FontSize="14"
                            BackgroundColor="Transparent"
@@ -100,7 +100,7 @@
                            VerticalOptions="Center"/>
 
                             <!-- HE2 -->
-                            <Entry Text="{Binding HE2}"
+                            <Entry Text="{Binding He2}"
                            Grid.Column="4"
                            FontSize="14"
                            BackgroundColor="Transparent"
