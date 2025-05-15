@@ -5,84 +5,57 @@ using System.Threading.Tasks;
 using Microsoft.Maui.Storage;
 using AlfinfData.Models.ConfiguracionApp;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace AlfinfData.ViewModels
 {
     public partial class ConfiguracionViewModel : ObservableObject
     {
-        //[ObservableProperty]
-        //private string odooUrl = string.Empty;
-        //public ConfiguracionViewModel()
-        //{
-        //    _ = InitializeAsync();
-        //}
-        //private class RootConfigDto
-        //{
-        //    public ConfigOdoo Odoo { get; set; } = new();
-        //}
+        // 1) Valor inicial que debería verse en la UI
+        [ObservableProperty]
+        private string _odooUrl = "Cargando...";
 
-        //// Método principal de carga
-        //private async Task InitializeAsync()
-        //{
-        //    try
-        //    {
-        //        // Abre tu archivo JSON embebido en la app
-        //        using var stream = await FileSystem.OpenAppPackageFileAsync("appsettings.json");
-        //        using var reader = new StreamReader(stream);
-        //        var json = await reader.ReadToEndAsync();
+        // 2) Método que lee el JSON y asigna OdooUrl; genera LoadConfigCommand
+        [RelayCommand]
+        private async Task LoadConfigAsync()
+        {
+            try
+            {
+                using var stream = await FileSystem.OpenAppPackageFileAsync("archivos.json");
+                using var reader = new StreamReader(stream);
+                var json = await reader.ReadToEndAsync();
 
-        //        // Deserializa a un DTO intermedio
-        //        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        //        var dto = JsonSerializer.Deserialize<RootConfigDto>(json, options)
-        //                  ?? throw new InvalidOperationException("JSON mal formado");
+                var dto = JsonSerializer.Deserialize<RootConfigDto>(json,
+                           new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
+                          ?? throw new InvalidOperationException("JSON mal formado");
 
-        //        // Asigna las propiedades al ViewModel
-        //        OdooUrl = dto.Odoo.Url;
-        //        OdooDatabase = dto.Odoo.Database;
-        //        OdooUsername = dto.Odoo.Username;
-        //        OdooPassword = dto.Odoo.Password;
-        //        OdooTimeoutSeconds = dto.Odoo.TimeoutSeconds;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Maneja errores (log, user alert, etc.)
-        //        System.Diagnostics.Debug.WriteLine($"Error cargando configuración: {ex}");
-        //    }
-        //}
-        //public string OdooUrl
-        //{
-        //    get => _odooUrl;
-        //    private set => SetProperty(ref _odooUrl, value);
-        //}
-        //private string _odooUrl;
+                // Esto dispara el PropertyChanged y refresca el Label
+                OdooUrl = dto.Odoo.Url;
+            }
+            catch (Exception ex)
+            {
+                // En caso de error mostramos el mensaje
+                OdooUrl = $"Error: {ex.Message}";
+            }
+        }
 
-        //public string OdooDatabase
-        //{
-        //    get => _odooDatabase;
-        //    private set => SetProperty(ref _odooDatabase, value);
-        //}
-        //private string _odooDatabase;
+        // 3) Método para abrir la URL; genera OpenUrlCommand
+        [RelayCommand]
+        private async Task OpenUrlAsync()
+        {
+            if (!string.IsNullOrWhiteSpace(OdooUrl))
+                await Launcher.OpenAsync(OdooUrl);
+        }
 
-        //public string OdooUsername
-        //{
-        //    get => _odooUsername;
-        //    private set => SetProperty(ref _odooUsername, value);
-        //}
-        //private string _odooUsername;
+        // 4) En el constructor ejecutamos la carga automáticamente
+        public ConfiguracionViewModel()
+        {
+            // El comando se llama LoadConfigCommand, no UrlCommand
+            LoadConfigCommand.Execute(null);
+        }
 
-        //public string OdooPassword
-        //{
-        //    get => _odooPassword;
-        //    private set => SetProperty(ref _odooPassword, value);
-        //}
-        //private string _odooPassword;
-
-        //public int OdooTimeoutSeconds
-        //{
-        //    get => _odooTimeoutSeconds;
-        //    private set => SetProperty(ref _odooTimeoutSeconds, value);
-        //}
-        //private int _odooTimeoutSeconds;
+        // Clases para deserializar el JSON
+        private class RootConfigDto { public ConfigOdoo Odoo { get; set; } = new(); }
 
 
     }
