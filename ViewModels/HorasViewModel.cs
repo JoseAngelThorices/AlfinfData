@@ -129,7 +129,7 @@ namespace AlfinfData.ViewModels
                     IdJornalero = j.IdJornalero,
                     Nombre = j.Nombre,
                     IdCuadrilla = j.IdCuadrilla,
-                    HoraActivacion = horaInicio,
+                    
                     Hn = Math.Round(hn, 2),
                     He1 = Math.Round(he1, 2),
                     He2 = 0
