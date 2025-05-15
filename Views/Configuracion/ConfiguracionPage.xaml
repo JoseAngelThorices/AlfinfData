@@ -37,12 +37,12 @@
                                 HeightRequest="40">
                             <Grid>
                                 <Label x:Name="UrlLabel"
-                                       Text="URL del servidor"
+                                       Text="{Binding OdooUrl}"
                                        Margin="10,0"
                                        VerticalOptions="Center"
                                        TextColor="Gray" />
                                 <Button BackgroundColor="Transparent"
-                                        Clicked="OnUrlClicked"/>
+                                        Command="{Binding UrlCommand}"/>
                             </Grid>
                         </Border>
                     </VerticalStackLayout>
@@ -66,7 +66,7 @@
                                        VerticalOptions="Center"
                                        TextColor="Gray"/>
                                 <Button BackgroundColor="Transparent"
-                                        Clicked="OnPortClicked"/>
+                                        Command="{Binding PortCommand}"/>
                             </Grid>
                         </Border>
                     </VerticalStackLayout>
