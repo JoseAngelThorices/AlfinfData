@@ -19,6 +19,28 @@
            TextColor="Gray"
            Margin="10,20,0,10"/>
 
+
+    <!-- Inicio -->
+    <Grid Padding="15,10" BackgroundColor="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Image Source="barralateral.png"
+           WidthRequest="24"
+           HeightRequest="24"
+           VerticalOptions="Center"
+           Margin="0,0,30,0"/>
+        <Label Text="Inicio"
+           FontAttributes="Bold"
+           TextColor="Black"
+           VerticalOptions="Center"
+           Grid.Column="1"/>
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Tapped="OnAccesoDirectoInicio"/>
+        </Grid.GestureRecognizers>
+    </Grid>
+
     <!-- Entradas -->
 
     <Grid Padding="15,10" BackgroundColor="White">
@@ -36,8 +58,8 @@
                TextColor="Black"
                VerticalOptions="Center"
                Grid.Column="1"/>
+    </Grid>
 
-   
 
     <!-- Salidas -->
     <Grid Padding="15,10" BackgroundColor="White">
@@ -61,8 +83,36 @@
         </Grid.GestureRecognizers>
     </Grid>
 
-    
 
+    <!-- Alta NFC -->
+    <Grid Padding="15,10" BackgroundColor="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Image Source="barralateral.png"
+           WidthRequest="24"
+           HeightRequest="24"
+           VerticalOptions="Center"
+           Margin="0,0,30,0"/>
+        <Label Text="Alta NFC"
+           FontAttributes="Bold"
+           TextColor="Black"
+           VerticalOptions="Center"
+           Grid.Column="1"/>
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Tapped="OnAccesoDirectoAltaNFC"/>
+        </Grid.GestureRecognizers>
+    </Grid>
+
+
+    <!-- Sección FICHAJES -->
+    <Label Text="2. Productividad"
+       FontAttributes="Bold"
+       FontSize="18"
+       TextColor="Gray"
+       Margin="10,20,0,10"/>
+    
     <!-- Inicio Descanso --><!--
     <Grid Padding="15,10" BackgroundColor="White">
         <Grid.ColumnDefinitions>
@@ -105,66 +155,77 @@
         </Grid.GestureRecognizers>
     </Grid>-->
 
-    <!-- Inicio -->
-    <Grid Padding="15,10" BackgroundColor="White">
-        <Label Text="Inicio" TextColor="Black" VerticalOptions="Center" />
-        <Grid.GestureRecognizers>
-            <TapGestureRecognizer Tapped="OnAccesoDirectoInicio"/>
-        </Grid.GestureRecognizers>
-    </Grid>
 
     <!-- Producción -->
-    <Grid Padding="15,10" BackgroundColor="White">
-        <Label Text="Producción" TextColor="Black" VerticalOptions="Center" />
-        <Grid.GestureRecognizers>
-            <TapGestureRecognizer Tapped="OnAccesoDirectoProduccion"/>
-        </Grid.GestureRecognizers>
-    </Grid>
-
-    <!-- Selección -->
-    <Grid Padding="15,10" BackgroundColor="White">
-        <Label Text="Selección" TextColor="Black" VerticalOptions="Center" />
-        <Grid.GestureRecognizers>
-            <TapGestureRecognizer Tapped="OnAccesoDirectoSeleccion"/>
-        </Grid.GestureRecognizers>
-    </Grid>
-
-    <!-- Horas -->
-    <Grid Padding="15,10" BackgroundColor="White">
-        <Label Text="Horas" TextColor="Black" VerticalOptions="Center" />
-        <Grid.GestureRecognizers>
-            <TapGestureRecognizer Tapped="OnAccesoDirectoHoras"/>
-        </Grid.GestureRecognizers>
-    </Grid>
-
-    <!-- Fin -->
-    <Grid Padding="15,10" BackgroundColor="White">
-        <Label Text="Fin" TextColor="Black" VerticalOptions="Center" />
-        <Grid.GestureRecognizers>
-            <TapGestureRecognizer Tapped="OnAccesoDirectoFin"/>
-        </Grid.GestureRecognizers>
-    </Grid>
-
-
-    <!-- Alta NFC -->
     <Grid Padding="15,10" BackgroundColor="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Image Source="barralateral.png"
-               WidthRequest="24"
-               HeightRequest="24"
-               VerticalOptions="Center"
-               Margin="0,0,30,0"/>
-        <Label Text="Alta NFC"
-               FontAttributes="Bold"
-               TextColor="Black"
-               VerticalOptions="Center"
-               Grid.Column="1"/>
+           WidthRequest="24"
+           HeightRequest="24"
+           VerticalOptions="Center"
+           Margin="0,0,30,0"/>
+        <Label Text="Producción"
+           FontAttributes="Bold"
+           TextColor="Black"
+           VerticalOptions="Center"
+           Grid.Column="1"/>
         <Grid.GestureRecognizers>
-            <TapGestureRecognizer Tapped="OnAccesoDirectoAltaNFC"/>
+            <TapGestureRecognizer Tapped="OnAccesoDirectoProduccion"/>
         </Grid.GestureRecognizers>
     </Grid>
+
+    <!-- Horas -->
+    <Grid Padding="15,10" BackgroundColor="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Image Source="barralateral.png"
+       WidthRequest="24"
+       HeightRequest="24"
+       VerticalOptions="Center"
+       Margin="0,0,30,0"/>
+        <Label Text="Horas"
+       FontAttributes="Bold"
+       TextColor="Black"
+       VerticalOptions="Center"
+       Grid.Column="1"/>
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Tapped="OnAccesoDirectoHoras"/>
+        </Grid.GestureRecognizers>
+    </Grid>
+
+    <!-- Sección FICHAJES -->
+    <Label Text="3. Seleccion"
+   FontAttributes="Bold"
+   FontSize="18"
+   TextColor="Gray"
+   Margin="10,20,0,10"/>
+
+    <!-- Selección -->
+    <Grid Padding="15,10" BackgroundColor="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Image Source="barralateral.png"
+           WidthRequest="24"
+           HeightRequest="24"
+           VerticalOptions="Center"
+           Margin="0,0,30,0"/>
+        <Label Text="Selección"
+           FontAttributes="Bold"
+           TextColor="Black"
+           VerticalOptions="Center"
+           Grid.Column="1"/>
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Tapped="OnAccesoDirectoSeleccion"/>
+        </Grid.GestureRecognizers>
+    </Grid>
+
+
 
 </VerticalStackLayout>
