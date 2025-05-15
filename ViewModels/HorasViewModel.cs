@@ -108,7 +108,7 @@ namespace AlfinfData.ViewModels
             var soloActivos = activos.Where(j => j.Activo == true).ToList();
 
             // Obtenemos todos los fichajes reales de hoy
-            var fichajesHoy = await _fichajeRepo.GetJornaleroEntradasAsync();  // Este método ya te devuelve los fichajes de tipo "Entrada" de hoy
+            var fichajesHoy = await _fichajeRepo.GetJornaleroEntradasAsync();  // Este mï¿½todo ya te devuelve los fichajes de tipo "Entrada" de hoy
 
             todosLosJornaleros.Clear();
 

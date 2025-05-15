@@ -108,16 +108,6 @@ namespace AlfinfData.ViewModels
         public async Task ActualizarJornaleroAsync(Jornalero j)
         {
             await _repo.SetActiveAsync(j.IdJornalero, j.Activo == true);
-            if ((j.Activo == true) && (j.HoraActivacion == null))
-
-                j.HoraActivacion = DateTime.Now;
-
-            if (j.Activo == false)
-
-                j.HoraActivacion = null;
-
-            await _repo.UpdateAsync(j);
-
         }
 
         public async void QuitarTodos()
