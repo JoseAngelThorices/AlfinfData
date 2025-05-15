@@ -77,7 +77,8 @@ namespace AlfinfData.ViewModels
             }
             CrossNFC.Current.OnMessageReceived += OnTagReceived;
             try
-            {            
+            {
+                CrossNFC.Current.OnMessageReceived += OnTagReceived;
                 CrossNFC.Current.StartListening();
                 return true;
             }
@@ -114,7 +115,7 @@ namespace AlfinfData.ViewModels
                         InstanteFichaje = DateTime.Today
                     };
 
-                    bool resultado = await _fichajeRepo.CrearFichajesAsync(nuevoFichaje);
+                    bool resultado = await _fichajeRepo.CrearFichajesJornalerosAsync(nuevoFichaje);
 
                     if (resultado)
                     {

@@ -13,12 +13,39 @@ namespace AlfinfData.Services.BdLocal
         {
             _db = databaseService.Conn;
         }
-        public async Task<bool> CrearFichajesAsync(Fichaje fichaje)
+        public async Task<bool> CrearFichajeNuevoDiaAsync(Fichaje fichaje)
         {
-            var existente = await _db.FindAsync<Fichaje>(fichaje.IdJornalero);
+             var existente = await _db.Table<Fichaje>()
+                        .Where(f => f.IdJornalero == fichaje.IdJornalero)
+                        .FirstOrDefaultAsync();
             if (existente != null)
             {
                 // Ya había un registro con ese Id ⇒ no insertamos
+                return false;
+            }
+            await _db.InsertAsync(fichaje);
+            return true;
+        }
+        public async Task<bool> CrearFichajesJornalerosAsync(Fichaje fichaje)
+        {
+            var inicioHoy = DateTime.Today;               
+            var inicioManana = inicioHoy.AddDays(1);
+            var ultimoHoy = await _db.Table<Fichaje>()
+            .Where(f =>
+                f.IdJornalero == fichaje.IdJornalero
+                && f.InstanteFichaje >= inicioHoy
+                && f.InstanteFichaje < inicioManana)                                    
+            .OrderByDescending(f => f.Id)               
+            .FirstOrDefaultAsync();
+
+            if(ultimoHoy == null)
+            {
+                await _db.InsertAsync(fichaje);
+                return true;
+            }
+            if (ultimoHoy.TipoFichaje == fichaje.TipoFichaje)
+            {
+                //Significará que el último registro que recoge, el tipo de fichaje coincide con el que le estás pasando por lo que ya existirá
                 return false;
             }
             await _db.InsertAsync(fichaje);
@@ -44,10 +71,18 @@ namespace AlfinfData.Services.BdLocal
             // 4) Si no existe, devolvemos false (puedes crear el nuevo)
             return false;
         }
-        public void BorrarDatosAsync()
+        public async Task<bool> BorrarDatosAsync()
         {
-            _db.DeleteAllAsync<Produccion>();
-            _db.DeleteAllAsync<Horas>();
+            await _db.DeleteAllAsync<Produccion>();
+            await _db.DeleteAllAsync<Fichaje>();
+            await _db.DeleteAllAsync<Horas>();
+            const string sql = @"
+                UPDATE Jornalero
+                SET Activo = ?;
+                ";
+
+            await _db.ExecuteAsync(sql, false);
+            return true;
         }
             
 
@@ -85,20 +120,71 @@ namespace AlfinfData.Services.BdLocal
 
         public Task<List<JornaleroEntrada>> GetJornaleroEntradasAsync() =>
             _db.QueryAsync<JornaleroEntrada>(@"
-                SELECT 
-                  f.IdJornalero,
-                  j.Nombre,
-                  f.HoraEficaz
-                FROM Fichaje AS f
-                INNER JOIN Jornalero AS j
-                ON f.IdJornalero = j.IdJornalero
-                WHERE date(
-                        (f.HoraEficaz - 621355968000000000) / 10000000, 
-                        'unixepoch', 
-                        'localtime'
-                      )
-                  = date('now', 'localtime');");
+        SELECT 
+            f.IdJornalero,
+            j.Nombre,
+            f.HoraEficaz
+        FROM Fichaje AS f
+        INNER JOIN Jornalero AS j
+        ON f.IdJornalero = j.IdJornalero
+        WHERE date(
+            (f.HoraEficaz - 621355968000000000) / 10000000, 
+            'unixepoch', 
+            'localtime')= date('now', 'localtime')
+        AND f.TipoFichaje = 'Entrada';");
+
+
+
+        public Task<List<JornaleroEntrada>> GetJornaleroSalidasAsync() =>
+    _db.QueryAsync<JornaleroEntrada>(@"
+        SELECT 
+            f.IdJornalero,
+            j.Nombre,
+            f.HoraEficaz
+        FROM Fichaje AS f
+        INNER JOIN Jornalero AS j
+        ON f.IdJornalero = j.IdJornalero
+        WHERE date(
+            (f.HoraEficaz - 621355968000000000) / 10000000, 
+            'unixepoch', 
+            'localtime')= date('now', 'localtime')
+        AND f.TipoFichaje = 'Salida';");
+
+
         public Task<List<Fichaje>> GetAllAsync()
             => _db.Table<Fichaje>().ToListAsync();
+
+
+
+
+
+
+        ////////Fichaje salida.
+        ///
+        //Sirve para saber si ese jornalero ya ha fichado la salida hoy.
+        public async Task<bool> ExisteFichajeSalidaAsync(int idJornalero)
+        {
+            var hoy = DateTime.Today;
+            var manana = hoy.AddDays(1);
+
+            var salida = await _db.Table<Fichaje>()
+                .Where(f =>
+                    f.IdJornalero == idJornalero &&
+                    f.TipoFichaje == "Salida" &&
+                    f.InstanteFichaje >= hoy &&
+                    f.InstanteFichaje < manana)
+                .FirstOrDefaultAsync();
+
+            return salida != null;
+        }
+
+        //Con esto sabre cuando tiempo ha trabajado el jornalero 
+        public async Task<Fichaje?> ObtenerEntradaPorJornaleroAsync(int idJornalero)
+        {
+            return await _db.Table<Fichaje>()
+                .Where(f => f.IdJornalero == idJornalero && f.TipoFichaje == "Entrada")
+                .OrderByDescending(f => f.HoraEficaz)
+                .FirstOrDefaultAsync();
+        }
     }
 }
