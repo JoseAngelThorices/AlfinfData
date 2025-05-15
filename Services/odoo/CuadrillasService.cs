@@ -29,7 +29,7 @@ namespace AlfinfData.Services.odoo
             {
                 domain = new object[][]
             {
-                new object[] { "id", "in", new object[] { 3, 4 } }
+                new object[] { "id", "in", new object[] { 3, 4, 9, 10, 11 } }
             },
                 fields = new[]
             {

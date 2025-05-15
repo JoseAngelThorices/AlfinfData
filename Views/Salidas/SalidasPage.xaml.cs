@@ -28,8 +28,10 @@ namespace AlfinfData.Views.Salidas
                 _viewModel.CuadrillaSeleccionada = _viewModel.Cuadrillas.First();
                 await _viewModel.CargarJornalerosPendientesAsync();
             }
+
             await _viewModel.GetJornaleroSalidasAsync();
             await _viewModel.SalidaNFCAsync();
+
         }
 
         protected override async void OnDisappearing()
