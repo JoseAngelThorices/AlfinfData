@@ -13,5 +13,8 @@ namespace AlfinfData.Models.SQLITE
         public int? NumeroLista { get; set; }
         public Boolean? Activo { get; set; }
         public string? TarjetaNFC { get; set; }
+
+  
+
     }
 }

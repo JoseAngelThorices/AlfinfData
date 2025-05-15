@@ -1,16 +1,22 @@
 ﻿using AlfinfData.Services.BdLocal;
 using Microsoft.Maui.Storage;
+using AlfinfData.Models.SQLITE;
+
 
 namespace AlfinfData
 {
     public partial class App : Application
     {
+
         public App(DatabaseService dbService)
         {
             InitializeComponent();
             Application.Current.UserAppTheme = AppTheme.Light;
 
             RegistrarAñoInstalacion(); // Guardamos el año si es la primera vez
+
+            var fichajeRepo = new FichajeRepository(dbService);
+            _ = CrearFichajeSemillaAsync(fichajeRepo); // Llamada no bloqueante
         }
 
         private void RegistrarAñoInstalacion()
@@ -21,9 +27,15 @@ namespace AlfinfData
             }
         }
 
+       
+
+
         protected override Window CreateWindow(IActivationState? activationState)
         {
             return new Window(new AppShell());
         }
+
+        
+
     }
 }

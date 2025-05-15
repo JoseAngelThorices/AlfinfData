@@ -11,6 +11,8 @@ namespace AlfinfData.ViewModels
     {
         private readonly HorasRepository _horasRepo;
         private readonly CuadrillaRepository _cuadrillaRepo;
+        private readonly JornaleroRepository _jornaleroRepo;
+        private readonly FichajeRepository _fichajeRepo;
 
         [ObservableProperty]
         private DateTime fechaSeleccionada = DateTime.Today;
@@ -26,10 +28,16 @@ namespace AlfinfData.ViewModels
 
         public ObservableCollection<Cuadrilla> Cuadrillas { get; } = new();
 
-        public HorasViewModel(HorasRepository horasRepo, CuadrillaRepository cuadrillaRepo)
+        public HorasViewModel(
+                HorasRepository horasRepo,
+                CuadrillaRepository cuadrillaRepo,
+                JornaleroRepository jornaleroRepo,
+                FichajeRepository fichajeRepo)
         {
             _horasRepo = horasRepo;
             _cuadrillaRepo = cuadrillaRepo;
+            _jornaleroRepo = jornaleroRepo;
+            _fichajeRepo = fichajeRepo;
         }
 
         public async Task CargarCuadrillasAsync()
@@ -90,5 +98,58 @@ namespace AlfinfData.ViewModels
             foreach (var j in filtrados)
                 JornalerosConHoras.Add(j);
         }
+
+
+
+
+        public async Task CargarDesdeActivosAsync()
+        {
+            var activos = await _jornaleroRepo.GetAllAsync();
+            var soloActivos = activos.Where(j => j.Activo == true).ToList();
+
+            // Obtenemos todos los fichajes reales de hoy
+            var fichajesHoy = await _fichajeRepo.GetJornaleroEntradasAsync();  // Este método ya te devuelve los fichajes de tipo "Entrada" de hoy
+
+            todosLosJornaleros.Clear();
+
+            foreach (var j in soloActivos)
+            {
+                // Buscar su fichaje de hoy
+                var entrada = fichajesHoy.FirstOrDefault(f => f.IdJornalero == j.IdJornalero);
+
+                if (entrada == null || entrada.HoraEficaz == default)
+                    continue;  // Si no tiene fichaje, lo ignoramos
+
+                var horaInicio = entrada.HoraEficaz;
+                var totalHoras = (DateTime.Now - horaInicio).TotalHours;
+
+                System.Diagnostics.Debug.WriteLine($"Jornalero {j.Nombre}: Total = {totalHoras}");
+
+                var hn = Math.Min(totalHoras, 6.5);
+                var he1 = Math.Max(0, totalHoras - 6.5);
+
+                todosLosJornaleros.Add(new JornaleroConHoras
+                {
+                    IdJornalero = j.IdJornalero,
+                    Nombre = j.Nombre,
+                    IdCuadrilla = j.IdCuadrilla,
+                    
+                    Hn = Math.Round(hn, 2),
+                    He1 = Math.Round(he1, 2),
+                    He2 = 0
+                });
+            }
+
+            FiltrarJornaleros();
+        }
+
+
+
+
+
     }
+
+
+
 }
+
