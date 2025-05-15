@@ -171,7 +171,7 @@ namespace AlfinfData.ViewModels
         public async Task GetJornaleroSalidasAsync()
         {
             var lista = await _fichajeRepo.GetJornaleroSalidasAsync();
-            
+
             if (lista != null)
             {
                 JornalerosE.Clear();
