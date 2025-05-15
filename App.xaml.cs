@@ -16,7 +16,6 @@ namespace AlfinfData
             RegistrarAñoInstalacion(); // Guardamos el año si es la primera vez
 
             var fichajeRepo = new FichajeRepository(dbService);
-            _ = CrearFichajeSemillaAsync(fichajeRepo); // Llamada no bloqueante
         }
 
         private void RegistrarAñoInstalacion()

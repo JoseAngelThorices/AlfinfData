@@ -114,7 +114,7 @@ namespace AlfinfData.ViewModels
                     TipoFichaje = "Salida",
                     InstanteFichaje = DateTime.Now
                 };
-                await _fichajeRepo.CrearFichajesAsync(nuevoFichaje); // no importa si devuelve false
+                await _fichajeRepo.CrearFichajesJornalerosAsync(nuevoFichaje); // no importa si devuelve false
                 await _jornaleroRepo.SetActiveAsync(jornalero.IdJornalero, false); // desactiva al fichar
 
                 JornalerosE.Add(new JornaleroEntrada
