@@ -4,11 +4,13 @@ using System.Text;
 using AlfinfData.Models.SQLITE;
 using AlfinfData.Services.BdLocal;
 using CommunityToolkit.Mvvm.Input;
+using System.Linq;
 
 public partial class FinViewModel : ObservableObject
 {
-    private readonly HorasRepository _horasRepo;
+    private readonly FichajeRepository _fichajeRepo;
     private readonly ProduccionRepository _produccionRepo;
+    private readonly JornaleroRepository _jornaleroRepo;
 
     [ObservableProperty]
     private DateTime fechaDesde = DateTime.Today;
@@ -21,11 +23,22 @@ public partial class FinViewModel : ObservableObject
 
     public ObservableCollection<RegistroHistorico> Historico { get; } = new();
 
-    public FinViewModel(HorasRepository horasRepo, ProduccionRepository produccionRepo)
+    public FinViewModel(
+        FichajeRepository fichajeRepo,
+        ProduccionRepository produccionRepo,
+        JornaleroRepository jornaleroRepo)
     {
-        _horasRepo = horasRepo;
+        _fichajeRepo = fichajeRepo;
         _produccionRepo = produccionRepo;
+        _jornaleroRepo = jornaleroRepo;
     }
+
+    private string FormatearHorasComoTexto(double horasDecimales)
+    {
+        var ts = TimeSpan.FromHours(horasDecimales);
+        return $"{(int)ts.TotalHours}:{ts.Minutes:D2}";
+    }
+
 
     [RelayCommand]
     public async Task GenerarHistoricoAsync()
@@ -35,20 +48,39 @@ public partial class FinViewModel : ObservableObject
 
         for (var dia = FechaDesde.Date; dia <= FechaHasta.Date; dia = dia.AddDays(1))
         {
-            var horasDia = await _horasRepo.GetJornalerosConHorasAsync(dia);
+            // 1. Obtener todos los fichajes de ese día
+            var fichajesDelDia = await _fichajeRepo.GetAllAsync();
+            var fichajesDiaFiltrados = fichajesDelDia
+                .Where(f => f.HoraEficaz.Date == dia.Date)
+                .GroupBy(f => f.IdJornalero)
+                .ToList();
+
             var cajasDia = await _produccionRepo.GetJornalerosConCajasAsync();
 
-            foreach (var j in horasDia)
+            foreach (var grupo in fichajesDiaFiltrados)
             {
-                var cajas = cajasDia.FirstOrDefault(c => c.IdJornalero == j.IdJornalero)?.TotalCajas ?? 0;
+                int? idJornalero = grupo.Key;
+
+                if (!idJornalero.HasValue)
+                    continue;
+
+                var jornalero = await _jornaleroRepo.GetByIdAsync(idJornalero.Value);
+                if (jornalero == null)
+                    continue;
+
+                var horasTotales = await _fichajeRepo.CalcularHorasTrabajadasAsync(idJornalero.Value, dia);
+                var hn = Math.Min(horasTotales, 6.5);
+                var he1 = Math.Max(0, horasTotales - 6.5);
+
+                var cajas = cajasDia.FirstOrDefault(c => c.IdJornalero == idJornalero.Value)?.TotalCajas ?? 0;
 
                 var registro = new RegistroHistorico
                 {
-                    NombreJornalero = j.Nombre,
+                    NombreJornalero = jornalero.Nombre ?? "Sin nombre",
                     Fecha = dia,
-                    HN = j.Hn,
-                    HE1 = j.He1,
-                    HE2 = j.He2,
+                    HN = Math.Round(hn, 2),
+                    HE1 = Math.Round(he1, 2),
+                    HE2 = 0,
                     Cajas = cajas
                 };
 
@@ -57,7 +89,9 @@ public partial class FinViewModel : ObservableObject
                 sb.AppendLine($"🧑 {registro.NombreJornalero}");
                 sb.AppendLine($"📅 Fecha: {registro.Fecha:dd/MM/yyyy}");
                 sb.AppendLine($"📦 Cajas: {registro.Cajas}");
-                sb.AppendLine($"⏱ HN: {registro.HN}, HE1: {registro.HE1}, HE2: {registro.HE2}");
+                sb.AppendLine($"⏱ HN: {FormatearHorasComoTexto(registro.HN)}, " +
+                              $"HE1: {FormatearHorasComoTexto(registro.HE1)}, " +
+                              $"HE2: {FormatearHorasComoTexto(registro.HE2)}");
                 sb.AppendLine(new string('-', 30));
             }
         }

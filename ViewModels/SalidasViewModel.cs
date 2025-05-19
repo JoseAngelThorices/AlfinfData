@@ -13,6 +13,7 @@ namespace AlfinfData.ViewModels
     {
         private readonly FichajeRepository _fichajeRepo;
         private readonly JornaleroRepository _jornaleroRepo;
+
         private readonly CuadrillaRepository _cuadrillaRepo;
 
         public ObservableCollection<JornaleroEntrada> JornalerosE { get; set; } = new();
@@ -74,74 +75,66 @@ namespace AlfinfData.ViewModels
             }
         }
 
-        private async void OnTagReceived(ITagInfo tagInfo)
+        async void OnTagReceived(ITagInfo tagInfo)
         {
             try
             {
+                var idBytes = tagInfo.Identifier;
                 var serial = tagInfo.SerialNumber;
                 var jornalero = await _jornaleroRepo.GetJornaleroBySerialAsync(serial);
-                if (jornalero == null)
+
+                if (jornalero != null)
                 {
-                    await Shell.Current.DisplayAlert("Importante", "Jornalero no encontrado.", "OK");
-                    return;
+                    if (!TimeSpan.TryParseExact(HoraTexto, @"hh\:mm", CultureInfo.InvariantCulture, out TimeSpan hora))
+                    {
+                        await Shell.Current.DisplayAlert("Error", "El valor de la hora no es válido. Usa el formato HH:mm", "OK");
+                        return;
+                    }
+
+                    var fechaHora = DateTime.Today.Add(hora);
+
+                    var nuevoFichaje = new Fichaje
+                    {
+                        IdJornalero = jornalero.IdJornalero,
+                        HoraEficaz = fechaHora,
+                        TipoFichaje = "Salida", // 👈 Tipo de fichaje correcto
+                        InstanteFichaje = DateTime.Now
+                    };
+
+                    bool resultado = await _fichajeRepo.CrearFichajesJornalerosAsync(nuevoFichaje);
+
+                    if (resultado)
+                    {
+                        // ❌ Quitar al jornalero de la lista visual si está presente
+                        var existentes = JornalerosE.Where(j => j.IdJornalero == jornalero.IdJornalero).ToList();
+                        foreach (var j in existentes)
+                            JornalerosE.Remove(j);
+
+                        // 🔄 Desactivar al jornalero
+                        await _jornaleroRepo.SetActiveAsync(jornalero.IdJornalero, false);
+
+                        await Shell.Current.DisplayAlert("Salida registrada", $"{jornalero.Nombre} ha fichado su salida.", "OK");
+                    }
+                    else
+                    {
+                        await Shell.Current.DisplayAlert("Importante", "El jornalero ya fichó su salida.", "OK");
+                    }
                 }
-
-                if (jornalero.Activo != true)
+                else
                 {
-                    await Shell.Current.DisplayAlert("Atención", "El jornalero ya fichó su salida.", "OK");
-                    return;
+                    await Shell.Current.DisplayAlert("Importante", "No se encontró ningún jornalero con ese serial. Descarga de nuevo los datos.", "OK");
                 }
-
-                var hayInicioDia = await _fichajeRepo.BuscarFichajeNuevoDia();
-                if (!hayInicioDia)
-                {
-                    await Shell.Current.DisplayAlert("Importante", "Inicia el día primero.", "OK");
-                    return;
-                }
-
-                if (!TimeSpan.TryParseExact(HoraTexto, @"hh\:mm", CultureInfo.InvariantCulture, out TimeSpan hora))
-                {
-                    await Shell.Current.DisplayAlert("Error", "Selecciona una hora válida antes de fichar.", "OK");
-                    return;
-                }
-
-                var fechaHora = DateTime.Today.Add(hora);
-
-                var nuevoFichaje = new Fichaje
-                {
-                    IdJornalero = jornalero.IdJornalero,
-                    HoraEficaz = fechaHora,
-                    TipoFichaje = "Salida",
-                    InstanteFichaje = DateTime.Now
-                };
-                await _fichajeRepo.CrearFichajesJornalerosAsync(nuevoFichaje); // no importa si devuelve false
-                await _jornaleroRepo.SetActiveAsync(jornalero.IdJornalero, false); // desactiva al fichar
-
-                JornalerosE.Add(new JornaleroEntrada
-                {
-                    IdJornalero = jornalero.IdJornalero,
-                    Nombre = jornalero.Nombre,
-                    HoraEficaz = fechaHora
-                });
-
-                var pendiente = JornalerosPendientes.FirstOrDefault(j => j.IdJornalero == jornalero.IdJornalero);
-                if (pendiente != null)
-                    JornalerosPendientes.Remove(pendiente);
-
-                await Shell.Current.DisplayAlert("Correcto", $"{jornalero.Nombre} fichó salida a las {fechaHora:HH:mm}.", "OK");
-
             }
             catch (FormatException fe)
             {
-                Debug.WriteLine($"Error de formato en HoraTexto: {fe}");
-                await Shell.Current.DisplayAlert("Error", "Formato de hora incorrecto", "OK");
+                Debug.WriteLine($"Error de formato al parsear HoraTexto: {fe}");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error al procesar NFC: {ex}");
-                await Shell.Current.DisplayAlert("Error", "Error general de lectura NFC", "OK");
+                Debug.WriteLine($"Error al procesar el tag NFC: {ex}");
             }
         }
+
 
 
         public async Task CargarCuadrillasAsync()

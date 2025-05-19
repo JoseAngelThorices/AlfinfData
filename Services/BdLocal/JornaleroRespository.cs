@@ -51,6 +51,12 @@ namespace AlfinfData.Services.BdLocal
             // sqlite-net sabe mapear bool a INTEGER (1 o 0)
             return _db.ExecuteAsync(sql, isActive, idJornalero);
         }
+        public async Task<Jornalero?> GetByIdAsync(int id)
+        {
+            return await _db.Table<Jornalero>()
+                .Where(j => j.IdJornalero == id)
+                .FirstOrDefaultAsync();
+        }
         public Task<Jornalero> GetJornaleroBySerialAsync(string serial)
         {
             // Usamos la tabla mapeada y LINQ para filtrar por el campo Serial
