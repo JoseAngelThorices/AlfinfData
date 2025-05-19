@@ -1,44 +1,43 @@
-using Microsoft.Maui.Controls;
+﻿using Microsoft.Maui.Controls;
 using Microsoft.Maui.Storage;
 using System;
+using System.Linq;
+using AlfinfData.ViewModels;
+using System.Collections.ObjectModel;
 
 namespace AlfinfData.Views.Salidas
 {
     public partial class SalidasPage : ContentPage
     {
-        const string HoraGuardadaKey = "HoraSeleccionada";
+        private readonly SalidasViewModel _viewModel;
 
-        public SalidasPage()
+        public SalidasPage(SalidasViewModel viewModel)
         {
             InitializeComponent();
-            RecuperarHoraGuardada();
+            BindingContext = _viewModel = viewModel;
         }
 
-        private void RecuperarHoraGuardada()
+        protected override async void OnAppearing()
         {
-            var hora = Preferences.Get(HoraGuardadaKey, string.Empty);
-            if (!string.IsNullOrEmpty(hora))
+            base.OnAppearing();
+
+            await _viewModel.CargarCuadrillasAsync();
+
+            if (_viewModel.Cuadrillas.Any())
             {
-                HoraButton.Text = hora;
+                _viewModel.CuadrillaSeleccionada = _viewModel.Cuadrillas.First();
+                await _viewModel.CargarJornalerosPendientesAsync();
             }
+
+            await _viewModel.GetJornaleroSalidasAsync();
+            await _viewModel.SalidaNFCAsync();
+
         }
 
-        private async void OnHoraButtonClicked(object sender, EventArgs e)
+        protected override async void OnDisappearing()
         {
-            string[] horas = new string[48];
-            for (int i = 0; i < 24; i++)
-            {
-                horas[i * 2] = $"{i:D2}:00";
-                horas[i * 2 + 1] = $"{i:D2}:30";
-            }
-
-            string seleccion = await DisplayActionSheet("Selecciona hora", "Cancelar", null, horas);
-
-            if (!string.IsNullOrEmpty(seleccion) && seleccion != "Cancelar")
-            {
-                HoraButton.Text = seleccion;
-                Preferences.Set(HoraGuardadaKey, seleccion);
-            }
+            base.OnDisappearing();
+            await _viewModel.CancelarNFC();
         }
     }
 }

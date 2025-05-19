@@ -43,27 +43,68 @@ namespace AlfinfData.ViewModels
 
                 if (password == "123")
                 {
-                    // Mostrar popup para seleccionar hora
-                    var popup = new HoraPopup();
-                    var resultado = await Shell.Current.ShowPopupAsync(popup);
-
-                    if (resultado is TimeSpan horaSeleccionada)
+                    bool resultadoNuevoDia = await _fichajeRepository.BuscarFichajeNuevoDia();
+                    if (resultadoNuevoDia)
                     {
-                        var fechaHoy = DateTime.Today;
-                        var fechaHora = fechaHoy.Add(horaSeleccionada);
-
-                        Titulo = $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}"; // <-- ESTA LÍNEA CAMBIA EL TÍTULO
-                        var nuevoDia = new Fichaje
+                        bool quiereBorrar = await Shell.Current.DisplayAlert(
+                                            "Nuevo Día",
+                                            "Ya hay un nuevo día creado. Si quieres seguir creando un nuevo día, se borrará todo para empezar de nuevo. ¿Estás de acuerdo?",
+                                            "Aceptar",   // texto del botón positivo
+                                            "Cancelar"   // texto del botón negativo
+                                             );
+                        if (quiereBorrar)
                         {
-                            IdJornalero = 999999,
-                            HoraEficaz = fechaHora,
-                            TipoFichaje = "Entrada",
-                            InstanteFichaje = DateTime.Today
-                        };
-                       await _fichajeRepository.CrearFichajesAsync(nuevoDia);
-                       await Shell.Current.DisplayAlert("Nuevo Día", $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}", "OK");
+                            // Mostrar popup para seleccionar hora
+                            var popup = new HoraPopup();
+                            var resultado = await Shell.Current.ShowPopupAsync(popup);
+                            if (resultado is TimeSpan horaSeleccionada)
+                            {
+                                var fechaHoy = DateTime.Today;
+                                var fechaHora = fechaHoy.Add(horaSeleccionada);
 
+                                Titulo = $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}"; // <-- ESTA LÍNEA CAMBIA EL TÍTULO
+                                // Usuario pulsó “Aceptar”
+                                // Aquí borras todo y creas el nuevo día
+                                var nuevoDia = new Fichaje
+                                {
+                                    IdJornalero = 999999,
+                                    HoraEficaz = fechaHora,
+                                    TipoFichaje = "Entrada",
+                                    InstanteFichaje = DateTime.Today
+                                };
+                                
+                                await _fichajeRepository.BorrarDatosAsync();
+                                await _fichajeRepository.CrearFichajeNuevoDiaAsync(nuevoDia);
+                                await Shell.Current.DisplayAlert("Nuevo Día", $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}", "OK");
+                            }
+                        }
+                        else
+                        {
+                            // Usuario pulsó “Cancelar”
+                            await Shell.Current.DisplayAlert("Operación cancelada", "No se ha borrado nada.", "OK");
+                        }
                     }
+                    else
+                    {
+                        var popup = new HoraPopup();
+                        var resultado = await Shell.Current.ShowPopupAsync(popup);
+                        if (resultado is TimeSpan horaSeleccionada)
+                        {
+                            var fechaHoy = DateTime.Today;
+                            var fechaHora = fechaHoy.Add(horaSeleccionada);
+
+                            Titulo = $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}"; // <-- ESTA LÍNEA CAMBIA EL TÍTULO
+                            var nuevoDia = new Fichaje
+                            {
+                                IdJornalero = 999999,
+                                HoraEficaz = fechaHora,
+                                TipoFichaje = "Entrada",
+                                InstanteFichaje = DateTime.Today
+                            };
+                            _fichajeRepository.BorrarDatosAsync();
+                            await _fichajeRepository.CrearFichajeNuevoDiaAsync(nuevoDia);
+                        }
+                    }     
                 }
                 else if (!string.IsNullOrWhiteSpace(password))
                 {
@@ -80,9 +121,9 @@ namespace AlfinfData.ViewModels
         {
             try
             {
-                var resultado = await _fichajeRepository.GetFirstByJornaleroAsync(999999);
+                bool resultadoNuevoDia = await _fichajeRepository.BuscarFichajeNuevoDia();
                 
-                if (resultado == null)
+                if (!resultadoNuevoDia)
                 {
                     // 2) Si no, avisamos y salimos SIN navegar
                     await Shell.Current.DisplayAlert("Importante", "Inicie un nuevo Día primero.", "OK");

@@ -38,7 +38,7 @@ namespace AlfinfData.ViewModels
             if (!string.IsNullOrEmpty(seleccion) && seleccion != "Cancelar")
             {
                 HoraTexto = seleccion.ToString();
-                TimeSpan horaSeleccionada = TimeSpan.ParseExact(HoraTexto, @"HH\:mm", CultureInfo.InvariantCulture);
+                TimeSpan horaSeleccionada = TimeSpan.ParseExact(HoraTexto, @"hh\:mm", CultureInfo.InvariantCulture);
                 var fechaHoy = DateTime.Today;
                 var fechaHora = fechaHoy.Add(horaSeleccionada);
                 await _fichajeRepo.ActualizarHoraEficazAsync(999999, fechaHora);
@@ -75,10 +75,11 @@ namespace AlfinfData.ViewModels
                 await Shell.Current.DisplayAlert("NFC", "Activa NFC en los ajustes.", "OK");
                 return false; 
             }
-            CrossNFC.Current.OnMessageReceived += OnTagReceived;
             try
-            {            
+            {
+                CrossNFC.Current.OnMessageReceived += OnTagReceived; // suscribe solo una vez
                 CrossNFC.Current.StartListening();
+
                 return true;
             }
             catch (Exception ex)
@@ -114,7 +115,7 @@ namespace AlfinfData.ViewModels
                         InstanteFichaje = DateTime.Today
                     };
 
-                    bool resultado = await _fichajeRepo.CrearFichajesAsync(nuevoFichaje);
+                    bool resultado = await _fichajeRepo.CrearFichajesJornalerosAsync(nuevoFichaje);
 
                     if (resultado)
                     {
@@ -167,7 +168,7 @@ namespace AlfinfData.ViewModels
                     throw new InvalidOperationException("_fichajeRepo no está inicializado");
 
                 // Obtén la lista (puede devolver null)
-                var fichaje = await _fichajeRepo.GetFirstByJornaleroAsync(999999);
+                var fichaje = await _fichajeRepo.BuscarFichajeNuevoDiaDatos();
   
                 // Supongamos que Hora es TimeSpan
                 HoraTexto = fichaje.HoraEficaz.ToString(@"HH\:mm");

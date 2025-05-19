@@ -1,10 +1,12 @@
-using AlfinfData.ViewModels;
 using AlfinfData.Models.SQLITE;
+using AlfinfData.ViewModels;
+
 namespace AlfinfData.Views.Seleccion;
 
 public partial class SeleccionPage : ContentPage
 {
     private readonly SeleccionViewModels _viewModel;
+    
 
     public SeleccionPage(SeleccionViewModels viewModel)
     {
@@ -16,10 +18,8 @@ public partial class SeleccionPage : ContentPage
     {
         base.OnAppearing();
 
-        if (_viewModel.Jornaleros.Count == 0)
-            await _viewModel.CargarEmpleadosAsync();
-
         await _viewModel.CargarCuadrillaAsync();
+        await _viewModel.CargarEmpleadosAsync();
     }
 
     private void OnSeleccionarTodosClicked(object sender, EventArgs e)
@@ -31,14 +31,13 @@ public partial class SeleccionPage : ContentPage
     {
         _viewModel.QuitarTodos();
     }
-
-    private async void OnJornaleroToggled(object sender, ToggledEventArgs e)
+    private async void activardesactivarswitch(object sender, ToggledEventArgs e)
     {
         if (sender is Switch sw && sw.BindingContext is Jornalero jornalero)
         {
+            jornalero.Activo = e.Value;
             await _viewModel.ActualizarJornaleroAsync(jornalero);
             _viewModel.ActualizarContador();
         }
     }
-
 }

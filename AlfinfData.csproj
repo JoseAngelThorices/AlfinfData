@@ -28,17 +28,16 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<!-- Ícono personalizado -->
-		<MauiIcon Include="Resources\AppIcon\appicon.png" />
-		<!-- Splash -->
-		<MauiSplashScreen Include="Resources\Splash\splashh.png" Color="#ffffff" />
-		<!-- Imágenes -->
-		<MauiImage Include="Resources\Images\*" />
-		<!-- Fuentes -->
-		<MauiFont Include="Resources\Fonts\*" />
+	<!-- ✅ Compatible con todas las arquitecturas Android -->
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
+		<RuntimeIdentifiers>android-arm64;android-arm;android-x86;android-x64</RuntimeIdentifiers>
+	</PropertyGroup>
 
-		<!-- Assets -->
+	<ItemGroup>
+		<MauiIcon Include="Resources\AppIcon\appicon.png" />
+		<MauiSplashScreen Include="Resources\Splash\splashh.png" Color="#ffffff" />
+		<MauiImage Include="Resources\Images\*" />
+		<MauiFont Include="Resources\Fonts\*" />
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
@@ -58,9 +57,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <AndroidResource Update="Platforms\Android\Resources\xml\network_security_config.xml">
-	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-	  </AndroidResource>
+		<AndroidResource Update="Platforms\Android\Resources\xml\network_security_config.xml">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</AndroidResource>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -70,7 +69,6 @@
 		<Compile Update="Views\Configuracion\ConfiguracionPage.xaml.cs">
 			<DependentUpon>ConfiguracionPage.xaml</DependentUpon>
 		</Compile>
-
 		<Compile Update="Views\Salidas\SalidasPage.xaml.cs">
 			<DependentUpon>SalidasPage.xaml</DependentUpon>
 		</Compile>
@@ -80,7 +78,6 @@
 		<Compile Update="Views\Fin\FinPage.xaml.cs">
 			<DependentUpon>FinPage.xaml</DependentUpon>
 		</Compile>
-
 		<Compile Update="Views\Horas\HorasPage.xaml.cs">
 			<DependentUpon>HorasPage.xaml</DependentUpon>
 		</Compile>
@@ -91,6 +88,9 @@
 
 	<ItemGroup>
 		<MauiXaml Update="Popups\HoraPopup.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\BarraLateral\BarraLateral.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\ConfiguracionPage.xaml" />
@@ -110,17 +110,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="appsettings.json">
-	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-	  </None>
+		<None Update="appsettings.json">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
+
 	<ItemGroup>
 		<MauiAsset Include="appsettings.json" CopyToOutputDirectory="Always" />
 	</ItemGroup>
+
 	<ItemGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
-	  <PackageReference Include="Plugin.CurrentActivity">
-	    <Version>2.1.0.4</Version>
-	  </PackageReference>
+		<PackageReference Include="Plugin.CurrentActivity">
+			<Version>2.1.0.4</Version>
+		</PackageReference>
 	</ItemGroup>
 
 </Project>

@@ -1,6 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
 using AlfinfData.Models.SQLITE;
 using AlfinfData.Services.BdLocal;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -17,7 +15,7 @@ namespace AlfinfData.ViewModels
         private List<Jornalero> TodosLosJornaleros { get; set; } = new();
 
         [ObservableProperty]
-        private Cuadrilla? _cuadrillaSeleccionada;
+        private Cuadrilla? cuadrillaSeleccionada;
 
         [ObservableProperty]
         private int seleccionados;
@@ -28,37 +26,43 @@ namespace AlfinfData.ViewModels
             _repoC = repoC;
         }
 
+        public async Task CargarCuadrillaAsync()
+        {
+            var lista = await _repoC.GetAllAsync();
+
+            Cuadrillas.Clear();
+            Cuadrillas.Add(new Cuadrilla { IdCuadrilla = 0, Descripcion = "TODOS" });
+            foreach (var c in lista)
+                Cuadrillas.Add(c);
+
+            // Restaurar cuadrilla guardada
+            var savedId = Preferences.Default.Get("CuadrillaSeleccionadaId", 0);
+            CuadrillaSeleccionada = Cuadrillas.FirstOrDefault(c => c.IdCuadrilla == savedId);
+        }
+
         public async Task CargarEmpleadosAsync()
         {
             TodosLosJornaleros = await _repo.GetAllAsync();
             FiltrarJornaleros();
         }
 
-        public async Task CargarCuadrillaAsync()
-        {
-            var lista = await _repoC.GetAllAsync();
-            Cuadrillas.Clear();
-            foreach (var c in lista)
-                Cuadrillas.Add(c);
-        }
-
         partial void OnCuadrillaSeleccionadaChanged(Cuadrilla? value)
         {
+            Preferences.Default.Set("CuadrillaSeleccionadaId", value?.IdCuadrilla ?? 0);
             FiltrarJornaleros();
         }
 
         private void FiltrarJornaleros()
         {
             Jornaleros.Clear();
-            var cuadrillaId = CuadrillaSeleccionada?.IdCuadrilla ?? 0;
 
-            var listaFiltrada = CuadrillaSeleccionada == null
+            var id = CuadrillaSeleccionada?.IdCuadrilla ?? 0;
+            var filtrados = id == 0
                 ? TodosLosJornaleros
-                : TodosLosJornaleros.Where(j => j.IdCuadrilla == cuadrillaId);
+                : TodosLosJornaleros.Where(j => j.IdCuadrilla == id);
 
-            foreach (var j in listaFiltrada)
+            foreach (var j in filtrados)
                 Jornaleros.Add(j);
-
             ActualizarContador();
         }
 
@@ -67,10 +71,43 @@ namespace AlfinfData.ViewModels
             foreach (var j in Jornaleros)
                 j.Activo = true;
 
-            await _repo.UpdateManyAsync(Jornaleros);
+            await _repo.UpdateManyAsync(Jornaleros.ToList());
 
-            // Recargar desde la BD los datos actualizados
-            await RecargarDesdeBD();
+            var id = CuadrillaSeleccionada?.IdCuadrilla ?? 0;
+            var recargados = await _repo.GetAllAsync();
+
+            TodosLosJornaleros = recargados;
+
+            var filtrados = id == 0
+                ? recargados
+                : recargados.Where(j => j.IdCuadrilla == id);
+
+            Jornaleros.Clear();
+            foreach (var j in filtrados.Select(c => new Jornalero
+            {
+                IdJornalero = c.IdJornalero,
+                IdCuadrilla = c.IdCuadrilla,
+                Nombre = c.Nombre,
+                NumeroLista = c.NumeroLista,
+                Activo = c.Activo,
+                TarjetaNFC = c.TarjetaNFC
+            }))
+            {
+                Jornaleros.Add(j);
+            }
+        }
+
+        public void ActualizarContador()
+        {
+            if (Jornaleros != null)
+                Seleccionados = Jornaleros.Count(j => j.Activo == true);
+            else
+                Seleccionados = 0;
+        }
+
+        public async Task ActualizarJornaleroAsync(Jornalero j)
+        {
+            await _repo.SetActiveAsync(j.IdJornalero, j.Activo == true);
         }
 
         public async void QuitarTodos()
@@ -78,40 +115,30 @@ namespace AlfinfData.ViewModels
             foreach (var j in Jornaleros)
                 j.Activo = false;
 
-            await _repo.UpdateManyAsync(Jornaleros);
+            await _repo.UpdateManyAsync(Jornaleros.ToList());
 
-            await RecargarDesdeBD();
-        }
+            var id = CuadrillaSeleccionada?.IdCuadrilla ?? 0;
+            var recargados = await _repo.GetAllAsync();
 
+            TodosLosJornaleros = recargados;
 
-        public async Task ActualizarJornaleroAsync(Jornalero j)
-        {
-            await _repo.UpdateAsync(j);
-        }
-
-        public void ActualizarContador()
-        {
-            Seleccionados = Jornaleros.Count(j => j.Activo == true);
-        }
-
-
-        private async Task RecargarDesdeBD()
-        {
-            var cuadrillaId = CuadrillaSeleccionada?.IdCuadrilla ?? 0;
-
-            var actualizados = await _repo.GetAllAsync();
-            TodosLosJornaleros = actualizados;
-
-            var filtrados = CuadrillaSeleccionada == null
-                ? actualizados
-                : actualizados.Where(j => j.IdCuadrilla == cuadrillaId);
+            var filtrados = id == 0
+                ? recargados
+                : recargados.Where(j => j.IdCuadrilla == id);
 
             Jornaleros.Clear();
-            foreach (var j in filtrados)
+            foreach (var j in filtrados.Select(c => new Jornalero
+            {
+                IdJornalero = c.IdJornalero,
+                IdCuadrilla = c.IdCuadrilla,
+                Nombre = c.Nombre,
+                NumeroLista = c.NumeroLista,
+                Activo = c.Activo,
+                TarjetaNFC = c.TarjetaNFC
+            }))
+            {
                 Jornaleros.Add(j);
-
-            ActualizarContador();
+            }
         }
-
     }
 }

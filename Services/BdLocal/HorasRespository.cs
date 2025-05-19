@@ -12,23 +12,30 @@ namespace AlfinfData.Services.BdLocal
             _db = dbService.Conn;
         }
 
+        public async Task<Horas> GetHorasPorJornaleroYFechaAsync(int idJornalero, DateTime fecha)
+        {
+            return await _db.Table<Horas>()
+                .Where(h => h.IdJornalero == idJornalero && h.Fecha == fecha.Date)
+                .FirstOrDefaultAsync();
+        }
+        //Necesario para generar historico
+        public async Task<List<JornaleroConHoras>> GetJornalerosConHorasAsync(DateTime fecha)
+        {
+            var query = @"SELECT h.IdJornalero, j.Nombre, j.IdCuadrilla, h.HN as Hn, h.HE1 as He1, h.HE2 as He2
+                  FROM Horas h
+                  JOIN Jornalero j ON j.IdJornalero = h.IdJornalero
+                  WHERE h.Fecha = ?";
+            return await _db.QueryAsync<JornaleroConHoras>(query, fecha.Date);
+        }
+
+        //Actualizar e insertar horas.
+        public async Task ActualizarHorasAsync(Horas horas)
+        {
+            await _db.UpdateAsync(horas);
+        }
         public async Task InsertarHorasAsync(Horas horas)
         {
             await _db.InsertAsync(horas);
-        }
-
-
-        public Task<List<JornaleroConHoras>> GetJornalerosConHorasAsync(DateTime fecha)
-        {
-            return _db.QueryAsync<JornaleroConHoras>(
-            @"SELECT j.IdJornalero, j.IdCuadrilla, j.Nombre,
-                 IFNULL(h.HN, 0) AS HN,
-                 IFNULL(h.HE1, 0) AS HE1,
-                 IFNULL(h.HE2, 0) AS HE2,
-                 CASE WHEN h.Id IS NULL THEN 1 ELSE 0 END AS Falta
-          FROM Jornalero j
-          LEFT JOIN Horas h ON j.IdJornalero = h.IdJornalero AND h.Fecha = ?
-          ORDER BY j.Nombre", fecha);
         }
     }
 }
