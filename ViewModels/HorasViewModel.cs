@@ -54,38 +54,15 @@ namespace AlfinfData.ViewModels
             CuadrillaSeleccionada = Cuadrillas.FirstOrDefault(c => c.IdCuadrilla == savedId);
         }
 
-        public async Task GuardarHorasAsync()
-        {
-            if (!JornalerosConHoras.Any())
-                return;
-
-            foreach (var j in JornalerosConHoras)
-            {
-                var horas = new Horas
-                {
-                    IdJornalero = j.IdJornalero,
-                    Fecha = FechaSeleccionada,
-                    HN = j.Hn,
-                    HE1 = j.He1,
-                    HE2 = j.He2
-                };
-                await _horasRepo.InsertarHorasAsync(horas);
-            }
-        }
-
-        public async Task CargarJornalerosConHorasAsync()
-        {
-            var lista = await _horasRepo.GetJornalerosConHorasAsync(FechaSeleccionada);
-            todosLosJornaleros = lista;
-            FiltrarJornaleros();
-        }
-
+        //Guardar cuadrillas.
         partial void OnCuadrillaSeleccionadaChanged(Cuadrilla? value)
         {
-            Preferences.Default.Set("Horas_CuadrillaSeleccionadaId", value?.IdCuadrilla ?? 0); // ✅ Guardar selección
+            Preferences.Default.Set("Horas_CuadrillaSeleccionadaId", value?.IdCuadrilla ?? 0);
             FiltrarJornaleros();
         }
 
+
+        //Funcion filtrar los jornaleros por su cuadrilla
         private void FiltrarJornaleros()
         {
             JornalerosConHoras.Clear();
@@ -100,56 +77,63 @@ namespace AlfinfData.ViewModels
         }
 
 
-
-
         public async Task CargarDesdeActivosAsync()
         {
+            var hoy = DateTime.Today;
             var activos = await _jornaleroRepo.GetAllAsync();
             var soloActivos = activos.Where(j => j.Activo == true).ToList();
-
-            // Obtenemos todos los fichajes reales de hoy
-            var fichajesHoy = await _fichajeRepo.GetJornaleroEntradasAsync();  // Este m�todo ya te devuelve los fichajes de tipo "Entrada" de hoy
+            var fichajesHoy = await _fichajeRepo.GetJornaleroEntradasAsync();
 
             todosLosJornaleros.Clear();
 
             foreach (var j in soloActivos)
             {
-                // Buscar su fichaje de hoy
                 var entrada = fichajesHoy.FirstOrDefault(f => f.IdJornalero == j.IdJornalero);
-
                 if (entrada == null || entrada.HoraEficaz == default)
-                    continue;  // Si no tiene fichaje, lo ignoramos
+                    continue;
 
                 var horaInicio = entrada.HoraEficaz;
                 var totalHoras = (DateTime.Now - horaInicio).TotalHours;
 
-                System.Diagnostics.Debug.WriteLine($"Jornalero {j.Nombre}: Total = {totalHoras}");
-
                 var hn = Math.Min(totalHoras, 6.5);
                 var he1 = Math.Max(0, totalHoras - 6.5);
 
-                todosLosJornaleros.Add(new JornaleroConHoras
+                var jHoras = new JornaleroConHoras
                 {
                     IdJornalero = j.IdJornalero,
                     Nombre = j.Nombre,
                     IdCuadrilla = j.IdCuadrilla,
-                    
                     Hn = Math.Round(hn, 2),
                     He1 = Math.Round(he1, 2),
                     He2 = 0
-                });
+                };
+
+                todosLosJornaleros.Add(jHoras);
+
+                var existente = await _horasRepo.GetHorasPorJornaleroYFechaAsync(j.IdJornalero, hoy);
+                if (existente != null)
+                {
+                    existente.HN = jHoras.Hn;
+                    existente.HE1 = jHoras.He1;
+                    existente.HE2 = jHoras.He2;
+                    await _horasRepo.ActualizarHorasAsync(existente);
+                }
+                else
+                {
+                    var nuevo = new Horas
+                    {
+                        IdJornalero = j.IdJornalero,
+                        Fecha = hoy,
+                        HN = jHoras.Hn,
+                        HE1 = jHoras.He1,
+                        HE2 = jHoras.He2
+                    };
+                    await _horasRepo.InsertarHorasAsync(nuevo);
+                }
             }
 
+            // ✅ Solo una vez, al final
             FiltrarJornaleros();
         }
-
-
-
-
-
     }
-
-
-
 }
-
