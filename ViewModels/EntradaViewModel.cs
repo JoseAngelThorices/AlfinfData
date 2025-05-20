@@ -127,7 +127,6 @@ namespace AlfinfData.ViewModels
             CrossNFC.Current.OnMessageReceived -= OnTagReceived;
             CrossNFC.Current.OnMessageReceived += OnTagReceived;
             CrossNFC.Current.StartListening();
-
             return true;
         }
 

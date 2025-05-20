@@ -47,6 +47,14 @@ namespace AlfinfData.Services.BdLocal
             ";
 
             return _db.ExecuteAsync(sql, isActive, idJornalero);
+        } 
+
+
+        public async Task<Jornalero?> GetByIdAsync(int id)
+        {
+            return await _db.Table<Jornalero>()
+                .Where(j => j.IdJornalero == id)
+                .FirstOrDefaultAsync();
         }
 
         public Task<Jornalero> GetJornaleroBySerialAsync(string serial)
