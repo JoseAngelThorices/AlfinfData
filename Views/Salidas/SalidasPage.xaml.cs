@@ -1,9 +1,5 @@
 ﻿using Microsoft.Maui.Controls;
-using Microsoft.Maui.Storage;
-using System;
-using System.Linq;
 using AlfinfData.ViewModels;
-using System.Collections.ObjectModel;
 
 namespace AlfinfData.Views.Salidas
 {
@@ -22,16 +18,9 @@ namespace AlfinfData.Views.Salidas
             base.OnAppearing();
 
             await _viewModel.CargarCuadrillasAsync();
-
-            if (_viewModel.Cuadrillas.Any())
-            {
-                _viewModel.CuadrillaSeleccionada = _viewModel.Cuadrillas.First();
-                await _viewModel.CargarJornalerosPendientesAsync();
-            }
-
+            await _viewModel.CargarJornalerosPendientesAsync();
             await _viewModel.GetJornaleroSalidasAsync();
             await _viewModel.SalidaNFCAsync();
-
         }
 
         protected override async void OnDisappearing()

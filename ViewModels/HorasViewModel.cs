@@ -1,7 +1,7 @@
 ﻿using AlfinfData.Models.SQLITE;
 using AlfinfData.Services.BdLocal;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.Maui.Storage; // ✅ Para Preferences
+using Microsoft.Maui.Storage;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
@@ -25,14 +25,13 @@ namespace AlfinfData.ViewModels
 
         public ObservableCollection<JornaleroConHoras> JornalerosConHoras { get; } = new();
         private List<JornaleroConHoras> todosLosJornaleros { get; set; } = new();
-
         public ObservableCollection<Cuadrilla> Cuadrillas { get; } = new();
 
         public HorasViewModel(
-                HorasRepository horasRepo,
-                CuadrillaRepository cuadrillaRepo,
-                JornaleroRepository jornaleroRepo,
-                FichajeRepository fichajeRepo)
+               HorasRepository horasRepo,
+               CuadrillaRepository cuadrillaRepo,
+               JornaleroRepository jornaleroRepo,
+               FichajeRepository fichajeRepo)
         {
             _horasRepo = horasRepo;
             _cuadrillaRepo = cuadrillaRepo;
@@ -45,11 +44,11 @@ namespace AlfinfData.ViewModels
             var lista = await _cuadrillaRepo.GetAllAsync();
 
             Cuadrillas.Clear();
-            Cuadrillas.Add(new Cuadrilla { IdCuadrilla = 0, Descripcion = "TODOS" }); // ✅ opción TODOS
+            Cuadrillas.Add(new Cuadrilla { IdCuadrilla = 0, Descripcion = "TODOS" }); // opción TODOS
             foreach (var c in lista)
                 Cuadrillas.Add(c);
 
-            // ✅ Restaurar cuadrilla seleccionada si existe
+            // Restaurar cuadrilla seleccionada si existe
             var savedId = Preferences.Default.Get("Horas_CuadrillaSeleccionadaId", 0);
             CuadrillaSeleccionada = Cuadrillas.FirstOrDefault(c => c.IdCuadrilla == savedId);
         }
@@ -82,7 +81,7 @@ namespace AlfinfData.ViewModels
 
         partial void OnCuadrillaSeleccionadaChanged(Cuadrilla? value)
         {
-            Preferences.Default.Set("Horas_CuadrillaSeleccionadaId", value?.IdCuadrilla ?? 0); // ✅ Guardar selección
+            Preferences.Default.Set("Horas_CuadrillaSeleccionadaId", value?.IdCuadrilla ?? 0); // Guardar selección
             FiltrarJornaleros();
         }
 
@@ -100,15 +99,13 @@ namespace AlfinfData.ViewModels
         }
 
 
-
-
         public async Task CargarDesdeActivosAsync()
         {
             var activos = await _jornaleroRepo.GetAllAsync();
             var soloActivos = activos.Where(j => j.Activo == true).ToList();
 
             // Obtenemos todos los fichajes reales de hoy
-            var fichajesHoy = await _fichajeRepo.GetJornaleroEntradasAsync();  // Este m�todo ya te devuelve los fichajes de tipo "Entrada" de hoy
+            var fichajesHoy = await _fichajeRepo.GetJornaleroEntradasAsync();  // Este metodo ya te devuelve los fichajes de tipo "Entrada" de hoy
 
             todosLosJornaleros.Clear();
 
@@ -142,14 +139,6 @@ namespace AlfinfData.ViewModels
 
             FiltrarJornaleros();
         }
-
-
-
-
-
     }
-
-
-
 }
 

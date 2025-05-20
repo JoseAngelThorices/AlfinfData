@@ -75,14 +75,14 @@
         </HorizontalStackLayout>
 
         <!-- Botón enviar -->
-        <Button Text="ENVIAR ARCHIVOS"
+        <!--<Button Text="ENVIAR ARCHIVOS"
                 BackgroundColor="#71639e"
                 TextColor="White"
                 FontAttributes="Bold"
                 CornerRadius="10"
                 HeightRequest="50"
                 HorizontalOptions="FillAndExpand"
-                Grid.Row="3" />
+                Grid.Row="3" />-->
 
         <!-- Resultado -->
         <Border Stroke="#a0a0a0"

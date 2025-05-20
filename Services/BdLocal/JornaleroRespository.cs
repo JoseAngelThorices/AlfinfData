@@ -21,25 +21,23 @@ namespace AlfinfData.Services.BdLocal
         {
             return _db.RunInTransactionAsync(conn =>
             {
-                // 1. Obtener IDs que vienen de Odoo
                 var idsOdoo = jornaleros.Select(j => j.IdJornalero).ToList();
 
-                // 2. Insertar o actualizar
                 foreach (var j in jornaleros)
                 {
                     conn.InsertOrReplace(j);
                 }
 
-                // 3. Eliminar los que no están ya en Odoo
                 var idsLocales = conn.Table<Jornalero>().Select(j => j.IdJornalero).ToList();
                 var idsABorrar = idsLocales.Except(idsOdoo).ToList();
 
                 foreach (var id in idsABorrar)
                 {
-                    conn.Execute("DELETE FROM Jornalero WHERE IdJornalero  = ?", id);
+                    conn.Execute("DELETE FROM Jornalero WHERE IdJornalero = ?", id);
                 }
             });
         }
+
         public Task<int> SetActiveAsync(int idJornalero, bool isActive)
         {
             const string sql = @"
@@ -48,25 +46,20 @@ namespace AlfinfData.Services.BdLocal
                 WHERE IdJornalero = ?;
             ";
 
-            // sqlite-net sabe mapear bool a INTEGER (1 o 0)
             return _db.ExecuteAsync(sql, isActive, idJornalero);
         }
+
         public Task<Jornalero> GetJornaleroBySerialAsync(string serial)
         {
-            // Usamos la tabla mapeada y LINQ para filtrar por el campo Serial
             return _db
                 .Table<Jornalero>()
                 .Where(j => j.TarjetaNFC == serial)
                 .FirstOrDefaultAsync();
         }
 
-
-        //Obtiene todos los registros que esten en la tabla jornalero
         public Task<List<Jornalero>> GetAllAsync()
             => _db.Table<Jornalero>().ToListAsync();
 
-
-        // Actualiza un solo jornalero
         public Task UpdateAsync(Jornalero jornalero)
         {
             return _db.UpdateAsync(jornalero);
@@ -75,19 +68,34 @@ namespace AlfinfData.Services.BdLocal
         public Task<List<Jornalero>> GetJornalerosActivosPorCuadrillaAsync(int idCuadrilla)
         {
             return _db.Table<Jornalero>()
-                .Where(j => j.IdCuadrilla == idCuadrilla && j.Activo == true) // si Activo es nullable (bool?)
+                .Where(j => j.IdCuadrilla == idCuadrilla && j.Activo == true)
                 .ToListAsync();
-
         }
 
+        public Task<List<Jornalero>> GetJornalerosActivosAsync()
+        {
+            return _db.Table<Jornalero>()
+                      .Where(j => j.Activo == true)
+                      .ToListAsync();
+        }
 
-
-
-        // Actualiza varios jornaleros a la vez
         public Task UpdateManyAsync(IEnumerable<Jornalero> jornaleros)
         {
             return _db.UpdateAllAsync(jornaleros.ToList());
         }
+
+        public async Task<List<Cuadrilla>> GetCuadrillasConJornalerosAsync()
+        {
+            const string sql = @"
+                SELECT DISTINCT c.IdCuadrilla, c.Descripcion
+                FROM Cuadrilla c
+                INNER JOIN Jornalero j ON j.IdCuadrilla = c.IdCuadrilla
+                WHERE j.Activo = 1
+                ORDER BY c.Descripcion;";
+
+            return await _db.QueryAsync<Cuadrilla>(sql);
+        }
+
 
     }
 }

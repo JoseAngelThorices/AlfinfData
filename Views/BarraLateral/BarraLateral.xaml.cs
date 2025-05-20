@@ -11,45 +11,58 @@ namespace AlfinfData.Views.BarraLateral
             BindingContext = Shell.Current;
         }
 
-        private async void OnAccesoDirectoAltaNFC(object sender, EventArgs e)
+        // Método para evitar navegación redundante y cerrar menu lateral
+        private async Task NavegarSiEsNecesarioAsync(string ruta)
         {
-            await Shell.Current.GoToAsync("DescargasPage?accion=alta");
-        }
+            string rutaActual = Shell.Current.CurrentState.Location.OriginalString.ToLower();
+            string rutaBase = ruta.Split('?')[0].ToLower();
 
-        private async void OnAccesoEntrada(object sender, EventArgs e)
-        {
-            await Shell.Current.GoToAsync("EntradaPage");
+            if (!rutaActual.Contains(rutaBase))
+            {
+                await Shell.Current.GoToAsync(ruta);
+            }
+
+            Shell.Current.FlyoutIsPresented = false;
         }
 
         private async void OnAccesoDirectoInicio(object sender, EventArgs e)
         {
-            await Shell.Current.GoToAsync("InicioPage");
+            await NavegarSiEsNecesarioAsync("InicioPage");
         }
 
-        private async void OnAccesoDirectoProduccion(object sender, EventArgs e)
+        private async void OnAccesoEntrada(object sender, EventArgs e)
         {
-            await Shell.Current.GoToAsync("ProduccionPage");
-        }
-
-        private async void OnAccesoDirectoSeleccion(object sender, EventArgs e)
-        {
-            await Shell.Current.GoToAsync("SeleccionPage");
-        }
-
-        private async void OnAccesoDirectoHoras(object sender, EventArgs e)
-        {
-            await Shell.Current.GoToAsync("HorasPage");
-        }
-
-        private async void OnAccesoDirectoFin(object sender, EventArgs e)
-        {
-            await Shell.Current.GoToAsync("FinPage");
+            await NavegarSiEsNecesarioAsync("EntradaPage");
         }
 
         private async void OnAccesoDirectoSalidas(object sender, EventArgs e)
         {
-            await Shell.Current.GoToAsync("SalidasPage");
+            await NavegarSiEsNecesarioAsync("SalidasPage");
         }
 
+        private async void OnAccesoDirectoAltaNFC(object sender, EventArgs e)
+        {
+            await NavegarSiEsNecesarioAsync("DescargasPage?accion=alta");
+        }
+
+        private async void OnAccesoDirectoProduccion(object sender, EventArgs e)
+        {
+            await NavegarSiEsNecesarioAsync("ProduccionPage");
+        }
+
+        private async void OnAccesoDirectoHoras(object sender, EventArgs e)
+        {
+            await NavegarSiEsNecesarioAsync("HorasPage");
+        }
+
+        private async void OnAccesoDirectoFin(object sender, EventArgs e)
+        {
+            await NavegarSiEsNecesarioAsync("FinPage");
+        }
+
+        private async void OnAccesoDirectoSeleccion(object sender, EventArgs e)
+        {
+            await NavegarSiEsNecesarioAsync("SeleccionPage");
+        }
     }
 }

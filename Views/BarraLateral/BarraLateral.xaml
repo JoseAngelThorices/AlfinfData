@@ -42,23 +42,26 @@
     </Grid>
 
     <!-- Entradas -->
-
     <Grid Padding="15,10" BackgroundColor="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Image Source="barralateral.png"
-               WidthRequest="24"
-               HeightRequest="24"
-               VerticalOptions="Center"
-               Margin="0,0,30,0"/>
+           WidthRequest="24"
+           HeightRequest="24"
+           VerticalOptions="Center"
+           Margin="0,0,30,0"/>
         <Label Text="Entradas"
-               FontAttributes="Bold"
-               TextColor="Black"
-               VerticalOptions="Center"
-               Grid.Column="1"/>
+           FontAttributes="Bold"
+           TextColor="Black"
+           VerticalOptions="Center"
+           Grid.Column="1"/>
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Tapped="OnAccesoEntrada"/>
+        </Grid.GestureRecognizers>
     </Grid>
+
 
 
     <!-- Salidas -->
