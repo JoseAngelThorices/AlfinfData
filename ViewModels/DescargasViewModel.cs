@@ -95,77 +95,68 @@ namespace AlfinfData.ViewModels
             //    });
         }
 
-        public async Task<(int start, int end)?> RangoValores()
+        public async Task<int> RangoValores()
         {
             // Pedir inicio
             var startStr = await Shell.Current.DisplayPromptAsync(
                 "Rango NFC", "Valor de inicio:", "Aceptar", "Cancelar",
                 placeholder: "0", keyboard: Keyboard.Numeric);
             if (string.IsNullOrWhiteSpace(startStr))
-                return null; // canceló
-
-            // Pedir fin
-            var endStr = await Shell.Current.DisplayPromptAsync(
-                "Rango NFC", "Valor de fin:", "Aceptar", "Cancelar",
-                placeholder: startStr, keyboard: Keyboard.Numeric);
-            if (string.IsNullOrWhiteSpace(endStr))
-                return null; // canceló
-
-            if (!int.TryParse(startStr, out var start) ||
-                !int.TryParse(endStr, out var end) ||
-                 start > end)
+                return 0; // canceló
+            if (!int.TryParse(startStr, out var inicio))
             {
-                await Shell.Current.DisplayAlert(
-                    "Error", "Rango inválido; inicio ≤ fin y números enteros.", "OK");
-                return null;
+                // Si falla la conversión, puedes volver a pedirlo, devolver un valor por defecto, 
+                // o mostrar un mensaje de error. Aquí devolvemos 0:
+                await Shell.Current.DisplayAlert("Error", "El valor debe ser un número entero.", "OK");
+                return 0;
             }
 
-            return (start, end);
+
+            return (inicio);
         }
 
         // 3) Método que llama a RangoValores y guarda el resultado
         public async Task SolicitarYRellenarRangoAsync()
         {
-            var resultado = await RangoValores();
-            if (resultado.HasValue)
-            {
-                _startValue = resultado.Value.start;
-                _endValue = resultado.Value.end;
+            _startValue = await RangoValores();
 
-                // 1) Limpiamos la lista
-                _rangoValores.Clear();
-
-                // 2) La llenamos con cada valor entre start y end
-                for (int i = _startValue; i <= _endValue; i++)
-                {
-                    _rangoValores.Add(i);
-                }
-            }
-            else
-            {
-                // Cancelado o error…
-            }
         }
         [RelayCommand]
         private async void CancelarAlta()
         {
-            for (int i = 0;i < _hexIds.Count; i++)
+            try
             {
+                for (int i = 0;i < _hexIds.Count; i++)
+                {
                     var tarjeta = new TarjetaNFC
                     {
-                        IdTarjetaNFC = _rangoValores[i],
+                        IdTarjetaNFC = _startValue,
                         NumeroSerie = _hexIds[i],
                     };
 
                     // La añades a la colección
                     TagsLeidas.Add(tarjeta);
+
+                    _startValue++;
+                }
+                await _tarjetaNFCService.CreateTarjetasNFCAsync(TagsLeidas);
+                TagsLeidas.Clear();
+                _hexIds.Clear();
+                IsAltaPopupVisible = false;
+                CrossNFC.Current.StopListening();
+                CrossNFC.Current.OnMessageReceived -= OnTagReceived;
+
             }
-            await _tarjetaNFCService.CreateTarjetasNFCAsync(TagsLeidas);
-            TagsLeidas.Clear();
-            _hexIds.Clear();
-            IsAltaPopupVisible = false;
-            CrossNFC.Current.StopListening();
-            CrossNFC.Current.OnMessageReceived -= OnTagReceived;
+            catch (Exception ex)
+            {
+                // Mostrar alerta de error, log, etc.
+                //await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+                await Shell.Current.DisplayAlert("Error", "No se ha podido contectar con el servidor.", "OK");
+            }
+            finally
+            {
+                isBusy = false;
+            }
 
         }
 
@@ -207,7 +198,8 @@ namespace AlfinfData.ViewModels
             catch (Exception ex)
             {
                 // Mostrar alerta de error, log, etc.
-                await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+                //await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+                await Shell.Current.DisplayAlert("Error", "No se ha podido contectar con el servidor.", "OK");
             }
             finally
             {
@@ -248,7 +240,8 @@ namespace AlfinfData.ViewModels
             catch (Exception ex)
             {
                 // Mostrar alerta de error, log, etc.
-                await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+                await Shell.Current.DisplayAlert("Error", "No se ha podido contectar con el servidor.", "OK");
+                //await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
             }
             finally
             {
