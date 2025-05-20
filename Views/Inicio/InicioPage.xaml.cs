@@ -9,5 +9,6 @@ namespace AlfinfData.Views.Inicio
             InitializeComponent();
             BindingContext = viewModel;
         }
+
     }
 }
