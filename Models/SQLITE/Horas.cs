@@ -1,4 +1,4 @@
-using SQLite;
+﻿using SQLite;
 using System;
 
 namespace AlfinfData.Models.SQLITE
@@ -14,5 +14,7 @@ namespace AlfinfData.Models.SQLITE
         public double HN { get; set; }
         public double HE1 { get; set; }
         public double HE2 { get; set; }
+
+
     }
 }

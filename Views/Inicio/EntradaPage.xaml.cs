@@ -1,35 +1,33 @@
-using System.Diagnostics;
-using System.Threading.Tasks;
-using AlfinfData.ViewModels;
-using Plugin.NFC;
-namespace AlfinfData.Views.Inicio;
+﻿using AlfinfData.ViewModels;
 
-public partial class EntradaPage : ContentPage
+namespace AlfinfData.Views.Inicio
 {
-    private readonly EntradaViewModel viewModel;
-    public EntradaPage(EntradaViewModel vm)
+    public partial class EntradaPage : ContentPage
+    {
+        private readonly EntradaViewModel viewModel;
+
+        public EntradaPage(EntradaViewModel vm)
         {
             InitializeComponent();
             viewModel = vm;
             BindingContext = viewModel;
         }
+
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            var resultado = await viewModel.EntradaNFCAsync();
-            if( resultado == true)
+            if (await viewModel.EntradaNFCAsync())
             {
                 await viewModel.CargarHoraAsync();
-                await viewModel.CargarFichajeAsync();
+                await viewModel.CargarCuadrillasAsync(); // <- Cargar cuadrillas
+                // Los jornaleros se cargarán automáticamente al seleccionar una cuadrilla
             }
-            
-        
         }
+
         protected override async void OnDisappearing()
         {
             base.OnDisappearing();
-            await viewModel.cancelarNFC();
+            await viewModel.CancelarNFCAsync();
         }
-
+    }
 }
-

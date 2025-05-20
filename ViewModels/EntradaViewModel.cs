@@ -3,8 +3,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using AlfinfData.Services.BdLocal;
 using AlfinfData.Models.SQLITE;
-using System.Diagnostics;
 using Plugin.NFC;
+using System.Diagnostics;
 using System.Globalization;
 
 namespace AlfinfData.ViewModels
@@ -12,17 +12,68 @@ namespace AlfinfData.ViewModels
     public partial class EntradaViewModel : ObservableObject
     {
         private readonly FichajeRepository _fichajeRepo;
-        private readonly JornaleroRepository _jornalerojeRepo;
-        public ObservableCollection<JornaleroEntrada> JornalerosE { get; set; }  = new ObservableCollection<JornaleroEntrada>();
+        private readonly JornaleroRepository _jornaleroRepo;
+
+        public ObservableCollection<JornaleroEntrada> JornalerosE { get; set; } = new();
+        public ObservableCollection<Cuadrilla> Cuadrillas { get; set; } = new();
 
         [ObservableProperty]
         private string _horaTexto = "HORA";
-        public EntradaViewModel(FichajeRepository fichajeRepo, JornaleroRepository jornalerojeRepo) 
+
+        [ObservableProperty]
+        private Cuadrilla? _cuadrillaSeleccionada;
+
+        public EntradaViewModel(FichajeRepository fichajeRepo, JornaleroRepository jornaleroRepo)
         {
             _fichajeRepo = fichajeRepo;
-            _jornalerojeRepo = jornalerojeRepo;
+            _jornaleroRepo = jornaleroRepo;
+        }
+
+        public async Task CargarCuadrillasAsync()
+        {
+            var cuadrillasBD = await _jornaleroRepo.GetCuadrillasConJornalerosAsync();
+            Cuadrillas.Clear();
+
+            // Insertamos "TODOS" como una cuadrilla falsa con ID 0
+            Cuadrillas.Add(new Cuadrilla { IdCuadrilla = 0, Descripcion = "TODOS" });
+
+            foreach (var c in cuadrillasBD)
+                Cuadrillas.Add(c);
+
+            CuadrillaSeleccionada = Cuadrillas.FirstOrDefault();
+        }
+
+        partial void OnCuadrillaSeleccionadaChanged(Cuadrilla? value)
+        {
+            _ = CargarJornalerosSegunCuadrillaAsync();
         }
         
+        public async Task CargarJornalerosSegunCuadrillaAsync()
+        {
+            if (CuadrillaSeleccionada == null)
+                return;
+
+            List<Jornalero> lista;
+
+            if (CuadrillaSeleccionada.IdCuadrilla == 0) // TODOS
+                lista = await _jornaleroRepo.GetJornalerosActivosAsync();
+            else
+                lista = await _jornaleroRepo.GetJornalerosActivosPorCuadrillaAsync(CuadrillaSeleccionada.IdCuadrilla);
+
+            var fichaje = await _fichajeRepo.BuscarFichajeNuevoDiaDatos();
+
+            JornalerosE.Clear();
+            foreach (var j in lista)
+            {
+                JornalerosE.Add(new JornaleroEntrada
+                {
+                    IdJornalero = j.IdJornalero,
+                    Nombre = j.Nombre,
+                    HoraEficaz = fichaje.HoraEficaz
+                });
+            }
+        }
+
         [RelayCommand]
         private async Task HoraButtonAsync()
         {
@@ -37,30 +88,28 @@ namespace AlfinfData.ViewModels
 
             if (!string.IsNullOrEmpty(seleccion) && seleccion != "Cancelar")
             {
-                HoraTexto = seleccion.ToString();
+                HoraTexto = seleccion;
                 TimeSpan horaSeleccionada = TimeSpan.ParseExact(HoraTexto, @"hh\:mm", CultureInfo.InvariantCulture);
-                var fechaHoy = DateTime.Today;
-                var fechaHora = fechaHoy.Add(horaSeleccionada);
+                var fechaHora = DateTime.Today.Add(horaSeleccionada);
                 await _fichajeRepo.ActualizarHoraEficazAsync(999999, fechaHora);
-                
             }
         }
-        public async Task CargarFichajeAsync()
-        {
-            var lista = await _fichajeRepo.GetJornaleroEntradasAsync();
-            if (lista != null)
-            {
-                JornalerosE.Clear();
-                foreach (var e in lista)
-                {           
-                    JornalerosE.Add(e);                   
-               }
-            }
 
+        public async Task CargarHoraAsync()
+        {
+            try
+            {
+                var fichaje = await _fichajeRepo.BuscarFichajeNuevoDiaDatos();
+                HoraTexto = fichaje.HoraEficaz.ToString(@"HH\:mm");
+            }
+            catch
+            {
+                HoraTexto = "—";
+            }
         }
+
         public async Task<bool> EntradaNFCAsync()
         {
-            // Comprueba que el usuario lo tenga activado
             if (!CrossNFC.Current.IsAvailable)
             {
                 await Shell.Current.GoToAsync("..");
@@ -68,127 +117,74 @@ namespace AlfinfData.ViewModels
                 return false;
             }
 
-
             if (!CrossNFC.Current.IsEnabled)
             {
                 await Shell.Current.GoToAsync("..");
                 await Shell.Current.DisplayAlert("NFC", "Activa NFC en los ajustes.", "OK");
-                return false; 
+                return false;
             }
+
+            CrossNFC.Current.OnMessageReceived -= OnTagReceived;
             CrossNFC.Current.OnMessageReceived += OnTagReceived;
-            try
-            {
-                CrossNFC.Current.OnMessageReceived += OnTagReceived;
-                CrossNFC.Current.StartListening();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                await Shell.Current.DisplayAlert("Error NFC", ex.Message, "OK");
-                return false; 
-            }
+            CrossNFC.Current.StartListening();
+            return true;
         }
+
         async void OnTagReceived(ITagInfo tagInfo)
         {
             try
             {
-                var idBytes = tagInfo.Identifier;
-                var idHex = BitConverter.ToString(idBytes);
-
-                // serial como string
                 var serial = tagInfo.SerialNumber;
-                var jornalero = await _jornalerojeRepo.GetJornaleroBySerialAsync(serial);
-                if (jornalero != null)
+                var jornalero = await _jornaleroRepo.GetJornaleroBySerialAsync(serial);
+                if (jornalero == null)
                 {
-                    TimeSpan hora = TimeSpan.ParseExact(
-                        HoraTexto,
-                        @"hh\:mm",
-                        CultureInfo.InvariantCulture
-                    );
-                    var fechaHoy = DateTime.Today;
-                    var fechaHora = fechaHoy.Add(hora);
-                    var nuevoFichaje = new Fichaje
+                    await Shell.Current.DisplayAlert("Importante", "Jornalero no encontrado.", "OK");
+                    return;
+                }
+
+                if (!TimeSpan.TryParseExact(HoraTexto, @"hh\:mm", CultureInfo.InvariantCulture, out TimeSpan hora))
+                {
+                    await Shell.Current.DisplayAlert("Error", "Hora inválida", "OK");
+                    return;
+                }
+
+                var fechaHora = DateTime.Today.Add(hora);
+                var nuevoFichaje = new Fichaje
+                {
+                    IdJornalero = jornalero.IdJornalero,
+                    HoraEficaz = fechaHora,
+                    TipoFichaje = "Entrada",
+                    InstanteFichaje = DateTime.Now
+                };
+
+                bool resultado = await _fichajeRepo.CrearFichajesJornalerosAsync(nuevoFichaje);
+
+                if (resultado)
+                {
+                    JornalerosE.Add(new JornaleroEntrada
                     {
                         IdJornalero = jornalero.IdJornalero,
-                        HoraEficaz = fechaHora,
-                        TipoFichaje = "Entrada",
-                        InstanteFichaje = DateTime.Today
-                    };
+                        Nombre = jornalero.Nombre,
+                        HoraEficaz = fechaHora
+                    });
 
-                    bool resultado = await _fichajeRepo.CrearFichajesJornalerosAsync(nuevoFichaje);
-
-                    if (resultado)
-                    {
-                        var JornaleroEntrando = new JornaleroEntrada
-                        {
-                            IdJornalero = jornalero.IdJornalero,
-                            Nombre = jornalero.Nombre,
-                            HoraEficaz = fechaHora
-                        };
-                        JornalerosE.Add(JornaleroEntrando);
-                        await _jornalerojeRepo.SetActiveAsync(jornalero.IdJornalero, true);
-                    }
-                    else
-                    {
-                        await Shell.Current.DisplayAlert("Importante", "El jornalero ya fichó su entrada.", "OK");
-                    }
-                    
+                    await _jornaleroRepo.SetActiveAsync(jornalero.IdJornalero, true);
                 }
                 else
                 {
-                    await Shell.Current.DisplayAlert("Importante", "No se encontró ningún jornalero con ese serial. Debería de descargar de nuevo los jornaleros.", "OK");
-                    
+                    await Shell.Current.DisplayAlert("Importante", "El jornalero ya fichó su entrada.", "OK");
                 }
-            }
-            catch (FormatException fe)
-            {
-                Debug.WriteLine($"Error de formato al parsear HoraTexto: {fe}");
-                // Opcional: notificar al usuario, asignar valor por defecto, etc.
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error al procesar el tag NFC: {ex}");
-                // Opcional: manejo genérico de errores
+                Debug.WriteLine($"Error al leer NFC: {ex}");
             }
-
-
         }
-        public async Task cancelarNFC()
+
+        public async Task CancelarNFCAsync()
         {
             CrossNFC.Current.StopListening();
             CrossNFC.Current.OnMessageReceived -= OnTagReceived;
-        }
-        public async Task CargarHoraAsync()
-        {
-            
-             try
-            {
-                // Asegúrate de que el repositorio esté inicializado
-                if (_fichajeRepo == null)
-                    throw new InvalidOperationException("_fichajeRepo no está inicializado");
-
-                // Obtén la lista (puede devolver null)
-                var fichaje = await _fichajeRepo.BuscarFichajeNuevoDiaDatos();
-  
-                // Supongamos que Hora es TimeSpan
-                HoraTexto = fichaje.HoraEficaz.ToString(@"HH\:mm");
-                
-            }
-            catch (NullReferenceException nre)
-            {
-                // Captura explicita de NRE
-                Debug.WriteLine($"NullReferenceException en CargarHoraAsync: {nre}");
-                HoraTexto = "—";
-                
-            }
-            catch (Exception ex)
-            {
-                // Cualquier otra excepción
-                Debug.WriteLine($"Error en CargarHoraAsync: {ex}");
-                HoraTexto = "Error";
-               
-            }
-
         }
     }
 }
