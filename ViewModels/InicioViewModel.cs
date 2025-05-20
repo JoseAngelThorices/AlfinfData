@@ -80,17 +80,23 @@ namespace AlfinfData.ViewModels
 
                         var nuevoDia = new Fichaje
                         {
-                            IdJornalero = 999999,
-                            HoraEficaz = fechaHora,
-                            TipoFichaje = "Entrada",
-                            InstanteFichaje = DateTime.Today
-                        };
+                            var fechaHoy = DateTime.Today;
+                            var fechaHora = fechaHoy.Add(horaSeleccionada);
 
-                        await _fichajeRepository.BorrarDatosAsync();
-                        await _fichajeRepository.CrearFichajeNuevoDiaAsync(nuevoDia);
+                            Titulo = $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}"; // <-- ESTA LÍNEA CAMBIA EL TÍTULO
+                            var nuevoDia = new Fichaje
+                            {
+                                IdJornalero = 999999,
+                                HoraEficaz = fechaHora,
+                                TipoFichaje = "Entrada",
+                                InstanteFichaje = DateTime.Today
+                            };
+                            await _fichajeRepository.BorrarDatosAsync();
+                            await _fichajeRepository.CrearFichajeNuevoDiaAsync(nuevoDia);
+                            await Shell.Current.DisplayAlert("Nuevo Día", $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}", "OK");
+                        }
+                    }     
 
-                        await Shell.Current.DisplayAlert("Nuevo Día", $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}", "OK");
-                    }
                 }
                 else if (!string.IsNullOrWhiteSpace(password))
                 {
