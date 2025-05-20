@@ -94,11 +94,21 @@ namespace AlfinfData.ViewModels
             initialValue: OdooUrl,
             maxLength: 50,
             keyboard: Keyboard.Chat);
-            if (resultado != null)
+            if (resultado == null)
+                return;  // El usuario canceló
+
+            // 1) Validar que sea una IP válida
+            if (!System.Net.IPAddress.TryParse(resultado, out _))
             {
+                await Shell.Current.DisplayAlert("IP no válida",
+                    "Por favor introduce una dirección IPv4 válida (ej. 192.168.0.1).",
+                    "OK");
+                return;
+            }
+        
                 OdooUrl = resultado;
                 await GuardarConfigJsonAsync();
-            }
+            
         }
         [RelayCommand]
         public async Task EditarPuerto()
@@ -112,11 +122,23 @@ namespace AlfinfData.ViewModels
             initialValue: Port,
             maxLength: 50,
             keyboard: Keyboard.Chat);
-            if (resultado != null)
+            if (!int.TryParse(resultado, out var p))
             {
+                await Shell.Current.DisplayAlert("Puerto no válido",
+                    "El puerto debe ser un número entero.", "OK");
+                return;
+            }
+
+            // 2) Debe estar entre 1 y 65535
+            if (p < 1 || p > 65535)
+            {
+                await Shell.Current.DisplayAlert("Puerto fuera de rango",
+                    "El puerto debe estar entre 1 y 65535.", "OK");
+                return;
+            }
                 Port = resultado;
                 await GuardarConfigJsonAsync();
-            }
+            
         }
         
         // Clases para deserializar el JSON

@@ -101,7 +101,7 @@ namespace AlfinfData.ViewModels
                                 TipoFichaje = "Entrada",
                                 InstanteFichaje = DateTime.Today
                             };
-                            _fichajeRepository.BorrarDatosAsync();
+                            await _fichajeRepository.BorrarDatosAsync();
                             await _fichajeRepository.CrearFichajeNuevoDiaAsync(nuevoDia);
                         }
                     }     
