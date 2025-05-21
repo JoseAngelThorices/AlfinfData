@@ -13,8 +13,24 @@ using System.Net;
 
 public static class MauiProgram
 {
+    private const string ConfigFileName = "appsettings.json";
     public static MauiApp CreateMauiApp()
     {
+
+        var destPath = Path.Combine(FileSystem.AppDataDirectory, ConfigFileName);
+        if (!File.Exists(destPath))
+        {
+            // Lee el asset del bundle
+            using var assetStream = FileSystem
+                .OpenAppPackageFileAsync(ConfigFileName)
+                .GetAwaiter()
+                .GetResult();
+            using var reader = new StreamReader(assetStream);
+            var text = reader.ReadToEnd();
+            // Escribe la copia en disco
+            File.WriteAllText(destPath, text);
+        }
+
         var builder = MauiApp.CreateBuilder();
 
         // Configura la aplicación MAUI
@@ -29,14 +45,15 @@ public static class MauiProgram
             });
 
         // Cargar archivo de configuración "appsettings.json"
-        using var stream = FileSystem
-            .OpenAppPackageFileAsync("appsettings.json")
-            .GetAwaiter()
-            .GetResult();
+        //using var stream = FileSystem
+        //    .OpenAppPackageFileAsync("appsettings.json")
+        //    .GetAwaiter()
+        //    .GetResult();
 
-        // Añadir ese archivo a la configuración de la aplicación
-        builder.Configuration.AddJsonStream(stream);
-
+        //// Añadir ese archivo a la configuración de la aplicación
+        //builder.Configuration.AddJsonStream(stream);
+        builder.Configuration
+               .AddJsonFile(destPath, optional: false, reloadOnChange: true);
         // Enlazar sección "Odoo" del JSON a la clase OdooConfiguracion
         builder.Services.Configure<OdooConfiguracion>(
             builder.Configuration.GetSection("Odoo"));
@@ -76,7 +93,7 @@ public static class MauiProgram
         builder.Services.AddTransient<FinViewModel>();
         builder.Services.AddTransient<HorasViewModel>();
         builder.Services.AddTransient<ConfiguracionViewModel>();
-        
+
 
         builder.Services.AddTransient<DescargasPage>();
         builder.Services.AddTransient<InicioViewModel>();
@@ -93,6 +110,7 @@ public static class MauiProgram
         builder.Services.AddTransient<FichajeRepository>();
         builder.Services.AddTransient<ProduccionRepository>();
         builder.Services.AddTransient<HorasRepository>();
+        builder.Services.AddTransient<HistoricoRepository>();
 
 #if DEBUG
         // Activar logging en modo depuración

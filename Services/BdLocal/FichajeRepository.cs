@@ -26,6 +26,8 @@ namespace AlfinfData.Services.BdLocal
             await _db.InsertAsync(fichaje);
             return true;
         }
+
+        //Verificamos si el jornalero esta en entrada o salida.
         public async Task<bool> CrearFichajesJornalerosAsync(Fichaje fichaje)
         {
             var inicioHoy = DateTime.Today;               
@@ -71,6 +73,7 @@ namespace AlfinfData.Services.BdLocal
             // 4) Si no existe, devolvemos false (puedes crear el nuevo)
             return false;
         }
+
         public async Task<bool> BorrarDatosAsync()
         {
             await _db.DeleteAllAsync<Produccion>();
@@ -118,43 +121,89 @@ namespace AlfinfData.Services.BdLocal
             return primero;
         }
 
-        public Task<List<JornaleroEntrada>> GetJornaleroEntradasAsync() =>
-            _db.QueryAsync<JornaleroEntrada>(@"
-        SELECT 
-            f.IdJornalero,
-            j.Nombre,
-            f.HoraEficaz
-        FROM Fichaje AS f
-        INNER JOIN Jornalero AS j
-        ON f.IdJornalero = j.IdJornalero
-        WHERE date(
-            (f.HoraEficaz - 621355968000000000) / 10000000, 
-            'unixepoch', 
-            'localtime')= date('now', 'localtime')
-        AND f.TipoFichaje = 'Entrada';");
+        public async Task<List<JornaleroEntrada>> GetJornaleroEntradasAsync()
+        {
+            var query = @"
+        SELECT f.IdJornalero, j.Nombre, f.HoraEficaz
+        FROM Fichaje f
+        JOIN Jornalero j ON j.IdJornalero = f.IdJornalero
+        WHERE f.Id IN (
+            SELECT MAX(f2.Id)
+            FROM Fichaje f2
+            WHERE date((f2.HoraEficaz - 621355968000000000) / 10000000, 'unixepoch', 'localtime') = date('now', 'localtime')
+            GROUP BY f2.IdJornalero
+        )
+        AND f.TipoFichaje = 'Entrada';
+    ";
 
-
-
-        public Task<List<JornaleroEntrada>> GetJornaleroSalidasAsync() =>
-    _db.QueryAsync<JornaleroEntrada>(@"
-        SELECT 
-            f.IdJornalero,
-            j.Nombre,
-            f.HoraEficaz
-        FROM Fichaje AS f
-        INNER JOIN Jornalero AS j
-        ON f.IdJornalero = j.IdJornalero
-        WHERE date(
-            (f.HoraEficaz - 621355968000000000) / 10000000, 
-            'unixepoch', 
-            'localtime')= date('now', 'localtime')
-        AND f.TipoFichaje = 'Salida';");
+            return await _db.QueryAsync<JornaleroEntrada>(query);
+        }
+            public Task<List<JornaleroEntrada>> GetJornaleroSalidasAsync() =>
+        _db.QueryAsync<JornaleroEntrada>(@"
+            SELECT 
+                f.IdJornalero,
+                j.Nombre,
+                f.HoraEficaz
+            FROM Fichaje AS f
+            INNER JOIN Jornalero AS j
+            ON f.IdJornalero = j.IdJornalero
+            WHERE date(
+                (f.HoraEficaz - 621355968000000000) / 10000000, 
+                'unixepoch', 
+                'localtime')= date('now', 'localtime')
+            AND f.TipoFichaje = 'Salida';");
 
 
         public Task<List<Fichaje>> GetAllAsync()
             => _db.Table<Fichaje>().ToListAsync();
 
 
+        public async Task<List<Fichaje>> GetFichajesOrdenadosPorJornaleroYFechaAsync(int idJornalero, DateTime fecha)
+        {
+            var inicio = fecha.Date;
+            var fin = inicio.AddDays(1);
+
+            return await _db.Table<Fichaje>()
+                .Where(f => f.IdJornalero == idJornalero &&
+                            f.HoraEficaz >= inicio &&
+                            f.HoraEficaz < fin)
+                .OrderBy(f => f.HoraEficaz)
+                .ToListAsync();
+        }
+
+
+
+        public async Task<double> CalcularHorasTrabajadasAsync(int idJornalero, DateTime fecha)
+        {
+            var fichajes = await GetFichajesOrdenadosPorJornaleroYFechaAsync(idJornalero, fecha);
+
+            double totalHoras = 0;
+            Fichaje? entradaPendiente = null;
+
+            foreach (var f in fichajes)
+            {
+                if (f.TipoFichaje == "Entrada")
+                {
+                    // Guarda la entrada pendiente si no hay otra en espera
+                    if (entradaPendiente == null)
+                        entradaPendiente = f;
+                }
+                else if (f.TipoFichaje == "Salida" && entradaPendiente != null)
+                {
+                    // Si hay una entrada pendiente y aparece una salida, calcula el intervalo
+                    var horas = (f.HoraEficaz - entradaPendiente.HoraEficaz).TotalHours;
+
+                    // Si la hora es válida, la añadimos al total
+                    if (horas > 0)
+                        totalHoras += horas;
+
+                    // Reinicia la entrada pendiente
+                    entradaPendiente = null;
+                }
+            }
+
+            return totalHoras;
+        }
 
 
 

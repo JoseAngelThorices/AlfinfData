@@ -28,13 +28,13 @@
                     HeightRequest="40"
                     Margin="5" />
 
-            <Button Text="NO FALTA"
+            <!--<Button Text="NO FALTA"
                     BackgroundColor="#1a8a22"
                     TextColor="White"
                     FontAttributes="Bold"
                     HeightRequest="40"
                     Grid.Column="1"
-                    Margin="5" />
+                    Margin="5" />-->
         </Grid>
 
         <!-- Fila hora y F. TAREA -->
@@ -48,13 +48,13 @@
             Margin="5" />
 
 
-            <Button Text="F. TAREA"
+            <!--<Button Text="F. TAREA"
                     BackgroundColor="#b12b2b"
                     TextColor="White"
                     FontAttributes="Bold"
                     HeightRequest="40"
                     Grid.Column="1"
-                    Margin="5" />
+                    Margin="5" />-->
         </Grid>
 
         <!-- Cabecera de lista -->
@@ -73,7 +73,7 @@
             <CollectionView x:Name="ListaActual"  ItemsSource="{Binding JornalerosE}" SelectionMode="None" >
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Grid Padding="8" ColumnDefinitions="0.2*,1*,0.1*">
+                        <Grid Padding="8" ColumnDefinitions="0.3*,1.4*,0.2*">
                             <Label Text="{Binding IdJornalero}" TextColor="Black" />
                             <Label Text="{Binding Nombre}" Grid.Column="1" TextColor="Black"/>
                             <Label Text="{Binding HoraFormateada}" Grid.Column="2" TextColor="Black" />
