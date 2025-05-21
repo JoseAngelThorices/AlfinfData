@@ -14,12 +14,15 @@ namespace AlfinfData.ViewModels
         public ObservableCollection<Cuadrilla> Cuadrillas { get; } = new();
         private List<Jornalero> TodosLosJornaleros { get; set; } = new();
 
+#pragma warning disable MVWMTK0045
         [ObservableProperty]
         private Cuadrilla? cuadrillaSeleccionada;
+#pragma warning restore MVWMTK0045
 
+#pragma warning disable MVWMTK0045
         [ObservableProperty]
         private int seleccionados;
-
+#pragma warning disable MVWMTK0045
         public SeleccionViewModels(JornaleroRepository repo, CuadrillaRepository repoC)
         {
             _repo = repo;
@@ -66,36 +69,7 @@ namespace AlfinfData.ViewModels
             ActualizarContador();
         }
 
-        public async void SeleccionarTodos()
-        {
-            foreach (var j in Jornaleros)
-                j.Activo = true;
-
-            await _repo.UpdateManyAsync(Jornaleros.ToList());
-
-            var id = CuadrillaSeleccionada?.IdCuadrilla ?? 0;
-            var recargados = await _repo.GetAllAsync();
-
-            TodosLosJornaleros = recargados;
-
-            var filtrados = id == 0
-                ? recargados
-                : recargados.Where(j => j.IdCuadrilla == id);
-
-            Jornaleros.Clear();
-            foreach (var j in filtrados.Select(c => new Jornalero
-            {
-                IdJornalero = c.IdJornalero,
-                IdCuadrilla = c.IdCuadrilla,
-                Nombre = c.Nombre,
-                NumeroLista = c.NumeroLista,
-                Activo = c.Activo,
-                TarjetaNFC = c.TarjetaNFC
-            }))
-            {
-                Jornaleros.Add(j);
-            }
-        }
+        
 
         public void ActualizarContador()
         {
@@ -110,35 +84,35 @@ namespace AlfinfData.ViewModels
             await _repo.SetActiveAsync(j.IdJornalero, j.Activo == true);
         }
 
-        public async void QuitarTodos()
+
+        public async Task SeleccionarTodos() => await AplicarCambioYRefrescar(true);
+        public async Task QuitarTodos() => await AplicarCambioYRefrescar(false);
+
+        private async Task AplicarCambioYRefrescar(bool activar)
         {
+            if (CuadrillaSeleccionada == null)
+                return;
+
             foreach (var j in Jornaleros)
-                j.Activo = false;
+                j.Activo = activar;
 
             await _repo.UpdateManyAsync(Jornaleros.ToList());
 
-            var id = CuadrillaSeleccionada?.IdCuadrilla ?? 0;
-            var recargados = await _repo.GetAllAsync();
-
-            TodosLosJornaleros = recargados;
+            var id = CuadrillaSeleccionada.IdCuadrilla;
+            TodosLosJornaleros = await _repo.GetAllAsync();
 
             var filtrados = id == 0
-                ? recargados
-                : recargados.Where(j => j.IdCuadrilla == id);
+                ? TodosLosJornaleros
+                : TodosLosJornaleros.Where(j => j.IdCuadrilla == id);
 
             Jornaleros.Clear();
-            foreach (var j in filtrados.Select(c => new Jornalero
-            {
-                IdJornalero = c.IdJornalero,
-                IdCuadrilla = c.IdCuadrilla,
-                Nombre = c.Nombre,
-                NumeroLista = c.NumeroLista,
-                Activo = c.Activo,
-                TarjetaNFC = c.TarjetaNFC
-            }))
-            {
+            foreach (var j in filtrados)
                 Jornaleros.Add(j);
-            }
+
+            ActualizarContador();
         }
+
+
+
     }
 }
