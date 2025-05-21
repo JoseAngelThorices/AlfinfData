@@ -19,6 +19,8 @@ namespace AlfinfData.Services.BdLocal
             _db.CreateTableAsync<Horas>().GetAwaiter().GetResult();
             _db.CreateTableAsync<Produccion>().GetAwaiter().GetResult();
             _db.CreateTableAsync<Fichaje>().GetAwaiter().GetResult();
+            _db.CreateTableAsync<RegistroHistorico>().GetAwaiter().GetResult();
+
         }
         //conexion con la base de datos
         public SQLiteAsyncConnection Conn => _db;
