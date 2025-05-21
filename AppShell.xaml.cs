@@ -6,7 +6,6 @@ using AlfinfData.Views.Produccion;
 using AlfinfData.Views.Salidas;
 using AlfinfData.Views.Seleccion;
 using AlfinfData.Views;
-using AlfinfData.Services.BdLocal;
 
 namespace AlfinfData
 {
@@ -124,7 +123,14 @@ namespace AlfinfData
 
         private async void OnAbrirConfiguracionClicked(object sender, EventArgs e)
         {
-            string? password = await Application.Current.MainPage.DisplayPromptAsync(
+            // Obtener la página activa
+            var page = Application.Current.Windows.FirstOrDefault()?.Page;
+
+            if (page == null)
+                return;
+
+            // Mostrar el prompt desde la página activa
+            string? password = await page.DisplayPromptAsync(
                 "Contraseña",
                 "Introduce la contraseña para acceder a Configuración:",
                 accept: "Entrar",
@@ -139,13 +145,10 @@ namespace AlfinfData
             }
             else if (!string.IsNullOrWhiteSpace(password))
             {
-                await Application.Current.MainPage.DisplayAlert("Acceso denegado", "Contraseña incorrecta.", "OK");
+                await page.DisplayAlert("Acceso denegado", "Contraseña incorrecta.", "OK");
             }
         }
-        private async void OnAccesoDirectoAltaNFC(object sender, EventArgs e)
-        {
-            await Shell.Current.GoToAsync($"{nameof(DescargasPage)}?accion=alta");
-        }
+
 
     }
 }

@@ -1,48 +1,40 @@
-﻿using System.Collections.ObjectModel;
-using AlfinfData.ViewModels;
+﻿using AlfinfData.ViewModels;
 using AlfinfData.Models.SQLITE;
-using System;
-
 
 namespace AlfinfData.Views.Produccion
 {
-
     public partial class ProduccionPage : ContentPage
     {
         private readonly ProduccionViewModel _viewModel;
 
-        public ProduccionPage(
-            ProduccionViewModel viewModel)
+        public ProduccionPage(ProduccionViewModel viewModel)
         {
             InitializeComponent();
-
             _viewModel = viewModel;
             BindingContext = _viewModel;
-            BindingContext = _viewModel = viewModel;
 
+            // Asociar botones de cantidades fijas
             Btn1.Clicked += (s, e) => OnCantidadFijaClicked(1);
             Btn2.Clicked += (s, e) => OnCantidadFijaClicked(2);
             Btn3.Clicked += (s, e) => OnCantidadFijaClicked(3);
             Btn4.Clicked += (s, e) => OnCantidadFijaClicked(4);
             Btn5.Clicked += (s, e) => OnCantidadFijaClicked(5);
+
+            // Botón de cantidad personalizada
             BtnN.Clicked += OnBtnNClicked;
         }
-
 
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-
-            await _viewModel.CargarJornalerosConCajasAsync();
             await _viewModel.CargarCuadrillaAsync();
+            await _viewModel.CargarJornalerosConCajasAsync();
         }
-
-
 
         private async void OnCantidadFijaClicked(int cantidad)
         {
             string accion = await DisplayActionSheet(
-                $"¿Qué deseas hacer con {cantidad} {pluralizar("caja", cantidad)}?",
+                $"¿Qué deseas hacer con {cantidad} {Pluralizar("caja", cantidad)}?",
                 "Cancelar", null, "Añadir cajas", "Restar cajas");
 
             if (accion == "Cancelar" || string.IsNullOrWhiteSpace(accion))
@@ -62,13 +54,12 @@ namespace AlfinfData.Views.Produccion
             bool confirmar = await DisplayAlert("Confirmar acción", resumen, "OK", "Cancelar");
 
             if (confirmar)
-                AddBoxes(cajasFinal);
+                await AplicarCambioDeCajasAsync(cajasFinal, seleccionados);
         }
 
-        private async void OnBtnNClicked(object sender, EventArgs e)
+        private async void OnBtnNClicked(object? sender, EventArgs e)
         {
-            string accion = await DisplayActionSheet(
-                "¿Qué deseas hacer?", "Cancelar", null, "Añadir cajas", "Restar cajas");
+            string accion = await DisplayActionSheet("¿Qué deseas hacer?", "Cancelar", null, "Añadir cajas", "Restar cajas");
 
             if (accion == "Cancelar" || string.IsNullOrWhiteSpace(accion))
                 return;
@@ -76,9 +67,7 @@ namespace AlfinfData.Views.Produccion
             bool esSuma = accion == "Añadir cajas";
             string promptTitle = esSuma ? "Número de cajas a añadir" : "Número de cajas a restar";
 
-                string result = await DisplayPromptAsync(
-            promptTitle, "Introduce el número de cajas:", "Aceptar", "Cancelar",
-                    "0", maxLength: 3, keyboard: Keyboard.Numeric);
+            string result = await DisplayPromptAsync(promptTitle, "Introduce el número de cajas:", "Aceptar", "Cancelar", "0", maxLength: 3, keyboard: Keyboard.Numeric);
 
             if (!int.TryParse(result, out int cajas) || cajas <= 0)
             {
@@ -100,61 +89,41 @@ namespace AlfinfData.Views.Produccion
             bool confirmar = await DisplayAlert("Confirmar acción", resumen, "OK", "Cancelar");
 
             if (confirmar)
-                AddBoxes(cajasFinal);
+                await AplicarCambioDeCajasAsync(cajasFinal, seleccionados);
         }
 
-        private async void AddBoxes(int numberOfBoxes)
+        private async Task AplicarCambioDeCajasAsync(int cantidad, List<JornaleroConCajas> seleccionados)
         {
-            var seleccionados = ListaDeJornaleros
-                .SelectedItems
-                .Cast<JornaleroConCajas>()
-                .ToList();
-
-            if (!seleccionados.Any())
+            foreach (var j in seleccionados)
             {
-                await DisplayAlert("Error", "Selecciona al menos un jornalero", "OK");
-                return;
-            }
-
-            foreach (var jornalero in seleccionados)
-            {
-                if (jornalero.TotalCajas + numberOfBoxes < 0)
+                if (j.TotalCajas + cantidad < 0)
                 {
-                    numberOfBoxes = -jornalero.TotalCajas;
+                    cantidad = -j.TotalCajas;
                 }
             }
 
+            _viewModel.SetSeleccionados(seleccionados);
 
-            _viewModel.Seleccionados = seleccionados;
-
-            await _viewModel.ProcesarCajasAsync(numberOfBoxes);
+            await _viewModel.ProcesarCajasAsync(cantidad);
 
             await DisplayAlert("Éxito",
-                $"{(numberOfBoxes >= 0 ? "Se han añadido" : "Se han restado")} " +
-                $"{Math.Abs(numberOfBoxes)} {pluralizar("caja", Math.Abs(numberOfBoxes))} " +
-                $"a {seleccionados.Count} {pluralizar("jornalero", seleccionados.Count)}",
+                $"{(cantidad >= 0 ? "Se han añadido" : "Se han restado")} " +
+                $"{Math.Abs(cantidad)} {Pluralizar("caja", Math.Abs(cantidad))} " +
+                $"a {seleccionados.Count} {Pluralizar("jornalero", seleccionados.Count)}",
                 "OK");
 
             ListaDeJornaleros.SelectedItems.Clear();
-
         }
 
-
-        private string pluralizar(string palabra, int cantidad)
-
+        private string Pluralizar(string palabra, int cantidad)
         {
             return cantidad == 1 ? palabra : palabra + "s";
         }
 
-        private string CrearResumenAccion(int cajas, int cantidadjornaleros)
+        private string CrearResumenAccion(int cajas, int cantidadJornaleros)
         {
             string verbo = cajas > 0 ? "añadir" : "restar";
-            string palabracaja = pluralizar("caja", Math.Abs(cajas));
-            string palabrajornalero = pluralizar("jornalero", cantidadjornaleros);
-            return $"{verbo} {Math.Abs(cajas)} {palabracaja} a {cantidadjornaleros} {palabrajornalero}";
+            return $"{verbo} {Math.Abs(cajas)} {Pluralizar("caja", Math.Abs(cajas))} a {cantidadJornaleros} {Pluralizar("jornalero", cantidadJornaleros)}";
         }
     }
 }
-
-
-

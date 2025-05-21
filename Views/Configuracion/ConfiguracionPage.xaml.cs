@@ -12,30 +12,37 @@ namespace AlfinfData.Views.Configuracion
         //private bool _enviarTotales;
         //private bool _enviarAsistencia;
         //private bool _aceptarFichajesDesconocidos;
+        private readonly ConfiguracionViewModel _viewModel;
         public ConfiguracionPage(ConfiguracionViewModel viewModel)
         {
             InitializeComponent();
-            BindingContext = viewModel;
+            _viewModel = viewModel;
+            BindingContext = _viewModel;
             
         }
-
-        private void CargarConfiguracion()
+        protected async override void OnAppearing()
         {
-            //ImprimirEtiqueta = Preferences.Default.Get("ImprimirEtiqueta", false);
-            //SeparadorNegro = Preferences.Default.Get("SeparadorNegro", false);
-            //HabilitarTcp = Preferences.Default.Get("HabilitarTcp", false);
-            //EnviarTotales = Preferences.Default.Get("EnviarTotales", false);
-            //EnviarAsistencia = Preferences.Default.Get("EnviarAsistencia", false);
-            //AceptarFichajesDesconocidos = Preferences.Default.Get("AceptarFichajesDesconocidos", false);
-
-            UrlLabel.Text = Preferences.Default.Get("ServerUrl", "URL del servidor");
-            UrlLabel.TextColor = UrlLabel.Text == "URL del servidor" ? Colors.Gray : Colors.Black;
-
-            PortLabel.Text = Preferences.Default.Get("ServerPort", "Puerto del servidor");
-            PortLabel.TextColor = PortLabel.Text == "Puerto del servidor" ? Colors.Gray : Colors.Black;
-
+            base.OnAppearing();
 
         }
+
+        //private void CargarConfiguracion()
+        //{
+        //    //ImprimirEtiqueta = Preferences.Default.Get("ImprimirEtiqueta", false);
+        //    //SeparadorNegro = Preferences.Default.Get("SeparadorNegro", false);
+        //    //HabilitarTcp = Preferences.Default.Get("HabilitarTcp", false);
+        //    //EnviarTotales = Preferences.Default.Get("EnviarTotales", false);
+        //    //EnviarAsistencia = Preferences.Default.Get("EnviarAsistencia", false);
+        //    //AceptarFichajesDesconocidos = Preferences.Default.Get("AceptarFichajesDesconocidos", false);
+
+        //    UrlLabel.Text = Preferences.Default.Get("ServerUrl", "URL del servidor");
+        //    UrlLabel.TextColor = UrlLabel.Text == "URL del servidor" ? Colors.Gray : Colors.Black;
+
+        //    PortLabel.Text = Preferences.Default.Get("ServerPort", "Puerto del servidor");
+        //    PortLabel.TextColor = PortLabel.Text == "Puerto del servidor" ? Colors.Gray : Colors.Black;
+
+
+        //}
         //public new event PropertyChangedEventHandler? PropertyChanged;
 
         //public bool ImprimirEtiqueta

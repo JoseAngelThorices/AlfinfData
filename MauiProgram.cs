@@ -15,6 +15,9 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
+
+        
+
         var builder = MauiApp.CreateBuilder();
 
         // Configura la aplicación MAUI
@@ -27,40 +30,30 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
+        // 1) Registrar ConfigService
+        builder.Services.AddSingleton<IConfigService, ConfigService>();
 
-        // Cargar archivo de configuración "appsettings.json"
-        using var stream = FileSystem
-            .OpenAppPackageFileAsync("appsettings.json")
-            .GetAwaiter()
-            .GetResult();
+        // 2) Named client “Odoo” con handler personalizado
+        builder.Services
+          .AddHttpClient("Odoo", (sp, client) =>
+          {
+              var cfg = sp.GetRequiredService<IConfigService>();
+              client.BaseAddress = new Uri($"{cfg.OdooUrl}:{cfg.OdooPort}/");
+              client.Timeout = TimeSpan.FromSeconds(30);
+              client.DefaultRequestHeaders
+                    .Accept
+                    .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+          })
+          .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+          {
+              CookieContainer = new CookieContainer(),
+              UseCookies = true,
+              ServerCertificateCustomValidationCallback =
+                  HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+          });
 
-        // Añadir ese archivo a la configuración de la aplicación
-        builder.Configuration.AddJsonStream(stream);
-
-        // Enlazar sección "Odoo" del JSON a la clase OdooConfiguracion
-        builder.Services.Configure<OdooConfiguracion>(
-            builder.Configuration.GetSection("Odoo"));
-
-        // Configurar un HttpClient especializado para OdooService
-        builder.Services.AddHttpClient<OdooService>((sp, client) =>
-        {
-            var cfg = sp.GetRequiredService<IOptions<OdooConfiguracion>>().Value;
-            client.BaseAddress = new Uri(cfg.Url); // URL del servidor Odoo
-            client.Timeout = TimeSpan.FromSeconds(cfg.TimeoutSeconds); // Timeout configurable
-            client.DefaultRequestHeaders
-                  .Accept
-                  .Add(new MediaTypeWithQualityHeaderValue("application/json")); // Cabecera de tipo JSON
-        })
-        .ConfigurePrimaryHttpMessageHandler(() =>
-        {
-            return new HttpClientHandler
-            {
-                CookieContainer = new CookieContainer(), // Almacena cookies de sesión
-                UseCookies = true,
-                ServerCertificateCustomValidationCallback =
-                HttpClientHandler.DangerousAcceptAnyServerCertificateValidator // Permite certificados no válidos (solo en pruebas)
-            };
-        });
+        // 3) Registrar tu servicio, que pedirá siempre el cliente “Odoo”
+        builder.Services.AddTransient<OdooService>();
 
 
         // Servicios de negocio (inyección de dependencias)
@@ -76,7 +69,7 @@ public static class MauiProgram
         builder.Services.AddTransient<FinViewModel>();
         builder.Services.AddTransient<HorasViewModel>();
         builder.Services.AddTransient<ConfiguracionViewModel>();
-        
+
 
         builder.Services.AddTransient<DescargasPage>();
         builder.Services.AddTransient<InicioViewModel>();
@@ -93,6 +86,7 @@ public static class MauiProgram
         builder.Services.AddTransient<FichajeRepository>();
         builder.Services.AddTransient<ProduccionRepository>();
         builder.Services.AddTransient<HorasRepository>();
+        builder.Services.AddTransient<HistoricoRepository>();
 
 #if DEBUG
         // Activar logging en modo depuración

@@ -6,6 +6,7 @@ using Plugin.NFC;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
+using Microsoft.Maui.Storage;
 
 namespace AlfinfData.ViewModels
 {
@@ -13,7 +14,6 @@ namespace AlfinfData.ViewModels
     {
         private readonly FichajeRepository _fichajeRepo;
         private readonly JornaleroRepository _jornaleroRepo;
-
         private readonly CuadrillaRepository _cuadrillaRepo;
 
         public ObservableCollection<JornaleroEntrada> JornalerosE { get; set; } = new();
@@ -33,146 +33,57 @@ namespace AlfinfData.ViewModels
             _cuadrillaRepo = cuadrillaRepo;
         }
 
-        public async Task CargarHoraAsync()
-        {
-            try
-            {
-                var fichaje = await _fichajeRepo.BuscarFichajeNuevoDiaDatos();
-                HoraTexto = fichaje.HoraEficaz.ToString(@"HH\:mm");
-            }
-            catch
-            {
-                HoraTexto = "—";
-            }
-        }
-
-        [RelayCommand]
-        public async Task<bool> SalidaNFCAsync()
-        {
-            if (!CrossNFC.Current.IsAvailable)
-            {
-                await Shell.Current.DisplayAlert("NFC", "Este dispositivo no tiene NFC.", "OK");
-                return false;
-            }
-
-            if (!CrossNFC.Current.IsEnabled)
-            {
-                await Shell.Current.DisplayAlert("NFC", "Activa NFC en los ajustes.", "OK");
-                return false;
-            }
-
-            try
-            {
-                CrossNFC.Current.OnMessageReceived -= OnTagReceived;
-                CrossNFC.Current.OnMessageReceived += OnTagReceived;
-                CrossNFC.Current.StartListening();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                await Shell.Current.DisplayAlert("Error NFC", ex.Message, "OK");
-                return false;
-            }
-        }
-
-        async void OnTagReceived(ITagInfo tagInfo)
-        {
-            try
-            {
-                var idBytes = tagInfo.Identifier;
-                var serial = tagInfo.SerialNumber;
-                var jornalero = await _jornaleroRepo.GetJornaleroBySerialAsync(serial);
-
-                if (jornalero != null)
-                {
-                    if (!TimeSpan.TryParseExact(HoraTexto, @"hh\:mm", CultureInfo.InvariantCulture, out TimeSpan hora))
-                    {
-                        await Shell.Current.DisplayAlert("Error", "El valor de la hora no es válido. Usa el formato HH:mm", "OK");
-                        return;
-                    }
-
-                    var fechaHora = DateTime.Today.Add(hora);
-
-                    var nuevoFichaje = new Fichaje
-                    {
-                        IdJornalero = jornalero.IdJornalero,
-                        HoraEficaz = fechaHora,
-                        TipoFichaje = "Salida", // 👈 Tipo de fichaje correcto
-                        InstanteFichaje = DateTime.Now
-                    };
-
-                    bool resultado = await _fichajeRepo.CrearFichajesJornalerosAsync(nuevoFichaje);
-
-                    if (resultado)
-                    {
-                        // ❌ Quitar al jornalero de la lista visual si está presente
-                        var existentes = JornalerosE.Where(j => j.IdJornalero == jornalero.IdJornalero).ToList();
-                        foreach (var j in existentes)
-                            JornalerosE.Remove(j);
-
-                        // 🔄 Desactivar al jornalero
-                        await _jornaleroRepo.SetActiveAsync(jornalero.IdJornalero, false);
-
-                        await Shell.Current.DisplayAlert("Salida registrada", $"{jornalero.Nombre} ha fichado su salida.", "OK");
-                    }
-                    else
-                    {
-                        await Shell.Current.DisplayAlert("Importante", "El jornalero ya fichó su salida.", "OK");
-                    }
-                }
-                else
-                {
-                    await Shell.Current.DisplayAlert("Importante", "No se encontró ningún jornalero con ese serial. Descarga de nuevo los datos.", "OK");
-                }
-            }
-            catch (FormatException fe)
-            {
-                Debug.WriteLine($"Error de formato al parsear HoraTexto: {fe}");
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error al procesar el tag NFC: {ex}");
-            }
-        }
-
-
-
         public async Task CargarCuadrillasAsync()
         {
             Cuadrillas.Clear();
+
             var lista = await _cuadrillaRepo.GetAllAsync();
+
+            // Agregar opción "TODOS"
+            Cuadrillas.Add(new Cuadrilla { IdCuadrilla = -1, Descripcion = "TODOS" });
+
             foreach (var c in lista)
                 Cuadrillas.Add(c);
+
+            // Restaurar última cuadrilla seleccionada
+            int idGuardado = Preferences.Get("UltimaCuadrillaSeleccionada", -999);
+            CuadrillaSeleccionada = Cuadrillas.FirstOrDefault(c => c.IdCuadrilla == idGuardado) ?? Cuadrillas.First();
+        }
+
+        partial void OnCuadrillaSeleccionadaChanged(Cuadrilla value)
+        {
+            if (value != null)
+            {
+                Preferences.Set("UltimaCuadrillaSeleccionada", value.IdCuadrilla);
+                _ = CargarJornalerosPendientesAsync();
+            }
         }
 
         public async Task CargarJornalerosPendientesAsync()
         {
             JornalerosPendientes.Clear();
 
-            if (CuadrillaSeleccionada == null)
+            List<Jornalero> lista;
+            if (CuadrillaSeleccionada?.IdCuadrilla == -1)
+                lista = await _jornaleroRepo.GetJornalerosActivosAsync();
+            else if (CuadrillaSeleccionada != null)
+                lista = await _jornaleroRepo.GetJornalerosActivosPorCuadrillaAsync(CuadrillaSeleccionada.IdCuadrilla);
+            else
                 return;
-
-            var lista = await _jornaleroRepo.GetJornalerosActivosPorCuadrillaAsync(CuadrillaSeleccionada.IdCuadrilla);
-            var idsExistentes = JornalerosPendientes.Select(j => j.IdJornalero).ToHashSet();
 
             foreach (var j in lista)
             {
-                if (!idsExistentes.Contains(j.IdJornalero))
+                if (!JornalerosPendientes.Any(e => e.IdJornalero == j.IdJornalero))
                     JornalerosPendientes.Add(j);
             }
         }
+
         public async Task GetJornaleroSalidasAsync()
         {
             var lista = await _fichajeRepo.GetJornaleroSalidasAsync();
-
-            if (lista != null)
-            {
-                JornalerosE.Clear();
-                foreach (var e in lista)
-                {
-                    JornalerosE.Add(e);
-                }
-            }
+            JornalerosE.Clear();
+            foreach (var e in lista)
+                JornalerosE.Add(e);
         }
 
         [RelayCommand]
@@ -194,17 +105,106 @@ namespace AlfinfData.ViewModels
             }
         }
 
-        public async Task CancelarNFC()
+        public async Task<bool> SalidaNFCAsync()
         {
-            CrossNFC.Current.StopListening();
-            CrossNFC.Current.OnMessageReceived -= OnTagReceived;
+            if (!Plugin.NFC.CrossNFC.Current.IsAvailable)
+            {
+                await Shell.Current.DisplayAlert("NFC", "Este dispositivo no tiene NFC.", "OK");
+                return false;
+            }
+
+            if (!Plugin.NFC.CrossNFC.Current.IsEnabled)
+            {
+                await Shell.Current.DisplayAlert("NFC", "Activa NFC en los ajustes.", "OK");
+                return false;
+            }
+
+            try
+            {
+                Plugin.NFC.CrossNFC.Current.OnMessageReceived -= OnTagReceived;
+                Plugin.NFC.CrossNFC.Current.OnMessageReceived += OnTagReceived;
+                Plugin.NFC.CrossNFC.Current.StartListening();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Error NFC", ex.Message, "OK");
+                return false;
+            }
         }
 
-
-
-        partial void OnCuadrillaSeleccionadaChanged(Cuadrilla value)
+        private async void OnTagReceived(Plugin.NFC.ITagInfo tagInfo)
         {
-            _ = CargarJornalerosPendientesAsync();
+            try
+            {
+                var serial = tagInfo.SerialNumber;
+                var jornalero = await _jornaleroRepo.GetJornaleroBySerialAsync(serial);
+                if (jornalero == null)
+                {
+                    await Shell.Current.DisplayAlert("Importante", "Jornalero no encontrado.", "OK");
+                    return;
+                }
+
+                if (jornalero.Activo != true)
+
+                {
+                    await Shell.Current.DisplayAlert("Atención", "El jornalero ya fichó su salida.", "OK");
+                    return;
+                }
+
+
+                var hayInicioDia = await _fichajeRepo.BuscarFichajeNuevoDia();
+                if (!hayInicioDia)
+                {
+                    await Shell.Current.DisplayAlert("Importante", "Inicia el día primero.", "OK");
+                    return;
+                }
+
+                if (!TimeSpan.TryParseExact(HoraTexto, @"hh\:mm", CultureInfo.InvariantCulture, out TimeSpan hora))
+                {
+                    await Shell.Current.DisplayAlert("Error", "Selecciona una hora válida antes de fichar.", "OK");
+                    return;
+                }
+
+
+                var fechaHora = DateTime.Today.Add(hora);
+
+                var nuevoFichaje = new Fichaje
+                {
+                    IdJornalero = jornalero.IdJornalero,
+                    HoraEficaz = fechaHora,
+                    TipoFichaje = "Salida",
+                    InstanteFichaje = DateTime.Now
+                };
+
+                await _fichajeRepo.CrearFichajesJornalerosAsync(nuevoFichaje); // no importa si devuelve false
+                await _jornaleroRepo.SetActiveAsync(jornalero.IdJornalero, false); // desactiva al fichar
+
+
+                JornalerosE.Add(new JornaleroEntrada
+                {
+                    IdJornalero = jornalero.IdJornalero,
+                    Nombre = jornalero.Nombre,
+                    HoraEficaz = fechaHora
+                });
+
+                var pendiente = JornalerosPendientes.FirstOrDefault(j => j.IdJornalero == jornalero.IdJornalero);
+                if (pendiente != null)
+                    JornalerosPendientes.Remove(pendiente);
+
+                await Shell.Current.DisplayAlert("Correcto", $"{jornalero.Nombre} fichó salida a las {fechaHora:HH:mm}.", "OK");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error al procesar NFC: {ex}");
+                await Shell.Current.DisplayAlert("Error", "Error general de lectura NFC", "OK");
+            }
+        }
+
+        public async Task CancelarNFC()
+        {
+            Plugin.NFC.CrossNFC.Current.StopListening();
+            Plugin.NFC.CrossNFC.Current.OnMessageReceived -= OnTagReceived;
         }
     }
 }
