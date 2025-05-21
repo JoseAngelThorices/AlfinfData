@@ -61,13 +61,13 @@
                 StrokeShape="RoundRectangle 10"
                 BackgroundColor="White"
                 Margin="5,0"
-                VerticalOptions="FillAndExpand">
+                VerticalOptions="Fill">
 
 
             <CollectionView x:Name="ListaDeJornaleros"
                             ItemsSource="{Binding Jornaleros}"
                             SelectionMode="None"
-                            VerticalOptions="FillAndExpand">
+                            VerticalOptions="Fill">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
 
