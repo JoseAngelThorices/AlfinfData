@@ -5,7 +5,7 @@ public interface IConfigService
     string OdooPort { get; set; }
 
     // Añade estos:
-    Task SetCredentialsAsync(string user, string pass);
+    Task SetCredentialsAsync(string user, string pass, string nameDateBase);
     Task<(string user, string pass, string nameDateBase)> GetCredentialsAsync();
 
     event EventHandler ConfigChanged;
@@ -18,7 +18,7 @@ public class ConfigService : IConfigService
     const string PortKey = "OdooPort";
     const string UserKey = "OdooUser";
     const string PassKey = "OdooPass";
-    const string NameDataBaseKey = "OdooUser";
+    const string NameDataBaseKey = "OdooNameDataBase";
     public event EventHandler ConfigChanged;
 
     public string OdooUrl
@@ -41,10 +41,11 @@ public class ConfigService : IConfigService
         }
     }
 
-    public async Task SetCredentialsAsync(string user, string pass)
+    public async Task SetCredentialsAsync(string user, string pass, string nameDateBase)
     {
         await SecureStorage.SetAsync(UserKey, user);
         await SecureStorage.SetAsync(PassKey, pass);
+        await SecureStorage.SetAsync(NameDataBaseKey, nameDateBase);
     }
 
     public async Task<(string user, string pass, string nameDateBase)> GetCredentialsAsync()

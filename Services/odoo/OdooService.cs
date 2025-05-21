@@ -1,7 +1,5 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
-using AlfinfData.Settings;
-using Microsoft.Extensions.Options;
 
 namespace AlfinfData.Services.odoo
 {

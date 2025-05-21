@@ -46,7 +46,7 @@
                                     BorderWidth="1"
                                     CornerRadius="5"
                                     HeightRequest="40"
-                                    Padding="10,0" />       
+                                    Padding="10,0" />
                             </Grid>
                         </Border>
                     </VerticalStackLayout>
@@ -75,6 +75,84 @@
                                     CornerRadius="5"
                                     HeightRequest="40"
                                     Padding="10,0" />
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Nombre de la base de datos Odoo"
+           FontAttributes="Bold"
+           FontSize="Small"
+           TextColor="Black"/>
+
+                        <Border Stroke="LightGray"
+            StrokeShape="RoundRectangle 5"
+            BackgroundColor="White"
+            Padding="0"
+            HeightRequest="40">
+                            <Grid>
+                                <Button
+                Text="Editar nombre base de datos Odoo"
+                Command="{Binding EditarNombreBaseDatosCommand}"
+                VerticalOptions="Center"
+                BackgroundColor="Transparent"
+                TextColor="Gray"
+                BorderColor="LightGray"
+                BorderWidth="1"
+                CornerRadius="5"
+                HeightRequest="40"
+                Padding="10,0" />
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Usuario de Odoo"
+           FontAttributes="Bold"
+           FontSize="Small"
+           TextColor="Black"/>
+
+                        <Border Stroke="LightGray"
+            StrokeShape="RoundRectangle 5"
+            BackgroundColor="White"
+            Padding="0"
+            HeightRequest="40">
+                            <Grid>
+                                <Button
+                Text="Editar usuario de Odoo"
+                Command="{Binding EditarUsuarioOdooCommand}"
+                VerticalOptions="Center"
+                BackgroundColor="Transparent"
+                TextColor="Gray"
+                BorderColor="LightGray"
+                BorderWidth="1"
+                CornerRadius="5"
+                HeightRequest="40"
+                Padding="10,0" />
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Editar contraseña de Odoo"
+           FontAttributes="Bold"
+           FontSize="Small"
+           TextColor="Black"/>
+
+                        <Border Stroke="LightGray"
+            StrokeShape="RoundRectangle 5"
+            BackgroundColor="White"
+            Padding="0"
+            HeightRequest="40">
+                            <Grid>
+                                <Button
+                Text="Contraseña de Odoo"
+                Command="{Binding EditarContrasenaOdooCommand}"
+                VerticalOptions="Center"
+                BackgroundColor="Transparent"
+                TextColor="Gray"
+                BorderColor="LightGray"
+                BorderWidth="1"
+                CornerRadius="5"
+                HeightRequest="40"
+                Padding="10,0" />
                             </Grid>
                         </Border>
                     </VerticalStackLayout>

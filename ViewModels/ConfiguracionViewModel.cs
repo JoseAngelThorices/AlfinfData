@@ -1,12 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.Maui.Storage;
-using AlfinfData.Models.ConfiguracionApp;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Diagnostics;
 
 namespace AlfinfData.ViewModels
 {
@@ -17,23 +10,31 @@ namespace AlfinfData.ViewModels
         public ConfiguracionViewModel(IConfigService config)
         {
             _config = config;
-            // Carga inicial desde Preferences
+
+            // Disparamos la carga inicial de forma asíncrona
+            _ = InitializeAsync();
+
+            // Volver a cargar todo si cambia cualquier configuración
+            _config.ConfigChanged += async (_, __) => await InitializeAsync();
+
+        }
+
+        [ObservableProperty] private string odooUrl;
+        [ObservableProperty] private string port;
+        [ObservableProperty] private string username;
+        [ObservableProperty] private string password;
+        [ObservableProperty] private string databaseName;
+
+        private async Task InitializeAsync()
+        {
             OdooUrl = _config.OdooUrl;
             Port = _config.OdooPort;
 
-            // Si en algún otro punto se cambia la configuración
-            _config.ConfigChanged += (_, __) =>
-            {
-                OdooUrl = _config.OdooUrl;
-                Port = _config.OdooPort;
-            };
+            var (user, pass, db) = await _config.GetCredentialsAsync();
+            Username = user;
+            Password = pass;
+            DatabaseName = db;
         }
-
-        [ObservableProperty]
-        private string odooUrl;
-
-        [ObservableProperty]
-        private string port;
 
         [RelayCommand]
         public async Task EditarUrlAsync()
@@ -62,10 +63,7 @@ namespace AlfinfData.ViewModels
 
             // Guardamos en Preferences (dispara ConfigChanged)
             _config.OdooUrl = resultado;
-            await Shell.Current.DisplayAlert(
-                "Configuración",
-                "URL guardada correctamente.",
-                "OK");
+            await DisplayGuardadoAsync("Url");
         }
 
         [RelayCommand]
@@ -90,11 +88,77 @@ namespace AlfinfData.ViewModels
             }
 
             _config.OdooPort = resultado;
-            await Shell.Current.DisplayAlert(
-                "Configuración",
-                "Puerto guardado correctamente.",
-                "OK");
+            await DisplayGuardadoAsync("Puerto");
         }
+        [RelayCommand]
+        public async Task EditarUsuarioOdooAsync()
+        {
+            var resultado = await Shell.Current.DisplayPromptAsync(
+                "Editar Usuario",
+                "Introduce el nuevo usuario de Odoo:",
+                accept: "Guardar",
+                cancel: "Cancelar",
+                placeholder: Username,
+                maxLength: 50,
+                keyboard: Keyboard.Text);
+
+            if (!string.IsNullOrWhiteSpace(resultado))
+            {
+                // Conservamos pass y db actuales al guardar
+                await _config.SetCredentialsAsync(resultado, Password, DatabaseName);
+                await InitializeAsync();
+                await DisplayGuardadoAsync("Usuario");
+            }
+        }
+
+        [RelayCommand]
+        public async Task EditarContrasenaOdooAsync()
+        {
+            var resultado = await Shell.Current.DisplayPromptAsync(
+                title: "Editar Contraseña",
+                message: "Introduce la nueva contraseña de Odoo:",
+                accept: "Guardar",
+                cancel: "Cancelar",
+                placeholder: Password,
+                maxLength: 100,
+                keyboard: Keyboard.Text,
+                initialValue: Password
+                );
+
+            if (!string.IsNullOrWhiteSpace(resultado))
+            {
+                await _config.SetCredentialsAsync(Username, resultado, DatabaseName);
+                await InitializeAsync();
+                await DisplayGuardadoAsync("Contraseña");
+            }
+        }
+
+        [RelayCommand]
+        public async Task EditarNombreBaseDatosAsync()
+        {
+            var resultado = await Shell.Current.DisplayPromptAsync(
+                "Editar Base de Datos",
+                "Introduce el nombre de la base de datos de Odoo:",
+                accept: "Guardar",
+                cancel: "Cancelar",
+                placeholder: DatabaseName,
+                maxLength: 100,
+                keyboard: Keyboard.Text);
+
+            if (!string.IsNullOrWhiteSpace(resultado))
+            {
+                await _config.SetCredentialsAsync(Username, Password, resultado);
+                await InitializeAsync();
+                await DisplayGuardadoAsync("Base de datos");
+            }
+        }
+
+        // Método auxiliar para alertar guardado
+        private static Task DisplayGuardadoAsync(string campo) =>
+            Shell.Current.DisplayAlert(
+                "Configuración",
+                $"{campo} guardado correctamente.",
+                "OK");
     }
 
 }
