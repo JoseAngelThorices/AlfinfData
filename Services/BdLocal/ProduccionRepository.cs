@@ -1,7 +1,5 @@
 ﻿using AlfinfData.Models.SQLITE;
 using SQLite;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace AlfinfData.Services.BdLocal
 {
@@ -46,11 +44,11 @@ namespace AlfinfData.Services.BdLocal
             return _db.QueryAsync<JornaleroConCajas>(
                 @"SELECT j.IdJornalero, j.IdCuadrilla, j.Nombre, 
                  IFNULL(SUM(p.Cajas), 0) AS TotalCajas
-          FROM Jornalero j
-          LEFT JOIN Produccion p ON j.IdJornalero = p.IdJornalero
-          GROUP BY j.IdJornalero, j.IdCuadrilla, j.Nombre
-          HAVING TotalCajas > 0
-          ORDER BY j.Nombre");
+                 FROM Jornalero j
+                 LEFT JOIN Produccion p ON j.IdJornalero = p.IdJornalero
+                 WHERE j.Activo = 1
+                 GROUP BY j.IdJornalero, j.IdCuadrilla, j.Nombre
+                 ORDER BY j.Nombre");
         }
     }
 }
