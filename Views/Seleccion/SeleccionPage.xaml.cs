@@ -22,14 +22,14 @@ public partial class SeleccionPage : ContentPage
         await _viewModel.CargarEmpleadosAsync();
     }
 
-    private void OnSeleccionarTodosClicked(object sender, EventArgs e)
+    private async void OnSeleccionarTodosClicked(object sender, EventArgs e)
     {
-        _viewModel.SeleccionarTodos();
+        await _viewModel.SeleccionarTodos();
     }
 
-    private void OnQuitarTodosClicked(object sender, EventArgs e)
+    private async void OnQuitarTodosClicked(object sender, EventArgs e)
     {
-        _viewModel.QuitarTodos();
+        await _viewModel.QuitarTodos();
     }
     private async void activardesactivarswitch(object sender, ToggledEventArgs e)
     {
