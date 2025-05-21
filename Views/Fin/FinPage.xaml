@@ -25,7 +25,7 @@
                 FontAttributes="Bold"
                 CornerRadius="10"
                 HeightRequest="50"
-                HorizontalOptions="FillAndExpand"
+                HorizontalOptions="Fill"
                 Grid.Row="0" />
 
         <!-- Fecha Desde -->
@@ -74,15 +74,17 @@
                     VerticalOptions="Center" />
         </HorizontalStackLayout>
 
-        <!-- Botón enviar -->
-        <!--<Button Text="ENVIAR ARCHIVOS"
-                BackgroundColor="#71639e"
-                TextColor="White"
-                FontAttributes="Bold"
-                CornerRadius="10"
-                HeightRequest="50"
-                HorizontalOptions="FillAndExpand"
-                Grid.Row="3" />-->
+        <!-- Botón Visualizar historico -->
+        <Button Text="VISUALIZAR HISTORICO"
+        Command="{Binding VisualizarHistoricoCommand}"
+        BackgroundColor="#71639e"
+        TextColor="White"
+        FontAttributes="Bold"
+        CornerRadius="10"
+        HeightRequest="50"
+        HorizontalOptions="FillAndExpand"
+        Grid.Row="3" />
+
 
         <!-- Resultado -->
         <Border Stroke="#a0a0a0"
@@ -93,14 +95,14 @@
                 Margin="5,0"
                 Grid.Row="4"
                 Grid.RowSpan="3"
-                VerticalOptions="FillAndExpand"
-                HorizontalOptions="FillAndExpand">
+                VerticalOptions="Fill"
+                HorizontalOptions="Fill">
             <ScrollView>
                 <Label Text="{Binding ResultadoTexto}"
                        FontSize="16"
                        TextColor="Black"
-                       VerticalOptions="FillAndExpand"
-                       HorizontalOptions="FillAndExpand" />
+                       VerticalOptions="Fill"
+                       HorizontalOptions="Fill" />
             </ScrollView>
         </Border>
     </Grid>

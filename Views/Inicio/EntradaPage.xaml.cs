@@ -1,4 +1,5 @@
 ﻿using AlfinfData.ViewModels;
+using Microsoft.Maui.Controls;
 
 namespace AlfinfData.Views.Inicio
 {
@@ -16,11 +17,15 @@ namespace AlfinfData.Views.Inicio
         protected override async void OnAppearing()
         {
             base.OnAppearing();
+
+            // Cargar cuadrillas siempre
+            await viewModel.CargarCuadrillasAsync();
+
+            // Cargar NFC y datos si está disponible
             if (await viewModel.EntradaNFCAsync())
             {
                 await viewModel.CargarHoraAsync();
-                await viewModel.CargarCuadrillasAsync(); // <- Cargar cuadrillas
-                // Los jornaleros se cargarán automáticamente al seleccionar una cuadrilla
+                await viewModel.CargarJornalerosSegunCuadrillaAsync(); // Refrescar trabajadores
             }
         }
 

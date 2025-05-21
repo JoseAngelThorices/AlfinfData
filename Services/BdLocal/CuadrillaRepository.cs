@@ -41,6 +41,6 @@ namespace AlfinfData.Services.BdLocal
         public Task<List<Cuadrilla>> GetAllAsync()
             => _db.Table<Cuadrilla>().ToListAsync();
 
-        // Otros métodos específicos de Empleado...
+        
     }
 }
