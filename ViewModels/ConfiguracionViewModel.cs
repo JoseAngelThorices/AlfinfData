@@ -12,138 +12,89 @@ namespace AlfinfData.ViewModels
 {
     public partial class ConfiguracionViewModel : ObservableObject
     {
-        // 1) Valor inicial que debería verse en la UI
-        private const string ConfigFileName = "appsettings.json";
+        private readonly IConfigService _config;
+
+        public ConfiguracionViewModel(IConfigService config)
+        {
+            _config = config;
+            // Carga inicial desde Preferences
+            OdooUrl = _config.OdooUrl;
+            Port = _config.OdooPort;
+
+            // Si en algún otro punto se cambia la configuración
+            _config.ConfigChanged += (_, __) =>
+            {
+                OdooUrl = _config.OdooUrl;
+                Port = _config.OdooPort;
+            };
+        }
+
         [ObservableProperty]
-        private string odooUrl = "Cargando...";
+        private string odooUrl;
+
         [ObservableProperty]
-        private string port = "Cargando...";
+        private string port;
 
-        // 2) Método que lee el JSON y asigna OdooUrl; genera LoadConfigCommand
-        private string GetConfigPath()
-        {
-            // Ej: "/data/user/0/com.miapp/files/config.json"
-            return Path.Combine(FileSystem.AppDataDirectory, ConfigFileName);
-        }
-
-        
-        public async Task LoadConfigAsync()
-        {
-
-            try
-            {
-               
-                var path = GetConfigPath();
-                var json = File.ReadAllText(path);
-                Debug.WriteLine("Contenido de config.json:");
-                Debug.WriteLine(json);
-                var dto = JsonSerializer.Deserialize<RootConfigDto>(json,
-                            new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
-                          ?? throw new InvalidOperationException("JSON mal formado");
-
-                // Esto dispara el PropertyChanged y refresca el Label
-                var uri = new Uri(dto.Odoo.Url);
-                OdooUrl = uri.Host;
-                Port = uri.Port.ToString();
-            }
-            catch (Exception ex)
-            {
-                // En caso de error mostramos el mensaje
-                OdooUrl = $"Error: {ex.Message}";
-            }
-        }
-        
-        private async Task GuardarConfigJsonAsync()
-        {
-            try
-            {
-                var path = GetConfigPath();
-                // 1) Leer la copia existente
-                var json = File.ReadAllText(path);
-                var appConfig = JsonSerializer.Deserialize<RootConfigDto>(json,
-                                  new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
-                               ?? throw new InvalidOperationException("JSON mal formado");
-
-                // 2) Sobreescribir sólo la URL nueva
-                appConfig.Odoo.Url = $"http://{OdooUrl}:{Port}";
-
-                // 3) Serializar con indentado (opcional) y escribir
-                var options = new JsonSerializerOptions { WriteIndented = true };
-                var newJson = JsonSerializer.Serialize(appConfig, options);
-                Debug.WriteLine("Contenido de config.json:");
-                Debug.WriteLine(newJson);
-                File.WriteAllText(path, newJson);
-
-                // Feedback al usuario, por ejemplo:
-                await Shell.Current.DisplayAlert("Configuración", "Configuración guardada.", "OK");
-            }
-            catch (Exception ex)
-            {
-                await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
-            }
-        }
         [RelayCommand]
-        public async Task EditarUrl()
+        public async Task EditarUrlAsync()
         {
-            string resultado = await Shell.Current.DisplayPromptAsync(
-            title: "Editar IP",
-            message: "Introduce la nueva IP del servidor:",
-            accept: "Guardar",
-            cancel: "Cancelar",
-            placeholder: OdooUrl,
-            initialValue: OdooUrl,
-            maxLength: 50,
-            keyboard: Keyboard.Chat);
-            if (resultado == null)
-                return;  // El usuario canceló
+            var resultado = await Shell.Current.DisplayPromptAsync(
+                "Editar IP",
+                "Introduce la nueva IP o URL del servidor:",
+                accept: "Guardar",
+                cancel: "Cancelar",
+                placeholder: OdooUrl,
+                maxLength: 100,
+                keyboard: Keyboard.Url);
 
-            // 1) Validar que sea una IP válida
-            if (!System.Net.IPAddress.TryParse(resultado, out _))
+            if (string.IsNullOrWhiteSpace(resultado))
+                return;
+
+            // Validación básica: que empiece por http:// o https://
+            if (!Uri.TryCreate(resultado, UriKind.Absolute, out _))
             {
-                await Shell.Current.DisplayAlert("IP no válida",
-                    "Por favor introduce una dirección IPv4 válida (ej. 192.168.0.1).",
-                    "OK");
+                await Shell.Current.DisplayAlert(
+                  "URL no válida",
+                  "Debe incluir el esquema (http:// o https://).",
+                  "OK");
                 return;
             }
-        
-                OdooUrl = resultado;
-                await GuardarConfigJsonAsync();
-            
+
+            // Guardamos en Preferences (dispara ConfigChanged)
+            _config.OdooUrl = resultado;
+            await Shell.Current.DisplayAlert(
+                "Configuración",
+                "URL guardada correctamente.",
+                "OK");
         }
+
         [RelayCommand]
-        public async Task EditarPuerto()
+        public async Task EditarPuertoAsync()
         {
-            string resultado = await Shell.Current.DisplayPromptAsync(
-            title: "Editar Puerto",
-            message: "Introduce el nuevo puerto del servidor:",
-            accept: "Guardar",
-            cancel: "Cancelar",
-            placeholder: Port,
-            initialValue: Port,
-            maxLength: 50,
-            keyboard: Keyboard.Chat);
-            if (!int.TryParse(resultado, out var p))
+            var resultado = await Shell.Current.DisplayPromptAsync(
+                "Editar Puerto",
+                "Introduce el nuevo puerto del servidor:",
+                accept: "Guardar",
+                cancel: "Cancelar",
+                placeholder: Port,
+                maxLength: 5,
+                keyboard: Keyboard.Numeric);
+
+            if (!int.TryParse(resultado, out var p) || p < 1 || p > 65535)
             {
-                await Shell.Current.DisplayAlert("Puerto no válido",
-                    "El puerto debe ser un número entero.", "OK");
+                await Shell.Current.DisplayAlert(
+                  "Puerto no válido",
+                  "Debe ser un número entre 1 y 65535.",
+                  "OK");
                 return;
             }
 
-            // 2) Debe estar entre 1 y 65535
-            if (p < 1 || p > 65535)
-            {
-                await Shell.Current.DisplayAlert("Puerto fuera de rango",
-                    "El puerto debe estar entre 1 y 65535.", "OK");
-                return;
-            }
-                Port = resultado;
-                await GuardarConfigJsonAsync();
-            
+            _config.OdooPort = resultado;
+            await Shell.Current.DisplayAlert(
+                "Configuración",
+                "Puerto guardado correctamente.",
+                "OK");
         }
-        
-        // Clases para deserializar el JSON
-        private class RootConfigDto { public ConfigOdoo Odoo { get; set; } = new(); }
-
-
     }
+
 }

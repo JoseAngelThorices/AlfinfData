@@ -24,7 +24,6 @@ namespace AlfinfData.Views.Configuracion
         {
             base.OnAppearing();
 
-            await _viewModel.LoadConfigAsync();
         }
 
         //private void CargarConfiguracion()

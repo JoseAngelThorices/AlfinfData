@@ -13,23 +13,10 @@ using System.Net;
 
 public static class MauiProgram
 {
-    private const string ConfigFileName = "appsettings.json";
     public static MauiApp CreateMauiApp()
     {
 
-        var destPath = Path.Combine(FileSystem.AppDataDirectory, ConfigFileName);
-        if (!File.Exists(destPath))
-        {
-            // Lee el asset del bundle
-            using var assetStream = FileSystem
-                .OpenAppPackageFileAsync(ConfigFileName)
-                .GetAwaiter()
-                .GetResult();
-            using var reader = new StreamReader(assetStream);
-            var text = reader.ReadToEnd();
-            // Escribe la copia en disco
-            File.WriteAllText(destPath, text);
-        }
+        
 
         var builder = MauiApp.CreateBuilder();
 
@@ -43,41 +30,30 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
+        // 1) Registrar ConfigService
+        builder.Services.AddSingleton<IConfigService, ConfigService>();
 
-        // Cargar archivo de configuración "appsettings.json"
-        //using var stream = FileSystem
-        //    .OpenAppPackageFileAsync("appsettings.json")
-        //    .GetAwaiter()
-        //    .GetResult();
+        // 2) Named client “Odoo” con handler personalizado
+        builder.Services
+          .AddHttpClient("Odoo", (sp, client) =>
+          {
+              var cfg = sp.GetRequiredService<IConfigService>();
+              client.BaseAddress = new Uri($"{cfg.OdooUrl}:{cfg.OdooPort}/");
+              client.Timeout = TimeSpan.FromSeconds(30);
+              client.DefaultRequestHeaders
+                    .Accept
+                    .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+          })
+          .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+          {
+              CookieContainer = new CookieContainer(),
+              UseCookies = true,
+              ServerCertificateCustomValidationCallback =
+                  HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+          });
 
-        //// Añadir ese archivo a la configuración de la aplicación
-        //builder.Configuration.AddJsonStream(stream);
-        builder.Configuration
-               .AddJsonFile(destPath, optional: false, reloadOnChange: true);
-        // Enlazar sección "Odoo" del JSON a la clase OdooConfiguracion
-        builder.Services.Configure<OdooConfiguracion>(
-            builder.Configuration.GetSection("Odoo"));
-
-        // Configurar un HttpClient especializado para OdooService
-        builder.Services.AddHttpClient<OdooService>((sp, client) =>
-        {
-            var cfg = sp.GetRequiredService<IOptions<OdooConfiguracion>>().Value;
-            client.BaseAddress = new Uri(cfg.Url); // URL del servidor Odoo
-            client.Timeout = TimeSpan.FromSeconds(cfg.TimeoutSeconds); // Timeout configurable
-            client.DefaultRequestHeaders
-                  .Accept
-                  .Add(new MediaTypeWithQualityHeaderValue("application/json")); // Cabecera de tipo JSON
-        })
-        .ConfigurePrimaryHttpMessageHandler(() =>
-        {
-            return new HttpClientHandler
-            {
-                CookieContainer = new CookieContainer(), // Almacena cookies de sesión
-                UseCookies = true,
-                ServerCertificateCustomValidationCallback =
-                HttpClientHandler.DangerousAcceptAnyServerCertificateValidator // Permite certificados no válidos (solo en pruebas)
-            };
-        });
+        // 3) Registrar tu servicio, que pedirá siempre el cliente “Odoo”
+        builder.Services.AddTransient<OdooService>();
 
 
         // Servicios de negocio (inyección de dependencias)

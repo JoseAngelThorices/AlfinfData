@@ -7,44 +7,52 @@ namespace AlfinfData.Services.odoo
 {
     public class OdooService
     {
-        private readonly HttpClient _http; // Cliente HTTP inyectado
-        private readonly OdooConfiguracion _cfg; // Configuración con URL, credenciales, etc.
-        private bool _isAuthenticated;  // Indica si ya se ha iniciado sesión con Odoo
+        private readonly IHttpClientFactory _factory;
+        private readonly IConfigService _config;
+        private bool _isAuthenticated;
 
-        public OdooService(HttpClient http, IOptions<OdooConfiguracion> cfg)
+        public OdooService(IHttpClientFactory factory, IConfigService config)
         {
-            _http = http;
-            _cfg = cfg.Value;
+            _factory = factory;
+            _config = config;
+            _config.ConfigChanged += (_, __) => _isAuthenticated = false;
         }
+
+        private HttpClient Client => _factory.CreateClient("Odoo");
+
 
         // Método privado para asegurarse de que la sesión está autenticada
         private async Task EnsureAuthenticatedAsync()
         {
-            // Si ya está autenticado, salir
-            if (_isAuthenticated) return;
+            // 1) Si ya está autenticado, salir
+            if (_isAuthenticated)
+                return;
 
-            // Payload con estructura JSON para iniciar sesión en Odoo
+            // 2) Crea el HttpClient configurado
+            var http = Client;
+
+            // 3) Lee las credenciales cifradas
+            var (user, pass, nameDateBase) = await _config.GetCredentialsAsync();
+
+            // 4) Construye el payload usando user/pass
             var loginPayload = new
             {
                 jsonrpc = "2.0",
                 method = "call",
                 @params = new
                 {
-                    db = _cfg.Database, 
-                    login = _cfg.Username,
-                    password = _cfg.Password   
+                    db = nameDateBase, // o donde guardes el nombre de la base
+                    login = user,
+                    password = pass
                 },
                 id = 1
             };
 
-            // Hacemos POST a /web/session/authenticate para loguearnos
-            var resp = await _http.PostAsJsonAsync(
-                "/web/session/authenticate",
-                loginPayload
-            );
-            resp.EnsureSuccessStatusCode(); // Si hay error de red o credenciales, lanza excepción
+            // 5) Lanza la petición de autenticación
+            var resp = await http.PostAsJsonAsync("/web/session/authenticate", loginPayload);
+            resp.EnsureSuccessStatusCode();
 
-            // Si llegó aquí, la cookie de sesión ya fue guardada en el HttpClient
+            // 6) Marca como autenticado
             _isAuthenticated = true;
         }
 
@@ -58,7 +66,7 @@ namespace AlfinfData.Services.odoo
 
         {
             await EnsureAuthenticatedAsync();
-
+            var http = Client;
             // Construimos el payload con los datos que Odoo espera
             var payload = new
             {
@@ -75,7 +83,7 @@ namespace AlfinfData.Services.odoo
             };
 
             // ¡OJO! apuntamos al endpoint /web/dataset/call_kw
-            var resp = await _http.PostAsJsonAsync("/web/dataset/call_kw", payload);
+            var resp = await http.PostAsJsonAsync("/web/dataset/call_kw", payload);
 
             resp.EnsureSuccessStatusCode();
             var content = await resp.Content.ReadAsStringAsync();// Leemos el contenido de la respuesta como string
