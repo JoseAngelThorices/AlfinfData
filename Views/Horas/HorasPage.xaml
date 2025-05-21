@@ -25,7 +25,7 @@
                     FontSize="16"
                     HeightRequest="45"
                     Margin="5"
-                    HorizontalOptions="FillAndExpand"
+                    HorizontalOptions="Fill"
                     Grid.Column="0" />
         </Grid>
 
@@ -44,80 +44,77 @@
 
 
 
-        <Frame Grid.Row="2"
-               Grid.RowSpan="2"
-               CornerRadius="10"
-               BorderColor="#a0a0a0"
-               BackgroundColor="White"
-               VerticalOptions="FillAndExpand"
-               HorizontalOptions="FillAndExpand"
-               Padding="5"
-               Margin="5,0"
-               HasShadow="False">
+        <Border Grid.Row="2"
+                Grid.RowSpan="2"
+                Stroke="#a0a0a0"
+                BackgroundColor="White"
+                StrokeShape="RoundRectangle 10"
+                Padding="5"
+                Margin="5,0">
+            <Border.Content>
+                <CollectionView ItemsSource="{Binding JornalerosConHoras}"
+                        SelectionMode="None"
+                        x:Name="ListaHoras">
 
-            <CollectionView ItemsSource="{Binding JornalerosConHoras}"
-                SelectionMode="None"
-                x:Name="ListaHoras">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="0.5*,2.5*,1.2*,1.2*,1.2*,1.1*"
+                          Padding="0"
+                          HeightRequest="45"
+                          VerticalOptions="Center">
 
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid ColumnDefinitions="0.5*,2.5*,1.2*,1.2*,1.2*,1.1*"
-                      Padding="0"
-                      HeightRequest="45"
-                      VerticalOptions="Center">
+                                <!-- N.L. -->
+                                <Label Text="{Binding IdJornalero}"
+                               Grid.Column="0"
+                               FontSize="14"
+                               TextColor="Black"
+                               VerticalOptions="Center"
+                               HorizontalTextAlignment="Center"/>
 
-                            <!-- N.L. -->
-                            <Label Text="{Binding IdJornalero}"
-                           Grid.Column="0"
-                           FontSize="14"
-                           TextColor="Black"
-                           VerticalOptions="Center"
-                           HorizontalTextAlignment="Center"/>
+                                <!-- Nombre -->
+                                <Label Text="{Binding Nombre}"
+                               Grid.Column="1"
+                               FontSize="14"
+                               TextColor="Black"
+                               VerticalOptions="Center"
+                               HorizontalTextAlignment="Start"
+                               Margin="5,0"/>
 
-                            <!-- Nombre -->
-                            <Label Text="{Binding Nombre}"
-                           Grid.Column="1"
-                           FontSize="14"
-                           TextColor="Black"
-                           VerticalOptions="Center"
-                           HorizontalTextAlignment="Start"
-                           Margin="5,0"/>
+                                <!-- HN -->
+                                <Entry Text="{Binding HnTexto}"
+                               Grid.Column="2"
+                               FontSize="14"
+                               BackgroundColor="Transparent"
+                               HorizontalTextAlignment="Center"
+                               VerticalOptions="Center"/>
 
-                            <!-- HN -->
-                            <Entry Text="{Binding HnTexto}"
-                           Grid.Column="2"
-                           FontSize="14"
-                           BackgroundColor="Transparent"
-                           HorizontalTextAlignment="Center"
-                           VerticalOptions="Center"/>
+                                <!-- HE1 -->
+                                <Entry Text="{Binding He1Texto}"
+                               Grid.Column="3"
+                               FontSize="14"
+                               BackgroundColor="Transparent"
+                               HorizontalTextAlignment="Center"
+                               VerticalOptions="Center"/>
 
-                            <!-- HE1 -->
-                            <Entry Text="{Binding He1Texto}"
-                           Grid.Column="3"
-                           FontSize="14"
-                           BackgroundColor="Transparent"
-                           HorizontalTextAlignment="Center"
-                           VerticalOptions="Center"/>
+                                <!-- HE2 -->
+                                <Entry Text="{Binding He2Texto}"
+                               Grid.Column="4"
+                               FontSize="14"
+                               BackgroundColor="Transparent"
+                               HorizontalTextAlignment="Center"
+                               VerticalOptions="Center"/>
 
-                            <!-- HE2 -->
-                            <Entry Text="{Binding He2Texto}"
-                           Grid.Column="4"
-                           FontSize="14"
-                           BackgroundColor="Transparent"
-                           HorizontalTextAlignment="Center"
-                           VerticalOptions="Center"/>
-
-                            <!-- Falta -->
-                            <Switch IsToggled="{Binding Falta}"
-                            Grid.Column="5"
-                            HorizontalOptions="Center"
-                            VerticalOptions="Center"/>
-                        </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </Frame>
-
+                                <!-- Falta -->
+                                <Switch IsToggled="{Binding Falta}"
+                                Grid.Column="5"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Border.Content>
+        </Border>
 
     </Grid>
 </ContentPage>

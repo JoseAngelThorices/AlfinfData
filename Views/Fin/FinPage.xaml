@@ -25,7 +25,7 @@
                 FontAttributes="Bold"
                 CornerRadius="10"
                 HeightRequest="50"
-                HorizontalOptions="FillAndExpand"
+                HorizontalOptions="Fill"
                 Grid.Row="0" />
 
         <!-- Fecha Desde -->
@@ -95,14 +95,14 @@
                 Margin="5,0"
                 Grid.Row="4"
                 Grid.RowSpan="3"
-                VerticalOptions="FillAndExpand"
-                HorizontalOptions="FillAndExpand">
+                VerticalOptions="Fill"
+                HorizontalOptions="Fill">
             <ScrollView>
                 <Label Text="{Binding ResultadoTexto}"
                        FontSize="16"
                        TextColor="Black"
-                       VerticalOptions="FillAndExpand"
-                       HorizontalOptions="FillAndExpand" />
+                       VerticalOptions="Fill"
+                       HorizontalOptions="Fill" />
             </ScrollView>
         </Border>
     </Grid>
