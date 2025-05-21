@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="AlfinfData.Views.Configuracion.ConfiguracionPage"
-             xmlns:local="clr-namespace:AlfinfData.Views.Configuracion"
-             x:DataType="local:ConfiguracionPage"
-             BackgroundColor="White"
-             Title="Configuración"
-             Shell.NavBarIsVisible="False">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:AlfinfData.ViewModels"       
+    x:Class="AlfinfData.Views.Configuracion.ConfiguracionPage"
+    x:DataType="vm:ConfiguracionViewModel"
+    BackgroundColor="White"
+    Title="Configuración"
+    Shell.NavBarIsVisible="False">
 
 
     <ScrollView>
@@ -36,13 +36,17 @@
                                 Padding="0"
                                 HeightRequest="40">
                             <Grid>
-                                <Label x:Name="UrlLabel"
-                                       Text="{Binding OdooUrl}"
-                                       Margin="10,0"
-                                       VerticalOptions="Center"
-                                       TextColor="Gray" />
-                                <Button BackgroundColor="Transparent"
-                                        Command="{Binding UrlCommand}"/>
+                                <Button
+                                    Text="IP del servidor HTTP"
+                                    Command="{Binding EditarUrlCommand}"
+                                    VerticalOptions="Center"
+                                    BackgroundColor="Transparent"
+                                    TextColor="Gray"
+                                    BorderColor="LightGray"
+                                    BorderWidth="1"
+                                    CornerRadius="5"
+                                    HeightRequest="40"
+                                    Padding="10,0" />       
                             </Grid>
                         </Border>
                     </VerticalStackLayout>
@@ -60,13 +64,17 @@
                                 Padding="0"
                                 HeightRequest="40">
                             <Grid>
-                                <Label x:Name="PortLabel" 
-                                       Text="Puerto del servidor"
-                                       Margin="10,0"
-                                       VerticalOptions="Center"
-                                       TextColor="Gray"/>
-                                <Button BackgroundColor="Transparent"
-                                        Command="{Binding PortCommand}"/>
+                                <Button
+                                    Text="Puerto del servidor"
+                                    Command="{Binding EditarPuertoCommand}"
+                                    VerticalOptions="Center"
+                                    BackgroundColor="Transparent"
+                                    TextColor="Gray"
+                                    BorderColor="LightGray"
+                                    BorderWidth="1"
+                                    CornerRadius="5"
+                                    HeightRequest="40"
+                                    Padding="10,0" />
                             </Grid>
                         </Border>
                     </VerticalStackLayout>

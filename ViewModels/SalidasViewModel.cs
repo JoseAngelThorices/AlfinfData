@@ -177,8 +177,9 @@ namespace AlfinfData.ViewModels
                     InstanteFichaje = DateTime.Now
                 };
 
-                await _fichajeRepo.CrearFichajesJornalerosAsync(nuevoFichaje);
-                await _jornaleroRepo.SetActiveAsync(jornalero.IdJornalero, false);
+                await _fichajeRepo.CrearFichajesJornalerosAsync(nuevoFichaje); // no importa si devuelve false
+                await _jornaleroRepo.SetActiveAsync(jornalero.IdJornalero, false); // desactiva al fichar
+
 
                 JornalerosE.Add(new JornaleroEntrada
                 {

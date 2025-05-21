@@ -78,19 +78,18 @@ namespace AlfinfData.ViewModels
                         Preferences.Set("Inicio_Titulo", Titulo);
                         Preferences.Set("Inicio_Fecha", DateTime.Today.ToString("yyyy-MM-dd"));
 
-                        var nuevoDia = new Fichaje
-                        {
-                            IdJornalero = 999999,
-                            HoraEficaz = fechaHora,
-                            TipoFichaje = "Entrada",
-                            InstanteFichaje = DateTime.Today
-                        };
+                            var nuevoDia = new Fichaje
+                            {
+                                IdJornalero = 999999,
+                                HoraEficaz = fechaHora,
+                                TipoFichaje = "Entrada",
+                                InstanteFichaje = DateTime.Today
+                            };
+                            await _fichajeRepository.BorrarDatosAsync();
+                            await _fichajeRepository.CrearFichajeNuevoDiaAsync(nuevoDia);
+                            await Shell.Current.DisplayAlert("Nuevo Día", $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}", "OK");  
+                    }     
 
-                        await _fichajeRepository.BorrarDatosAsync();
-                        await _fichajeRepository.CrearFichajeNuevoDiaAsync(nuevoDia);
-
-                        await Shell.Current.DisplayAlert("Nuevo Día", $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}", "OK");
-                    }
                 }
                 else if (!string.IsNullOrWhiteSpace(password))
                 {
