@@ -1,7 +1,6 @@
 ﻿using AlfinfData;
 using AlfinfData.Services.odoo;
 using AlfinfData.Services.BdLocal;
-using AlfinfData.Settings;
 using AlfinfData.ViewModels;
 using AlfinfData.Views.Inicio;
 using CommunityToolkit.Maui;
