@@ -43,10 +43,10 @@ namespace AlfinfData.ViewModels
             _cuadrillaRepo = cuadrillaRepo;
         }
 
-        // === LECTURA NFC ===
+        // LECTURA NFC
 
         [RelayCommand]
-        private async Task NfcTarjeta()
+        private async Task NfcTarjetaAsync()
         {
             if (!CrossNFC.Current.IsAvailable)
             {
@@ -103,7 +103,9 @@ namespace AlfinfData.ViewModels
         }
 
         [RelayCommand]
+
         private async Task CancelarAlta()
+
         {
             try
             {
@@ -134,10 +136,12 @@ namespace AlfinfData.ViewModels
             }
         }
 
-        // === ENTRADA DE DATOS DESDE ODOO ===
+        // ENTRADA DE DATOS DESDE ODOO 
 
         [RelayCommand]
+
         private async Task Entrada() => await CargarEmpleadosAsync();
+
 
         private async Task CargarEmpleadosAsync()
         {
@@ -171,10 +175,11 @@ namespace AlfinfData.ViewModels
             }
         }
 
-        // === DESCARGA DE CUADRILLAS ===
+        // DESCARGA DE CUADRILLAS
 
         [RelayCommand]
         private async Task Cuadrilla() => await CargarCuadrillaAsync();
+
 
         private async Task CargarCuadrillaAsync()
         {
