@@ -39,9 +39,12 @@ namespace AlfinfData.Services.odoo
                 method = "call",
                 @params = new
                 {
-                    db = nameDateBase, // o donde guardes el nombre de la base
-                    login = user,
-                    password = pass
+                    db = "alfinfdoomaui", // o donde guardes el nombre de la base
+                    login = "admin",
+                    password = "20@lfinF20"
+                    //db = nameDateBase, // o donde guardes el nombre de la base
+                    //login = user,
+                    //password = pass
                 },
                 id = 1
             };
