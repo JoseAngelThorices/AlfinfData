@@ -22,11 +22,10 @@ namespace AlfinfData.Views.Inicio
             await viewModel.CargarCuadrillasAsync();
 
             // Cargar NFC y datos si está disponible
-            if (await viewModel.EntradaNFCAsync())
-            {
-                await viewModel.CargarHoraAsync();
-                await viewModel.CargarJornalerosSegunCuadrillaAsync(); // Refrescar trabajadores
-            }
+            await viewModel.EntradaNFCAsync();
+            await viewModel.CargarHoraAsync();
+            await viewModel.CargarJornalerosSegunCuadrillaAsync(); // Refrescar trabajadores
+            
         }
 
         protected override async void OnDisappearing()

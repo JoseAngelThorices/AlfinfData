@@ -20,7 +20,7 @@ namespace AlfinfData.Views.Configuracion
             BindingContext = _viewModel;
             
         }
-        protected async override void OnAppearing()
+        protected override void OnAppearing()
         {
             base.OnAppearing();
 

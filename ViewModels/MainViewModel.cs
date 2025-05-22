@@ -8,12 +8,21 @@ using AlfinfData.Views.Salidas;
 using AlfinfData.Views.Seleccion;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using AlfinfData.ViewModels;
 
 
 namespace AlfinfData.ViewModels
 {
     public partial class MainViewModel : ObservableObject
     {
+        private readonly SalidasViewModel vm;
+
+        public MainViewModel(SalidasViewModel vmo)
+        {
+ 
+            vm = vmo;
+        }
+
         [RelayCommand]
         private async Task NavigateToInicio() => await Shell.Current.GoToAsync(nameof(InicioPage));
 
@@ -21,7 +30,13 @@ namespace AlfinfData.ViewModels
         private async Task NavigateToSeleccion() => await Shell.Current.GoToAsync(nameof(SeleccionPage));
 
         [RelayCommand]
-        private async Task NavigateToSalidas() => await Shell.Current.GoToAsync(nameof(SalidasPage));
+        private async Task NavigateToSalidas()
+        {
+            if (await vm.SalidaNFCAsync())
+            {
+                await Shell.Current.GoToAsync(nameof(SalidasPage));
+            }
+        }
 
         [RelayCommand]
         private async Task NavigateToHoras() => await Shell.Current.GoToAsync(nameof(HorasPage));

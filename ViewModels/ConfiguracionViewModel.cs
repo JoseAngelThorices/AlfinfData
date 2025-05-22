@@ -19,11 +19,11 @@ namespace AlfinfData.ViewModels
 
         }
 
-        [ObservableProperty] private string odooUrl;
-        [ObservableProperty] private string port;
-        [ObservableProperty] private string username;
-        [ObservableProperty] private string password;
-        [ObservableProperty] private string databaseName;
+        private string? OdooUrl;
+        private string? Port;
+        private string? Username;
+        private string? Password;
+        private string? DatabaseName;
 
         private async Task InitializeAsync()
         {
