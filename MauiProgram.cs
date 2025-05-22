@@ -6,7 +6,6 @@ using AlfinfData.Views.Inicio;
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
 using System.Net;
 
@@ -14,13 +13,9 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
-
-        
-
         var builder = MauiApp.CreateBuilder();
 
-        // Configura la aplicación MAUI
-        
+        // Configura la aplicación MAUI    
         builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit() // Activa el CommunityToolkit
@@ -37,7 +32,9 @@ public static class MauiProgram
           .AddHttpClient("Odoo", (sp, client) =>
           {
               var cfg = sp.GetRequiredService<IConfigService>();
-              client.BaseAddress = new Uri($"{cfg.OdooUrl}:{cfg.OdooPort}/");
+          
+              //client.BaseAddress = new Uri($"{cfg.OdooUrl}:{cfg.OdooPort}/");
+              client.BaseAddress = new Uri($"http://149.202.47.188:8016/");
               client.Timeout = TimeSpan.FromSeconds(30);
               client.DefaultRequestHeaders
                     .Accept
@@ -68,6 +65,7 @@ public static class MauiProgram
         builder.Services.AddTransient<FinViewModel>();
         builder.Services.AddTransient<HorasViewModel>();
         builder.Services.AddTransient<ConfiguracionViewModel>();
+        builder.Services.AddTransient<MainViewModel>();
 
 
         builder.Services.AddTransient<DescargasPage>();

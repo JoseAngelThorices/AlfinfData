@@ -20,7 +20,7 @@ public partial class FinViewModel : ObservableObject
     private DateTime fechaHasta = DateTime.Today;
 
     [ObservableProperty]
-    private string resultadoTexto;
+    private string resultadoTexto = string.Empty;
 
     public ObservableCollection<RegistroHistorico> Historico { get; } = new();
 

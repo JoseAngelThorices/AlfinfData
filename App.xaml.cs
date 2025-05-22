@@ -1,20 +1,23 @@
 ﻿using AlfinfData.Services.BdLocal;
-using Microsoft.Maui.Storage;
-using AlfinfData.Models.SQLITE;
-
 
 namespace AlfinfData
 {
     public partial class App : Application
     {
-
         public App(DatabaseService dbService)
         {
             InitializeComponent();
-            Application.Current.UserAppTheme = AppTheme.Light;
 
-            RegistrarAñoInstalacion(); // Guardamos el año si es la primera vez
+            // Solución para el warning de nulabilidad al acceder a Application.Current
+            if (Application.Current != null)
+            {
+                Application.Current.UserAppTheme = AppTheme.Light;
+            }
 
+            // Guarda el año si es la primera ejecución
+            RegistrarAñoInstalacion();
+
+            // Aquí podrías usar el repositorio fichajeRepo más adelante si lo necesitas
             var fichajeRepo = new FichajeRepository(dbService);
         }
 
@@ -26,15 +29,10 @@ namespace AlfinfData
             }
         }
 
-       
-
-
+        // Este método define que la app usará AppShell como ventana raíz
         protected override Window CreateWindow(IActivationState? activationState)
         {
             return new Window(new AppShell());
         }
-
-        
-
     }
 }

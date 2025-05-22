@@ -7,17 +7,17 @@ namespace AlfinfData.Views
     public partial class MainPage : ContentPage
     {
         private readonly OdooService _odoo;
-        public MainPage(OdooService odoo)
+        private readonly MainViewModel _viewModel;
+        public MainPage(OdooService odoo, MainViewModel viewModel)
         {
             InitializeComponent();
             _odoo = odoo;
-            BindingContext = new MainViewModel();
+            _viewModel = viewModel;
+            BindingContext = _viewModel;
         }
-        protected override async void OnAppearing()
+        protected override void OnAppearing()
         {
-            base.OnAppearing();
-
-           
+            base.OnAppearing();        
         }
     }
 }

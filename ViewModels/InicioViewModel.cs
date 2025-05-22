@@ -5,22 +5,22 @@ using AlfinfData.Services.BdLocal;
 using AlfinfData.Models.SQLITE;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Maui.Storage;
 
 namespace AlfinfData.ViewModels
 {
     public partial class InicioViewModel : ObservableObject
     {
-        private string _titulo;
+        private string _titulo = string.Empty;
         private readonly FichajeRepository _fichajeRepository;
-
+        private readonly EntradaViewModel vm;
         public string FechaSistema => $"F.T.: {DateTime.Now:dd-MM-yyyy}";
 
-        public InicioViewModel(FichajeRepository fichajeRepository)
+        public InicioViewModel(FichajeRepository fichajeRepository, EntradaViewModel vmo)
         {
             Titulo = "MENÚ INICIO";
             _fichajeRepository = fichajeRepository;
             CargarTituloInicio(); // Carga título si ya existe para hoy
+            vm = vmo;
         }
 
         public string Titulo
@@ -114,8 +114,15 @@ namespace AlfinfData.ViewModels
                     await Shell.Current.DisplayAlert("Importante", "Inicie un nuevo día primero.", "OK");
                     return;
                 }
-
-                await Shell.Current.GoToAsync(nameof(AlfinfData.Views.Inicio.EntradaPage));
+                if (await vm.ComprobacionNFC())
+                {
+                    await Shell.Current.GoToAsync(nameof(AlfinfData.Views.Inicio.EntradaPage));
+                } else
+                {
+                    return;
+                }
+                    
+                
             }
             catch (Exception ex)
             {

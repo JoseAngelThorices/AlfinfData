@@ -110,27 +110,26 @@ namespace AlfinfData.ViewModels
                 HoraTexto = "—";
             }
         }
-
-        public async Task<bool> EntradaNFCAsync()
+        public async Task<bool> ComprobacionNFC()
         {
             if (!CrossNFC.Current.IsAvailable)
             {
-                await Shell.Current.GoToAsync("..");
                 await Shell.Current.DisplayAlert("NFC", "Este dispositivo no tiene NFC.", "OK");
                 return false;
             }
 
             if (!CrossNFC.Current.IsEnabled)
             {
-                await Shell.Current.GoToAsync("..");
                 await Shell.Current.DisplayAlert("NFC", "Activa NFC en los ajustes.", "OK");
                 return false;
             }
-
+            return true;
+        }
+        public async Task EntradaNFCAsync()
+        {
             CrossNFC.Current.OnMessageReceived -= OnTagReceived;
             CrossNFC.Current.OnMessageReceived += OnTagReceived;
             CrossNFC.Current.StartListening();
-            return true;
         }
 
         async void OnTagReceived(ITagInfo tagInfo)

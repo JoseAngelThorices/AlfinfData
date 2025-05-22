@@ -235,5 +235,27 @@ namespace AlfinfData.Services.BdLocal
                 .OrderByDescending(f => f.HoraEficaz)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<List<Fichaje>> GetUltimosFichajesDelDiaAsync()
+        {
+            var inicioHoy = DateTime.Today;
+            var finHoy = inicioHoy.AddDays(1);
+
+            // Usamos HoraEficaz porque es de tipo DateTime y se puede filtrar en SQLite
+            var fichajesHoy = await _db.Table<Fichaje>()
+                .Where(f => f.HoraEficaz >= inicioHoy && f.HoraEficaz < finHoy)
+                .ToListAsync();
+
+            // Luego agrupamos por jornalero y nos quedamos con el último por InstanteFichaje
+            var ultimos = fichajesHoy
+                .GroupBy(f => f.IdJornalero)
+                .Select(g => g.OrderByDescending(f => f.InstanteFichaje).First())
+                .ToList();
+
+            return ultimos;
+        }
+
+
+
     }
 }

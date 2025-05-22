@@ -12,19 +12,16 @@ namespace AlfinfData.ViewModels
 {
     public partial class DescargasViewModel : ObservableObject
     {
-        // Dependencias y Repositorios
         private readonly IEmpleadosService _empleadosService;
         private readonly ICuadrillasService _cuadrillaService;
         private readonly ITarjetaNFCServices _tarjetaNFCService;
         private readonly JornaleroRepository _jornaleroRepo;
         private readonly CuadrillaRepository _cuadrillaRepo;
 
-        // Datos internos
         private readonly List<int> _rangoValores = new();
         private readonly List<string> _hexIds = new();
         private int _startValue;
 
-        // Propiedades públicas (UI)
         public ObservableCollection<Empleado> Empleados { get; } = new();
         public ObservableCollection<CuadrillaOdoo> Cuadrillas { get; } = new();
         public ObservableCollection<TarjetaNFC> TagsLeidas { get; } = new();
@@ -106,7 +103,9 @@ namespace AlfinfData.ViewModels
         }
 
         [RelayCommand]
-        private async Task CancelarAltaAsync()
+
+        private async Task CancelarAlta()
+
         {
             try
             {
@@ -140,7 +139,9 @@ namespace AlfinfData.ViewModels
         // ENTRADA DE DATOS DESDE ODOO 
 
         [RelayCommand]
-        private async Task EntradaAsync() => await CargarEmpleadosAsync();
+
+        private async Task Entrada() => await CargarEmpleadosAsync();
+
 
         private async Task CargarEmpleadosAsync()
         {
@@ -177,7 +178,8 @@ namespace AlfinfData.ViewModels
         // DESCARGA DE CUADRILLAS
 
         [RelayCommand]
-        private async Task CuadrillaAsync() => await CargarCuadrillaAsync();
+        private async Task Cuadrilla() => await CargarCuadrillaAsync();
+
 
         private async Task CargarCuadrillaAsync()
         {
