@@ -36,7 +36,17 @@ namespace AlfinfData.Services.BdLocal
                       .Where(p => p.Timestamp >= desde && p.Timestamp <= hasta)
                       .ToListAsync();
         }
-
+        public Task<List<JornaleroConCajas>> GetJornalerosConCajasActivosAsync()
+        {
+            return _db.QueryAsync<JornaleroConCajas>(
+                @"SELECT j.IdJornalero, j.IdCuadrilla, j.Nombre, 
+                 IFNULL(SUM(p.Cajas), 0) AS TotalCajas
+                 FROM Jornalero j
+                 LEFT JOIN Produccion p ON j.IdJornalero = p.IdJornalero
+                 WHERE j.Activo = 1
+                 GROUP BY j.IdJornalero, j.IdCuadrilla, j.Nombre
+                 ORDER BY j.Nombre");
+        }
 
         // Obtener lista combinada de jornaleros con sus cajas totales
         public Task<List<JornaleroConCajas>> GetJornalerosConCajasAsync()
@@ -46,7 +56,7 @@ namespace AlfinfData.Services.BdLocal
                  IFNULL(SUM(p.Cajas), 0) AS TotalCajas
                  FROM Jornalero j
                  LEFT JOIN Produccion p ON j.IdJornalero = p.IdJornalero
-                 WHERE j.Activo = 1
+                 WHERE j.Activo = 0
                  GROUP BY j.IdJornalero, j.IdCuadrilla, j.Nombre
                  ORDER BY j.Nombre");
         }
