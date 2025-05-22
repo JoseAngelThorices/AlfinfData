@@ -28,7 +28,7 @@
                 FontSize="16"
                 HeightRequest="45"
                 Margin="5"
-                HorizontalOptions="FillAndExpand"
+                HorizontalOptions="Fill"
                 Grid.Column="0" />
         </Grid>
 

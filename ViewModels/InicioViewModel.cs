@@ -11,7 +11,7 @@ namespace AlfinfData.ViewModels
 {
     public partial class InicioViewModel : ObservableObject
     {
-        private string _titulo;
+        private string _titulo = string.Empty;
         private readonly FichajeRepository _fichajeRepository;
 
         public string FechaSistema => $"F.T.: {DateTime.Now:dd-MM-yyyy}";
@@ -20,9 +20,7 @@ namespace AlfinfData.ViewModels
         {
             Titulo = "MENÚ INICIO";
             _fichajeRepository = fichajeRepository;
-
-            // Cargar el título desde Preferences al crear el ViewModel
-            CargarTituloInicio();
+            CargarTituloInicio(); // Carga título si ya existe para hoy
         }
 
         public string Titulo
@@ -37,7 +35,7 @@ namespace AlfinfData.ViewModels
         {
             try
             {
-                // 1) Pedimos contraseña
+                // 1) Solicita contraseña al usuario
                 string password = await Shell.Current.DisplayPromptAsync(
                     "Contraseña requerida",
                     "Introduce la contraseña para registrar un nuevo día:",
@@ -47,58 +45,59 @@ namespace AlfinfData.ViewModels
 
                 if (password == "123")
                 {
-                    // 2) Verificamos si ya hay un día creado
-                    bool resultadoNuevoDia = await _fichajeRepository.BuscarFichajeNuevoDia();
+                    // 2) Verifica si ya hay un fichaje de nuevo día
+                    bool yaExiste = await _fichajeRepository.BuscarFichajeNuevoDia();
 
-                    if (resultadoNuevoDia)
+                    if (yaExiste)
                     {
-                        // 3) Confirmamos si desea borrar
+                        // 3) Pregunta si desea borrar los datos actuales
                         bool quiereBorrar = await Shell.Current.DisplayAlert(
                             "Nuevo Día",
-                            "Ya hay un nuevo día creado. Si quieres seguir creando un nuevo día, se borrará todo para empezar de nuevo. ¿Estás de acuerdo?",
+                            "Ya hay un nuevo día creado. Si continúas, se borrarán todos los datos anteriores. ¿Deseas continuar?",
                             "Aceptar", "Cancelar");
 
                         if (!quiereBorrar)
                         {
-                            await Shell.Current.DisplayAlert("Operación cancelada", "No se ha borrado nada.", "OK");
+                            await Shell.Current.DisplayAlert("Cancelado", "No se ha borrado nada.", "OK");
                             return;
                         }
                     }
 
-                    // 4) Mostrar popup para seleccionar hora
+                    // 4) Muestra popup para seleccionar la hora de inicio
                     var popup = new HoraPopup();
                     var resultado = await Shell.Current.ShowPopupAsync(popup);
 
                     if (resultado is TimeSpan horaSeleccionada)
                     {
-                        var fechaHoy = DateTime.Today;
-                        var fechaHora = fechaHoy.Add(horaSeleccionada);
+                        var fechaHora = DateTime.Today.Add(horaSeleccionada);
 
+                        // Guarda título y fecha en Preferences
                         Titulo = $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}";
                         Preferences.Set("Inicio_Titulo", Titulo);
                         Preferences.Set("Inicio_Fecha", DateTime.Today.ToString("yyyy-MM-dd"));
 
-                            var nuevoDia = new Fichaje
-                            {
-                                IdJornalero = 999999,
-                                HoraEficaz = fechaHora,
-                                TipoFichaje = "Entrada",
-                                InstanteFichaje = DateTime.Today
-                            };
-                            await _fichajeRepository.BorrarDatosAsync();
-                            await _fichajeRepository.CrearFichajeNuevoDiaAsync(nuevoDia);
-                            await Shell.Current.DisplayAlert("Nuevo Día", $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}", "OK");  
-                    }     
+                        var nuevoFichaje = new Fichaje
+                        {
+                            IdJornalero = 999999,
+                            HoraEficaz = fechaHora,
+                            TipoFichaje = "Entrada",
+                            InstanteFichaje = DateTime.Today
+                        };
 
+                        await _fichajeRepository.BorrarDatosAsync();
+                        await _fichajeRepository.CrearFichajeNuevoDiaAsync(nuevoFichaje);
+
+                        await Shell.Current.DisplayAlert("Nuevo Día", $"Inicio: {fechaHora:dd/MM/yyyy HH:mm}", "OK");
+                    }
                 }
                 else if (!string.IsNullOrWhiteSpace(password))
                 {
                     await Shell.Current.DisplayAlert("Error", "Contraseña incorrecta.", "OK");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                await Shell.Current.DisplayAlert("Error", "No se pudo registrar el nuevo día", "OK");
+                await Shell.Current.DisplayAlert("Error", "No se pudo registrar el nuevo día.", "OK");
             }
         }
 
@@ -108,11 +107,11 @@ namespace AlfinfData.ViewModels
         {
             try
             {
-                bool resultadoNuevoDia = await _fichajeRepository.BuscarFichajeNuevoDia();
+                bool nuevoDiaExiste = await _fichajeRepository.BuscarFichajeNuevoDia();
 
-                if (!resultadoNuevoDia)
+                if (!nuevoDiaExiste)
                 {
-                    await Shell.Current.DisplayAlert("Importante", "Inicie un nuevo Día primero.", "OK");
+                    await Shell.Current.DisplayAlert("Importante", "Inicie un nuevo día primero.", "OK");
                     return;
                 }
 
@@ -120,7 +119,7 @@ namespace AlfinfData.ViewModels
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error al navegar: {ex.Message}");
+                Debug.WriteLine($"Error al navegar a Entrada: {ex.Message}");
                 await Shell.Current.DisplayAlert("Error", "No se pudo abrir Entrada", "OK");
             }
         }
@@ -130,18 +129,17 @@ namespace AlfinfData.ViewModels
         private async Task DescargasAsync()
         {
             try
-
             {
                 await Shell.Current.GoToAsync(nameof(AlfinfData.Views.Inicio.DescargasPage));
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error al navegar: {ex.Message}");
+                Debug.WriteLine($"Error al navegar a Descargas: {ex.Message}");
                 await Shell.Current.DisplayAlert("Error", "No se pudo abrir Descargas", "OK");
             }
         }
 
-        // CARGA EL TÍTULO GUARDADO SI EL DÍA ES HOY
+        // Recupera el título si la fecha guardada es la de hoy
         public void CargarTituloInicio()
         {
             string fechaGuardada = Preferences.Get("Inicio_Fecha", "");

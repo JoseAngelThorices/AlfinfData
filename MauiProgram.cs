@@ -69,7 +69,7 @@ public static class MauiProgram
         builder.Services.AddTransient<FinViewModel>();
         builder.Services.AddTransient<HorasViewModel>();
         builder.Services.AddTransient<ConfiguracionViewModel>();
-        
+
 
         builder.Services.AddTransient<DescargasPage>();
         builder.Services.AddTransient<InicioViewModel>();
@@ -86,6 +86,7 @@ public static class MauiProgram
         builder.Services.AddTransient<FichajeRepository>();
         builder.Services.AddTransient<ProduccionRepository>();
         builder.Services.AddTransient<HorasRepository>();
+        builder.Services.AddTransient<HistoricoRepository>();
 
 #if DEBUG
         // Activar logging en modo depuración

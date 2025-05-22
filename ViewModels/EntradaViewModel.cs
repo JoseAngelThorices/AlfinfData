@@ -13,6 +13,7 @@ namespace AlfinfData.ViewModels
     {
         private readonly FichajeRepository _fichajeRepo;
         private readonly JornaleroRepository _jornaleroRepo;
+        private readonly CuadrillaRepository _cuadrillaRepo;
 
         public ObservableCollection<JornaleroEntrada> JornalerosE { get; set; } = new();
         public ObservableCollection<Cuadrilla> Cuadrillas { get; set; } = new();
@@ -23,18 +24,21 @@ namespace AlfinfData.ViewModels
         [ObservableProperty]
         private Cuadrilla? _cuadrillaSeleccionada;
 
-        public EntradaViewModel(FichajeRepository fichajeRepo, JornaleroRepository jornaleroRepo)
+        public EntradaViewModel(
+            FichajeRepository fichajeRepo,
+            JornaleroRepository jornaleroRepo,
+            CuadrillaRepository cuadrillaRepo)
         {
             _fichajeRepo = fichajeRepo;
             _jornaleroRepo = jornaleroRepo;
+            _cuadrillaRepo = cuadrillaRepo;
         }
 
         public async Task CargarCuadrillasAsync()
         {
-            var cuadrillasBD = await _jornaleroRepo.GetCuadrillasConJornalerosAsync();
+            var cuadrillasBD = await _cuadrillaRepo.GetAllAsync(); // ✅ muestra todas las cuadrillas
             Cuadrillas.Clear();
 
-            // Insertamos "TODOS" como una cuadrilla falsa con ID 0
             Cuadrillas.Add(new Cuadrilla { IdCuadrilla = 0, Descripcion = "TODOS" });
 
             foreach (var c in cuadrillasBD)
@@ -47,15 +51,14 @@ namespace AlfinfData.ViewModels
         {
             _ = CargarJornalerosSegunCuadrillaAsync();
         }
-        
+
         public async Task CargarJornalerosSegunCuadrillaAsync()
         {
-            if (CuadrillaSeleccionada == null)
-                return;
+            if (CuadrillaSeleccionada == null) return;
 
             List<Jornalero> lista;
 
-            if (CuadrillaSeleccionada.IdCuadrilla == 0) // TODOS
+            if (CuadrillaSeleccionada.IdCuadrilla == 0)
                 lista = await _jornaleroRepo.GetJornalerosActivosAsync();
             else
                 lista = await _jornaleroRepo.GetJornalerosActivosPorCuadrillaAsync(CuadrillaSeleccionada.IdCuadrilla);
