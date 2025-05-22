@@ -1,13 +1,11 @@
 ﻿using AlfinfData;
 using AlfinfData.Services.odoo;
 using AlfinfData.Services.BdLocal;
-using AlfinfData.Settings;
 using AlfinfData.ViewModels;
 using AlfinfData.Views.Inicio;
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
 using System.Net;
 
@@ -15,13 +13,9 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
-
-        
-
         var builder = MauiApp.CreateBuilder();
 
-        // Configura la aplicación MAUI
-        
+        // Configura la aplicación MAUI    
         builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit() // Activa el CommunityToolkit
@@ -69,6 +63,7 @@ public static class MauiProgram
         builder.Services.AddTransient<FinViewModel>();
         builder.Services.AddTransient<HorasViewModel>();
         builder.Services.AddTransient<ConfiguracionViewModel>();
+        builder.Services.AddTransient<MainViewModel>();
 
 
         builder.Services.AddTransient<DescargasPage>();
