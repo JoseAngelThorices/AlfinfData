@@ -123,10 +123,10 @@ namespace AlfinfData
 
         private async void OnAbrirConfiguracionClicked(object sender, EventArgs e)
         {
-            // Obtener la página activa
-            var page = Application.Current.Windows.FirstOrDefault()?.Page;
+            // Validación segura contra null
+            var page = Application.Current?.Windows.FirstOrDefault()?.Page;
 
-            if (page == null)
+            if (page is null)
                 return;
 
             // Mostrar el prompt desde la página activa
@@ -148,6 +148,7 @@ namespace AlfinfData
                 await page.DisplayAlert("Acceso denegado", "Contraseña incorrecta.", "OK");
             }
         }
+
 
 
     }
