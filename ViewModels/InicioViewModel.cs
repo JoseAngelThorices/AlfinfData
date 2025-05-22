@@ -11,7 +11,7 @@ namespace AlfinfData.ViewModels
 {
     public partial class InicioViewModel : ObservableObject
     {
-        private string _titulo;
+        private string _titulo = string.Empty;
         private readonly FichajeRepository _fichajeRepository;
 
         public string FechaSistema => $"F.T.: {DateTime.Now:dd-MM-yyyy}";
