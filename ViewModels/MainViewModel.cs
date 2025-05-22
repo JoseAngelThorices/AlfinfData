@@ -32,7 +32,7 @@ namespace AlfinfData.ViewModels
         [RelayCommand]
         private async Task NavigateToSalidas()
         {
-            if (await vm.SalidaNFCAsync())
+            if (await vm.ComprobacionNFCAsync())
             {
                 await Shell.Current.GoToAsync(nameof(SalidasPage));
             }

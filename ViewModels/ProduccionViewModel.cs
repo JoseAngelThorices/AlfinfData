@@ -58,7 +58,7 @@ namespace AlfinfData.ViewModels
         // Carga la producción actual de todos los jornaleros activos
         public async Task CargarJornalerosConCajasAsync()
         {
-            TodosLosJornaleros = await _produccionRepository.GetJornalerosConCajasAsync();
+            TodosLosJornaleros = await _produccionRepository.GetJornalerosConCajasActivosAsync();
             FiltrarJornaleros();
         }
 
