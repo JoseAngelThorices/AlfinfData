@@ -56,26 +56,34 @@ namespace AlfinfData.ViewModels
         {
             if (CuadrillaSeleccionada == null) return;
 
-            List<Jornalero> lista;
-
+            List<Jornalero> jornaleros;
             if (CuadrillaSeleccionada.IdCuadrilla == 0)
-                lista = await _jornaleroRepo.GetJornalerosActivosAsync();
+                jornaleros = await _jornaleroRepo.GetJornalerosActivosAsync();
             else
-                lista = await _jornaleroRepo.GetJornalerosActivosPorCuadrillaAsync(CuadrillaSeleccionada.IdCuadrilla);
+                jornaleros = await _jornaleroRepo.GetJornalerosActivosPorCuadrillaAsync(CuadrillaSeleccionada.IdCuadrilla);
 
-            var fichaje = await _fichajeRepo.BuscarFichajeNuevoDiaDatos();
+            // Obtenemos los últimos fichajes del día
+            var ultimosFichajes = await _fichajeRepo.GetUltimosFichajesDelDiaAsync();
 
             JornalerosE.Clear();
-            foreach (var j in lista)
+            foreach (var fichaje in ultimosFichajes)
             {
-                JornalerosE.Add(new JornaleroEntrada
+                if (fichaje.TipoFichaje == "Entrada")
                 {
-                    IdJornalero = j.IdJornalero,
-                    Nombre = j.Nombre,
-                    HoraEficaz = fichaje.HoraEficaz
-                });
+                    var jornalero = jornaleros.FirstOrDefault(j => j.IdJornalero == fichaje.IdJornalero);
+                    if (jornalero != null)
+                    {
+                        JornalerosE.Add(new JornaleroEntrada
+                        {
+                            IdJornalero = jornalero.IdJornalero,
+                            Nombre = jornalero.Nombre,
+                            HoraEficaz = fichaje.HoraEficaz
+                        });
+                    }
+                }
             }
         }
+
 
         [RelayCommand]
         private async Task HoraButtonAsync()
