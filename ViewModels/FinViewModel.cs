@@ -4,7 +4,6 @@ using System.Text;
 using AlfinfData.Models.SQLITE;
 using AlfinfData.Services.BdLocal;
 using CommunityToolkit.Mvvm.Input;
-using System.Linq;
 
 namespace AlfinfData.ViewModels
 {
@@ -63,12 +62,11 @@ namespace AlfinfData.ViewModels
             foreach (var r in filtrados)
             {
                 Historico.Add(r);
-
                 sb.AppendLine($"🧑 {r.NombreJornalero}");
                 sb.AppendLine($"📅 Fecha: {r.Fecha:dd/MM/yyyy}");
                 sb.AppendLine($"📦 Cajas: {r.Cajas}");
-                sb.AppendLine($"⏱ HN: {FormatearHorasComoTexto(r.HN)}, HE1: {FormatearHorasComoTexto(r.HE1)}, HE2: {FormatearHorasComoTexto(r.HE2)}");
-                sb.AppendLine(new string('-', 30));
+                sb.AppendLine($"🕔 H.Normal: {FormatearHorasComoTexto(r.HN)}, 🔺 H.Extras: {FormatearHorasComoTexto(r.HE1)}");
+                sb.AppendLine(new string('-', 60));
             }
 
             ResultadoTexto = filtrados.Any() ? sb.ToString() : "No hay registros en ese rango.";

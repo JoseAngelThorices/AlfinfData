@@ -3,10 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AlfinfData.Views.Seleccion.SeleccionPage"
              Title="SeleccionPage"
-             xmlns:vm="clr-namespace:AlfinfData.ViewModels"
              xmlns:model="clr-namespace:AlfinfData.Models.SQLITE"
-             BackgroundColor="#e9e9e9"
-             x:DataType="vm:SeleccionViewModels">
+             BackgroundColor="#e9e9e9">
 
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsVisible="False" />
