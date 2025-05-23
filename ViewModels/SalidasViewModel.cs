@@ -71,12 +71,21 @@ namespace AlfinfData.ViewModels
             else
                 return;
 
+            var ultimosFichajes = await _fichajeRepo.GetUltimosFichajesDelDiaAsync();
+
             foreach (var j in lista)
             {
-                if (!JornalerosPendientes.Any(e => e.IdJornalero == j.IdJornalero))
-                    JornalerosPendientes.Add(j);
+                var ultimo = ultimosFichajes.FirstOrDefault(f => f.IdJornalero == j.IdJornalero);
+                if (ultimo != null && ultimo.TipoFichaje == "Entrada")
+                {
+                    if (!JornalerosPendientes.Any(p => p.IdJornalero == j.IdJornalero))
+                        JornalerosPendientes.Add(j);
+                }
             }
+
         }
+
+
 
         public async Task GetJornaleroSalidasAsync()
         {

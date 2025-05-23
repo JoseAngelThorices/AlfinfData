@@ -33,90 +33,45 @@
 
         <!-- Cabecera tabla -->
         <Grid Grid.Row="1"
-            ColumnSpacing="0"
-            ColumnDefinitions="0.8*,2.1*,1.2*,1.2*,1.2*,1.1*"
-            Padding="5,0">
+      ColumnSpacing="0"
+      ColumnDefinitions="0.5*,2.2*,1.3*,1.3*,0.5*,0.8*"
+      Padding="5,0">
+
             <Label Text="N.L" Grid.Column="0" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
-            <Label Text="Nombre" Grid.Column="1" HorizontalTextAlignment="Start" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
-            <Label Text="HN" Grid.Column="2" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
-            <Label Text="HE1" Grid.Column="3" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
-            <Label Text="HE2" Grid.Column="4" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
+            <Label Text="Nombre" Grid.Column="1" HorizontalTextAlignment="Start" FontSize="13" FontAttributes="Bold" TextColor="Black" Margin="20,0,0,0"/>
+            <Label Text="H.Normal" Grid.Column="2" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
+            <Label Text="H.Extras" Grid.Column="3" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
             <Label Text="Falta" Grid.Column="5" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
         </Grid>
 
-
-
+        <!-- Lista de jornaleros -->
         <Border Grid.Row="2"
-                Grid.RowSpan="2"
-                Stroke="#a0a0a0"
-                BackgroundColor="White"
-                StrokeShape="RoundRectangle 10"
-                Padding="5"
-                Margin="5,0">
+        Grid.RowSpan="2"
+        Stroke="#a0a0a0"
+        BackgroundColor="White"
+        StrokeShape="RoundRectangle 10"
+        Padding="5"
+        Margin="5,0">
             <Border.Content>
                 <CollectionView ItemsSource="{Binding JornalerosConHoras}"
                         SelectionMode="None"
                         x:Name="ListaHoras">
-
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <Grid ColumnDefinitions="0.5*,2.5*,1.2*,1.2*,1.2*,1.1*"
+                            <Grid ColumnDefinitions="0.3*,2.5*,1.3*,1.3*,0.5*,0.8*"
                           Padding="0"
                           HeightRequest="45"
                           VerticalOptions="Center">
-
-                                <!-- N.L. -->
-                                <Label Text="{Binding IdJornalero}"
-                               Grid.Column="0"
-                               FontSize="14"
-                               TextColor="Black"
-                               VerticalOptions="Center"
-                               HorizontalTextAlignment="Center"/>
-
-                                <!-- Nombre -->
-                                <Label Text="{Binding Nombre}"
-                               Grid.Column="1"
-                               FontSize="14"
-                               TextColor="Black"
-                               VerticalOptions="Center"
-                               HorizontalTextAlignment="Start"
-                               Margin="5,0"/>
-
-                                <!-- HN -->
-                                <Entry Text="{Binding HnTexto}"
-                               Grid.Column="2"
-                               FontSize="14"
-                               BackgroundColor="Transparent"
-                               HorizontalTextAlignment="Center"
-                               VerticalOptions="Center"/>
-
-                                <!-- HE1 -->
-                                <Entry Text="{Binding He1Texto}"
-                               Grid.Column="3"
-                               FontSize="14"
-                               BackgroundColor="Transparent"
-                               HorizontalTextAlignment="Center"
-                               VerticalOptions="Center"/>
-
-                                <!-- HE2 -->
-                                <Entry Text="{Binding He2Texto}"
-                               Grid.Column="4"
-                               FontSize="14"
-                               BackgroundColor="Transparent"
-                               HorizontalTextAlignment="Center"
-                               VerticalOptions="Center"/>
-
-                                <!-- Falta -->
-                                <Switch IsToggled="{Binding Falta}"
-                                Grid.Column="5"
-                                HorizontalOptions="Center"
-                                VerticalOptions="Center"/>
+                                <Label Text="{Binding IdJornalero}" Grid.Column="0" FontSize="14" TextColor="Black" VerticalOptions="Center" HorizontalTextAlignment="Center"/>
+                                <Label Text="{Binding Nombre}" Grid.Column="1" FontSize="14" TextColor="Black" VerticalOptions="Center" HorizontalTextAlignment="Center" />
+                                <Entry Text="{Binding HnTexto}" Grid.Column="2" FontSize="14" BackgroundColor="Transparent" HorizontalTextAlignment="Center" VerticalOptions="Center"/>
+                                <Entry Text="{Binding He1Texto}" Grid.Column="3" FontSize="14" BackgroundColor="Transparent" HorizontalTextAlignment="Center" VerticalOptions="Center"/>
+                                <Switch IsToggled="{Binding Falta}" Grid.Column="5" HorizontalOptions="Center" VerticalOptions="Center"/>
                             </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
             </Border.Content>
         </Border>
-
     </Grid>
 </ContentPage>
