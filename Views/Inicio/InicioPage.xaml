@@ -2,8 +2,6 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AlfinfData.Views.Inicio.InicioPage"
-             xmlns:vm="clr-namespace:AlfinfData.ViewModels"       
-             x:DataType="vm:InicioViewModel"
              BackgroundColor="#e9e9e9">
 
     <Shell.BackButtonBehavior>
