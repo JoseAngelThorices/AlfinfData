@@ -82,8 +82,9 @@ public partial class FinViewModel : ObservableObject
         var hoy = DateTime.Today;
 
         // 1. Obtener todos los fichajes de hoy
-        var fichajesDelDia = await _fichajeRepo.GetAllAsync();
+        var fichajesDelDia = await _fichajeRepo.GetFichajesSalidasAsync();
         var fichajesHoy = fichajesDelDia
+            
             .Where(f => f.HoraEficaz.Date == hoy)
             .GroupBy(f => f.IdJornalero)
             .ToList();

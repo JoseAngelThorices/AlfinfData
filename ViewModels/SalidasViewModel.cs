@@ -104,8 +104,7 @@ namespace AlfinfData.ViewModels
                 Preferences.Set("HoraSeleccionada", seleccion);
             }
         }
-
-        public async Task<bool> SalidaNFCAsync()
+        public async Task<bool> ComprobacionNFCAsync()
         {
             if (!Plugin.NFC.CrossNFC.Current.IsAvailable)
             {
@@ -118,22 +117,26 @@ namespace AlfinfData.ViewModels
                 await Shell.Current.DisplayAlert("NFC", "Activa NFC en los ajustes.", "OK");
                 return false;
             }
+            return true;
+        }
 
+        public async Task SalidaNFCAsync()
+        {       
             try
             {
-                Plugin.NFC.CrossNFC.Current.OnMessageReceived -= OnTagReceived;
-                Plugin.NFC.CrossNFC.Current.OnMessageReceived += OnTagReceived;
+                Plugin.NFC.CrossNFC.Current.OnMessageReceived -= OnTagReceivedSalida;
+                Plugin.NFC.CrossNFC.Current.OnMessageReceived += OnTagReceivedSalida;
                 Plugin.NFC.CrossNFC.Current.StartListening();
-                return true;
+                
             }
             catch (Exception ex)
             {
                 await Shell.Current.DisplayAlert("Error NFC", ex.Message, "OK");
-                return false;
+                
             }
         }
 
-        private async void OnTagReceived(Plugin.NFC.ITagInfo tagInfo)
+        private async void OnTagReceivedSalida(Plugin.NFC.ITagInfo tagInfo)
         {
             try
             {
@@ -153,12 +156,6 @@ namespace AlfinfData.ViewModels
                 }
 
 
-                var hayInicioDia = await _fichajeRepo.BuscarFichajeNuevoDia();
-                if (!hayInicioDia)
-                {
-                    await Shell.Current.DisplayAlert("Importante", "Inicia el día primero.", "OK");
-                    return;
-                }
 
                 if (!TimeSpan.TryParseExact(HoraTexto, @"hh\:mm", CultureInfo.InvariantCulture, out TimeSpan hora))
                 {
@@ -204,7 +201,7 @@ namespace AlfinfData.ViewModels
         public async Task CancelarNFC()
         {
             Plugin.NFC.CrossNFC.Current.StopListening();
-            Plugin.NFC.CrossNFC.Current.OnMessageReceived -= OnTagReceived;
+            Plugin.NFC.CrossNFC.Current.OnMessageReceived -= OnTagReceivedSalida;
         }
     }
 }
