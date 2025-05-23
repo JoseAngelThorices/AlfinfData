@@ -1,5 +1,4 @@
 ﻿using AlfinfData.ViewModels;
-using Microsoft.Maui.Controls;
 
 namespace AlfinfData.Views.Inicio
 {

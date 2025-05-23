@@ -156,29 +156,31 @@ namespace AlfinfData.Services.BdLocal
 
         public Task<List<Fichaje>> GetAllAsync()
             => _db.Table<Fichaje>().ToListAsync();
-        public Task<List<Fichaje>> GetFichajesSalidasAsync() =>
-         _db.QueryAsync<Fichaje>(@"
-        WITH Ultimos AS (
-            SELECT
-                f.*,
-                ROW_NUMBER() OVER (
-                    PARTITION BY f.IdJornalero
-                    ORDER BY f.HoraEficaz DESC
-                ) AS rn
-            FROM Fichaje AS f
-            WHERE
-                date(
-                    (f.HoraEficaz - 621355968000000000) / 10000000,
-                    'unixepoch',
-                    'localtime'
-                ) = date('now', 'localtime')
-                AND f.TipoFichaje = 'Salida'
-        )
-        SELECT
-            u.*
-        FROM Ultimos AS u
-        WHERE u.rn = 1;
-    ");
+        public async Task<List<Fichaje>> GetFichajesSalidasAsync()
+        {
+            var inicioHoy = DateTime.Today;              
+            var inicioManana = inicioHoy.AddDays(1);
+            var fichajes = await _db.QueryAsync<Fichaje>(@"
+                WITH Ultimos AS (
+                    SELECT
+                        f.*,
+                        ROW_NUMBER() OVER (
+                            PARTITION BY f.IdJornalero
+                            ORDER BY f.Id DESC
+                        ) AS rn
+                    FROM Fichaje AS f
+                )
+                SELECT *
+                FROM Ultimos
+                WHERE rn = 1
+                  AND HoraEficaz >= ?
+                  AND HoraEficaz < ?;
+            ", inicioHoy, inicioManana);
+            return fichajes;
+
+        }
+
+      
 
         public async Task<List<Fichaje>> GetFichajesOrdenadosPorJornaleroYFechaAsync(int idJornalero, DateTime fecha)
         {

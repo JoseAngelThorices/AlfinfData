@@ -67,7 +67,7 @@ namespace AlfinfData.ViewModels
                 sb.AppendLine($"🧑 {r.NombreJornalero}");
                 sb.AppendLine($"📅 Fecha: {r.Fecha:dd/MM/yyyy}");
                 sb.AppendLine($"📦 Cajas: {r.Cajas}");
-                sb.AppendLine($"⏱ HN: {FormatearHorasComoTexto(r.HN)}, HE1: {FormatearHorasComoTexto(r.HE1)}, HE2: {FormatearHorasComoTexto(r.HE2)}");
+                sb.AppendLine($"⏱ HN: {FormatearHorasComoTexto(r.HN)}, HE1: {FormatearHorasComoTexto(r.HE1)}");
                 sb.AppendLine(new string('-', 30));
             }
 
@@ -87,7 +87,7 @@ namespace AlfinfData.ViewModels
             var fichajesDelDia = await _fichajeRepo.GetFichajesSalidasAsync();
             var fichajesHoy = fichajesDelDia
 
-                .Where(f => f.HoraEficaz.Date == hoy)
+                .Where(f => f.TipoFichaje == "Salida")
                 .GroupBy(f => f.IdJornalero)
                 .ToList();
 
