@@ -2,6 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:AlfinfData.ViewModels"
+             xmlns:vm="clr-namespace:AlfinfData.ViewModels"       
+             x:DataType="vm:MainViewModel"
              x:Class="AlfinfData.Views.MainPage"
              Title="MainPage"
              BackgroundColor="{StaticResource PageBackgroundColor}">
