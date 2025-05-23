@@ -1,6 +1,5 @@
-﻿using Microsoft.Maui.Controls;
-using System;
-using System.Globalization;
+﻿using System.Globalization;
+using AlfinfData.ViewModels;
 
 namespace AlfinfData.Views.Fin
 {

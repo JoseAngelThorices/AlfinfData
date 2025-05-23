@@ -2,6 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AlfinfData.Views.Horas.HorasPage"
+             xmlns:vm="clr-namespace:AlfinfData.ViewModels"       
+             x:DataType="vm:HorasViewModel"
              BackgroundColor="#e9e9e9"
              Title="Horas"
              Shell.NavBarIsVisible="True">
@@ -31,9 +33,9 @@
 
         <!-- Cabecera tabla -->
         <Grid Grid.Row="1"
-      ColumnSpacing="0"
-      ColumnDefinitions="0.8*,2.1*,1.2*,1.2*,1.2*,1.1*"
-      Padding="5,0">
+            ColumnSpacing="0"
+            ColumnDefinitions="0.8*,2.1*,1.2*,1.2*,1.2*,1.1*"
+            Padding="5,0">
             <Label Text="N.L" Grid.Column="0" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
             <Label Text="Nombre" Grid.Column="1" HorizontalTextAlignment="Start" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
             <Label Text="HN" Grid.Column="2" HorizontalTextAlignment="Center" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
