@@ -33,8 +33,8 @@ public static class MauiProgram
           {
               var cfg = sp.GetRequiredService<IConfigService>();
           
-              //client.BaseAddress = new Uri($"{cfg.OdooUrl}:{cfg.OdooPort}/");
-              client.BaseAddress = new Uri($"http://149.202.47.188:8016/");
+              client.BaseAddress = new Uri($"{cfg.OdooUrl}:{cfg.OdooPort}/");
+              //client.BaseAddress = new Uri($"http://149.202.47.188:8016/");
               client.Timeout = TimeSpan.FromSeconds(30);
               client.DefaultRequestHeaders
                     .Accept
