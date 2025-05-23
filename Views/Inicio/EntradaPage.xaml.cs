@@ -28,10 +28,10 @@ namespace AlfinfData.Views.Inicio
             
         }
 
-        protected override async void OnDisappearing()
+        protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            await viewModel.CancelarNFCAsync();
+            viewModel.CancelarNFCAsync();
         }
     }
 }

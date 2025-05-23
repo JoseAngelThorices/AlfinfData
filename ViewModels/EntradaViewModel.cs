@@ -183,10 +183,10 @@ namespace AlfinfData.ViewModels
             }
         }
 
-        public async Task CancelarNFCAsync()
+        public void CancelarNFCAsync()
         {
-            CrossNFC.Current.StopListening();
             CrossNFC.Current.OnMessageReceived -= OnTagReceived;
+            CrossNFC.Current.StopListening();
         }
     }
 }

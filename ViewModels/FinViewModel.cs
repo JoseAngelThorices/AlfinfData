@@ -6,132 +6,136 @@ using AlfinfData.Services.BdLocal;
 using CommunityToolkit.Mvvm.Input;
 using System.Linq;
 
-public partial class FinViewModel : ObservableObject
+namespace AlfinfData.ViewModels
 {
-    private readonly FichajeRepository _fichajeRepo;
-    private readonly ProduccionRepository _produccionRepo;
-    private readonly JornaleroRepository _jornaleroRepo;
-    private readonly HistoricoRepository _historicoRepo;
-
-    [ObservableProperty]
-    private DateTime fechaDesde = DateTime.Today;
-
-    [ObservableProperty]
-    private DateTime fechaHasta = DateTime.Today;
-
-    [ObservableProperty]
-    private string resultadoTexto = string.Empty;
-
-    public ObservableCollection<RegistroHistorico> Historico { get; } = new();
-
-    public FinViewModel(
-        FichajeRepository fichajeRepo,
-        ProduccionRepository produccionRepo,
-        JornaleroRepository jornaleroRepo,
-        HistoricoRepository historicoRepo)
-
+    public partial class FinViewModel : ObservableObject
     {
-        _fichajeRepo = fichajeRepo;
-        _produccionRepo = produccionRepo;
-        _jornaleroRepo = jornaleroRepo;
-        _historicoRepo = historicoRepo;
-    }
+        private readonly FichajeRepository _fichajeRepo;
+        private readonly ProduccionRepository _produccionRepo;
+        private readonly JornaleroRepository _jornaleroRepo;
+        private readonly HistoricoRepository _historicoRepo;
 
+        [ObservableProperty]
+        private DateTime fechaDesde = DateTime.Today;
 
-    private string FormatearHorasComoTexto(double horasDecimales)
-    {
-        var ts = TimeSpan.FromHours(horasDecimales);
-        return $"{(int)ts.TotalHours}:{ts.Minutes:D2}";
-    }
+        [ObservableProperty]
+        private DateTime fechaHasta = DateTime.Today;
 
+        [ObservableProperty]
+        private string resultadoTexto = string.Empty;
 
-    [RelayCommand]
-    public async Task VisualizarHistoricoAsync()
-    {
-        Historico.Clear();
-        var sb = new StringBuilder();
+        public ObservableCollection<RegistroHistorico> Historico { get; } = new();
 
-        var registros = await _historicoRepo.GetAllAsync();
-        var filtrados = registros
-            .Where(r => r.Fecha.Date >= FechaDesde.Date && r.Fecha.Date <= FechaHasta.Date)
-            .OrderBy(r => r.Fecha)
-            .ThenBy(r => r.NombreJornalero)
-            .ToList();
+        public FinViewModel(
+            FichajeRepository fichajeRepo,
+            ProduccionRepository produccionRepo,
+            JornaleroRepository jornaleroRepo,
+            HistoricoRepository historicoRepo)
 
-        foreach (var r in filtrados)
         {
-            Historico.Add(r);
-
-            sb.AppendLine($"🧑 {r.NombreJornalero}");
-            sb.AppendLine($"📅 Fecha: {r.Fecha:dd/MM/yyyy}");
-            sb.AppendLine($"📦 Cajas: {r.Cajas}");
-            sb.AppendLine($"⏱ HN: {FormatearHorasComoTexto(r.HN)}, HE1: {FormatearHorasComoTexto(r.HE1)}, HE2: {FormatearHorasComoTexto(r.HE2)}");
-            sb.AppendLine(new string('-', 30));
+            _fichajeRepo = fichajeRepo;
+            _produccionRepo = produccionRepo;
+            _jornaleroRepo = jornaleroRepo;
+            _historicoRepo = historicoRepo;
         }
 
-        ResultadoTexto = filtrados.Any() ? sb.ToString() : "No hay registros en ese rango.";
-    }
 
-
-
-    [RelayCommand]
-    public async Task GenerarHistoricoAsync()
-    {
-        Historico.Clear();
-
-        var hoy = DateTime.Today;
-
-        // 1. Obtener todos los fichajes de hoy
-        var fichajesDelDia = await _fichajeRepo.GetFichajesSalidasAsync();
-        var fichajesHoy = fichajesDelDia
-            
-            .Where(f => f.HoraEficaz.Date == hoy)
-            .GroupBy(f => f.IdJornalero)
-            .ToList();
-
-        var cajasHoy = await _produccionRepo.GetJornalerosConCajasAsync();
-
-        bool seGeneroAlMenosUnRegistro = false;
-
-        foreach (var grupo in fichajesHoy)
+        private string FormatearHorasComoTexto(double horasDecimales)
         {
-            int? idJornalero = grupo.Key;
-            if (!idJornalero.HasValue)
-                continue;
+            var ts = TimeSpan.FromHours(horasDecimales);
+            return $"{(int)ts.TotalHours}:{ts.Minutes:D2}";
+        }
 
-            var jornalero = await _jornaleroRepo.GetByIdAsync(idJornalero.Value);
-            if (jornalero == null)
-                continue;
 
-            var horasTotales = await _fichajeRepo.CalcularHorasTrabajadasAsync(idJornalero.Value, hoy);
-            var hn = Math.Min(horasTotales, 6.5);
-            var he1 = Math.Max(0, horasTotales - 6.5);
+        [RelayCommand]
+        public async Task VisualizarHistoricoAsync()
+        {
+            Historico.Clear();
+            var sb = new StringBuilder();
 
-            var cajas = cajasHoy.FirstOrDefault(c => c.IdJornalero == idJornalero.Value)?.TotalCajas ?? 0;
+            var registros = await _historicoRepo.GetAllAsync();
+            var filtrados = registros
+                .Where(r => r.Fecha.Date >= FechaDesde.Date && r.Fecha.Date <= FechaHasta.Date)
+                .OrderBy(r => r.Fecha)
+                .ThenBy(r => r.NombreJornalero)
+                .ToList();
 
-            var registro = new RegistroHistorico
+            foreach (var r in filtrados)
             {
-                NombreJornalero = jornalero.Nombre ?? "Sin nombre",
-                Fecha = hoy,
-                HN = Math.Round(hn, 2),
-                HE1 = Math.Round(he1, 2),
-                HE2 = 0,
-                Cajas = cajas
-            };
+                Historico.Add(r);
 
-            await _historicoRepo.InsertOrUpdateAsync(registro);
-            seGeneroAlMenosUnRegistro = true;
+                sb.AppendLine($"🧑 {r.NombreJornalero}");
+                sb.AppendLine($"📅 Fecha: {r.Fecha:dd/MM/yyyy}");
+                sb.AppendLine($"📦 Cajas: {r.Cajas}");
+                sb.AppendLine($"⏱ HN: {FormatearHorasComoTexto(r.HN)}, HE1: {FormatearHorasComoTexto(r.HE1)}, HE2: {FormatearHorasComoTexto(r.HE2)}");
+                sb.AppendLine(new string('-', 30));
+            }
+
+            ResultadoTexto = filtrados.Any() ? sb.ToString() : "No hay registros en ese rango.";
         }
 
-        ResultadoTexto = string.Empty;
 
-        if (seGeneroAlMenosUnRegistro)
+
+        [RelayCommand]
+        public async Task GenerarHistoricoAsync()
         {
-            await Shell.Current.DisplayAlert("Éxito", "Histórico generado correctamente para hoy.", "OK");
-        }
-        else
-        {
-            await Shell.Current.DisplayAlert("Sin datos", "No hay datos para generar el histórico de hoy.", "OK");
+            Historico.Clear();
+
+            var hoy = DateTime.Today;
+
+            // 1. Obtener todos los fichajes de hoy
+            var fichajesDelDia = await _fichajeRepo.GetFichajesSalidasAsync();
+            var fichajesHoy = fichajesDelDia
+
+                .Where(f => f.HoraEficaz.Date == hoy)
+                .GroupBy(f => f.IdJornalero)
+                .ToList();
+
+            var cajasHoy = await _produccionRepo.GetJornalerosConCajasAsync();
+
+            bool seGeneroAlMenosUnRegistro = false;
+
+            foreach (var grupo in fichajesHoy)
+            {
+                int? idJornalero = grupo.Key;
+                if (!idJornalero.HasValue)
+                    continue;
+
+                var jornalero = await _jornaleroRepo.GetByIdAsync(idJornalero.Value);
+                if (jornalero == null)
+                    continue;
+
+                var horasTotales = await _fichajeRepo.CalcularHorasTrabajadasAsync(idJornalero.Value, hoy);
+                var hn = Math.Min(horasTotales, 6.5);
+                var he1 = Math.Max(0, horasTotales - 6.5);
+
+                var cajas = cajasHoy.FirstOrDefault(c => c.IdJornalero == idJornalero.Value)?.TotalCajas ?? 0;
+
+                var registro = new RegistroHistorico
+                {
+                    NombreJornalero = jornalero.Nombre ?? "Sin nombre",
+                    Fecha = hoy,
+                    HN = Math.Round(hn, 2),
+                    HE1 = Math.Round(he1, 2),
+                    HE2 = 0,
+                    Cajas = cajas
+                };
+
+                await _historicoRepo.InsertOrUpdateAsync(registro);
+                seGeneroAlMenosUnRegistro = true;
+            }
+
+            ResultadoTexto = string.Empty;
+
+            if (seGeneroAlMenosUnRegistro)
+            {
+                await Shell.Current.DisplayAlert("Éxito", "Histórico generado correctamente para hoy.", "OK");
+            }
+            else
+            {
+                await Shell.Current.DisplayAlert("Sin datos", "No hay datos para generar el histórico de hoy.", "OK");
+            }
         }
     }
 }
+   
